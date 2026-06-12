@@ -16710,7 +16710,47 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field 8</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130825">0x1FF09:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
+            PGN 130824
+            - Mercury: Engine Key-Value Data</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Engine diagnostic key/value pairs (uptime, cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 2
+            bytes long and contains 6 fields.
+
+            
+        The 3 fields starting at field 
+        4 
+        (with name "Key")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>144:
+                  Mercury Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Key</td><td/><td><div class="xs">0 .. 4092</div></td><td>12 bits
+                  
+                      lookup
+                      <a href="#lookup-MERCURY_KEY_VALUE">MERCURY_KEY_VALUE</a>
+                      that defines the next variable field's type.
+                    </td><td>true</td></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Length</td><td>Length of field 6</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Value</td><td>Data value</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130825">0x1FF09:
             PGN 130825
             - Maretron: Data Instance Channel Correlation</h3><p>
               This PGN description applies when the following field(s) match:
@@ -16974,15 +17014,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130829
             - Mercury: Engine Status</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Per-engine status/identity beacon sent by the Mercury VesselView-Link gateway (one source address per engine). Field layout as observed; field meanings not yet identified. Observed on the wire as a constant 5-byte payload with only Status Fields 2 and 3 toggling together between 0x0/0x0 and 0xF/0xF.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            5
+            bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>144:
                   Mercury Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -16992,7 +17034,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130830">0x1FF0E:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Status Field 1</td><td/><td/><td>4 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>6</td><td>Status Field 2</td><td/><td/><td>4 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Status Field 3</td><td/><td/><td>4 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Status Field 4</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130830">0x1FF0E:
             PGN 130830
             - Maretron: Dometic HVAC Status</h3><p>
               This PGN description applies when the following field(s) match:
@@ -20861,6 +20908,35 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>387</td><td>Pilot Mean Heel</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-MERCURY_KEY_VALUE">MERCURY_KEY_VALUE
+        (0 - 4095)
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>8</td><td>Engine 0 Uptime</td><td>0.25 s</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>9</td><td>Engine 1 Cumulative Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Engine 1 Uptime</td><td>0.25 s</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>432</td><td>Engine 0 Work Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>433</td><td>Engine 1 Work Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>448</td><td>Engine 0 Work Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>449</td><td>Engine 1 Work Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>464</td><td>Engine 0 Work Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>465</td><td>Engine 1 Work Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h2 id="notes">Notes</h2><h3 id="offset">Excess-K offset</h3><p>
             Some fields are not stored as a straight signed two's complement binary number,
             but as an binary number with an offset.

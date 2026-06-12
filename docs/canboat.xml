@@ -3540,6 +3540,26 @@ limitations under the License.
       <EnumFieldType Value='387' Name='Pilot Mean Heel' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
     </LookupFieldTypeEnumeration>
+    <LookupFieldTypeEnumeration Name='MERCURY_KEY_VALUE' MaxValue='4095'>
+      <EnumFieldType Value='8' Name='Engine 0 Uptime' FieldType='DURATION' Signed='false'
+ Resolution='0.25' Unit='s' Bits='32'/>
+      <EnumFieldType Value='9' Name='Engine 1 Cumulative Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='13' Name='Engine 1 Uptime' FieldType='DURATION' Signed='false'
+ Resolution='0.25' Unit='s' Bits='32'/>
+      <EnumFieldType Value='432' Name='Engine 0 Work Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='433' Name='Engine 1 Work Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='448' Name='Engine 0 Work Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='449' Name='Engine 1 Work Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='464' Name='Engine 0 Work Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='465' Name='Engine 1 Work Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+    </LookupFieldTypeEnumeration>
   </LookupFieldTypeEnumerations>
   <PGNs>
     <PGNInfo>
@@ -58815,6 +58835,106 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130824</PGN>
+      <Id>mercuryEngineKeyValueData</Id>
+      <Description>Mercury: Engine Key-Value Data</Description>
+    <Priority>7</Priority>
+      <Explanation>Engine diagnostic key/value pairs (uptime, cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <MinLength>2</MinLength>
+      <RepeatingFieldSet1Size>3</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Mercury Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>144</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>key</Id>
+          <Name>Key</Name>
+          <BitLength>12</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4092</RangeMax>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
+          <LookupFieldTypeEnumeration>MERCURY_KEY_VALUE</LookupFieldTypeEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Length of field 6</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Data value</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130825</PGN>
       <Id>maretronDataInstanceChannelCorrelation</Id>
       <Description>Maretron: Data Instance Channel Correlation</Description>
@@ -59624,17 +59744,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130829</PGN>
       <Id>mercuryEngineStatus</Id>
       <Description>Mercury: Engine Status</Description>
+    <Priority>7</Priority>
+      <Explanation>Per-engine status/identity beacon sent by the Mercury VesselView-Link gateway (one source address per engine). Field layout as observed; field meanings not yet identified. Observed on the wire as a constant 5-byte payload with only Status Fields 2 and 3 toggling together between 0x0/0x0 and 0xF/0xF.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>8</FieldCount>
+      <Length>5</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -59677,6 +59798,56 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>statusField1</Id>
+          <Name>Status Field 1</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>statusField2</Id>
+          <Name>Status Field 2</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>statusField3</Id>
+          <Name>Status Field 3</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>statusField4</Id>
+          <Name>Status Field 4</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

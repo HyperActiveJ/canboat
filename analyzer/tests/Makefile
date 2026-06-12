@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 tests
 
 all:	tests
 
@@ -149,4 +149,13 @@ test15:
 	diff $(TEMPDIR)/short-frame.out short-frame.out
 	diff $(TEMPDIR)/short-frame.err short-frame.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15
+#
+# This tests Mercury Marine proprietary PGNs 130824 (key-value) and 130829 (engine status)
+# using frames captured from a Mercury VesselView-Link gateway
+#
+test16:
+	$(ANALYZER) < pgn-mercury.in > $(TEMPDIR)/pgn-mercury.out -debug -q -fixtime pgn-mercury 2> $(TEMPDIR)/pgn-mercury.err
+	diff $(TEMPDIR)/pgn-mercury.out pgn-mercury.out
+	diff $(TEMPDIR)/pgn-mercury.err pgn-mercury.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16

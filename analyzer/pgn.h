@@ -8262,6 +8262,25 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Mercury: Engine Key-Value Data",
+     130824,
+     PACKET_LOOKUPS_UNKNOWN,
+     PACKET_FAST,
+     {COMPANY(144),
+      LOOKUP_DYNAMIC_FIELD_KEY("Key", 12, MERCURY_KEY_VALUE),
+      DYNAMIC_FIELD_LENGTH("Length", 4, "Length of field 6"),
+      DYNAMIC_FIELD_VALUE("Value", "Data value"),
+      END_OF_FIELDS},
+     .priority        = 7,
+     .repeatingField1 = UINT8_MAX,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 4,
+     .explanation     = "Engine diagnostic key/value pairs (uptime, cumulative counters, configuration) sent by the Mercury "
+                        "VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Reverse engineered "
+                        "from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's "
+                        "internal engine-data structure and only partially identified."}
+
+    ,
     {"Maretron: Data Instance Channel Correlation",
      130825,
      PACKET_COMPLETE,
@@ -8353,9 +8372,20 @@ Pgn pgnList[] = {
     ,
     {"Mercury: Engine Status",
      130829,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(144), END_OF_FIELDS}}
+     {COMPANY(144),
+      RESERVED_FIELD(4),
+      BINARY_FIELD("Status Field 1", 4, ""),
+      BINARY_FIELD("Status Field 2", 4, ""),
+      BINARY_FIELD("Status Field 3", 4, ""),
+      BINARY_FIELD("Status Field 4", BYTES(1), ""),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Per-engine status/identity beacon sent by the Mercury VesselView-Link gateway (one source address per engine). "
+                    "Field layout as observed; field meanings not yet identified. "
+                    "Observed on the wire as a constant 5-byte payload with only Status Fields 2 and 3 toggling together "
+                    "between 0x0/0x0 and 0xF/0xF."}
 
     ,
     {"Maretron: Dometic HVAC Status",

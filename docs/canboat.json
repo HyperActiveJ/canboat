@@ -4357,6 +4357,21 @@
         {"name": "Pilot Weather Helm", "value": 386, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Pilot Mean Heel", "value": 387, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"}
         ]
+      },
+      {
+        "Name":"MERCURY_KEY_VALUE",
+        "MaxValue":4095,
+        "EnumFieldTypeValues":[
+        {"name": "Engine 0 Uptime", "value": 8, "FieldType": "DURATION", "Resolution": 0.25, "Unit": "s", "Bits": "32"},
+        {"name": "Engine 1 Cumulative Counter", "value": 9, "FieldType": "NUMBER", "Bits": "32"},
+        {"name": "Engine 1 Uptime", "value": 13, "FieldType": "DURATION", "Resolution": 0.25, "Unit": "s", "Bits": "32"},
+        {"name": "Engine 0 Work Counter", "value": 432, "FieldType": "NUMBER", "Bits": "32"},
+        {"name": "Engine 1 Work Counter", "value": 433, "FieldType": "NUMBER", "Bits": "32"},
+        {"name": "Engine 0 Work Counter", "value": 448, "FieldType": "NUMBER", "Bits": "32"},
+        {"name": "Engine 1 Work Counter", "value": 449, "FieldType": "NUMBER", "Bits": "32"},
+        {"name": "Engine 0 Work Counter", "value": 464, "FieldType": "NUMBER", "Bits": "32"},
+        {"name": "Engine 1 Work Counter", "value": 465, "FieldType": "NUMBER", "Bits": "32"}
+        ]
       }
     ],
     "PGNs":[
@@ -58636,6 +58651,104 @@
         ]
       },
       {
+        "PGN":130824,
+        "Id":"mercuryEngineKeyValueData",
+        "Description":"Mercury: Engine Key-Value Data",
+        "Priority":7,
+        "Explanation":"Engine diagnostic key/value pairs (uptime, cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Lookups","Interval"
+        ],
+        "FieldCount":6,
+        "MinLength":2,
+        "RepeatingFieldSet1Size":3,
+        "RepeatingFieldSet1StartField":4,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mercury Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":144,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"key",
+            "Name":"Key",
+            "BitLength":12,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4092,
+            "FieldType":"DYNAMIC_FIELD_KEY",
+            "LookupFieldTypeEnumeration":"MERCURY_KEY_VALUE",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"length",
+            "Name":"Length",
+            "Description":"Length of field 6",
+            "BitLength":4,
+            "BitOffset":28,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"DYNAMIC_FIELD_LENGTH"
+          },
+          {
+            "Order":6,
+            "Id":"value",
+            "Name":"Value",
+            "Description":"Data value",
+            "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
+            "FieldType":"DYNAMIC_FIELD_VALUE"
+          }
+        ]
+      },
+      {
         "PGN":130825,
         "Id":"maretronDataInstanceChannelCorrelation",
         "Description":"Maretron: Data Instance Channel Correlation",
@@ -59417,12 +59530,14 @@
         "PGN":130829,
         "Id":"mercuryEngineStatus",
         "Description":"Mercury: Engine Status",
+        "Priority":7,
+        "Explanation":"Per-engine status/identity beacon sent by the Mercury VesselView-Link gateway (one source address per engine). Field layout as observed; field meanings not yet identified. Observed on the wire as a constant 5-byte payload with only Status Fields 2 and 3 toggling together between 0x0/0x0 and 0xF/0xF.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":3,
-        "Length":2,
+        "FieldCount":8,
+        "Length":5,
         "Fields":[
           {
             "Order":1,
@@ -59465,6 +59580,56 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":4,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":5,
+            "Id":"statusField1",
+            "Name":"Status Field 1",
+            "BitLength":4,
+            "BitOffset":20,
+            "BitStart":4,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          },
+          {
+            "Order":6,
+            "Id":"statusField2",
+            "Name":"Status Field 2",
+            "BitLength":4,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          },
+          {
+            "Order":7,
+            "Id":"statusField3",
+            "Name":"Status Field 3",
+            "BitLength":4,
+            "BitOffset":28,
+            "BitStart":4,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          },
+          {
+            "Order":8,
+            "Id":"statusField4",
+            "Name":"Status Field 4",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
