@@ -3547,18 +3547,18 @@ limitations under the License.
  Bits='32'/>
       <EnumFieldType Value='13' Name='Engine 1 Uptime' FieldType='DURATION' Signed='false'
  Resolution='0.25' Unit='s' Bits='32'/>
-      <EnumFieldType Value='432' Name='Engine 0 Work Counter' FieldType='NUMBER' Signed='false'
- Bits='32'/>
-      <EnumFieldType Value='433' Name='Engine 1 Work Counter' FieldType='NUMBER' Signed='false'
- Bits='32'/>
-      <EnumFieldType Value='448' Name='Engine 0 Work Counter' FieldType='NUMBER' Signed='false'
- Bits='32'/>
-      <EnumFieldType Value='449' Name='Engine 1 Work Counter' FieldType='NUMBER' Signed='false'
- Bits='32'/>
-      <EnumFieldType Value='464' Name='Engine 0 Work Counter' FieldType='NUMBER' Signed='false'
- Bits='32'/>
-      <EnumFieldType Value='465' Name='Engine 1 Work Counter' FieldType='NUMBER' Signed='false'
- Bits='32'/>
+      <EnumFieldType Value='432' Name='Engine 0 Fuel Used' FieldType='NUMBER' Signed='false'
+ Resolution='0.0001' Unit='L' Bits='32'/>
+      <EnumFieldType Value='433' Name='Engine 1 Fuel Used' FieldType='NUMBER' Signed='false'
+ Resolution='0.0001' Unit='L' Bits='32'/>
+      <EnumFieldType Value='448' Name='Engine 0 Fuel Used' FieldType='NUMBER' Signed='false'
+ Resolution='0.0001' Unit='L' Bits='32'/>
+      <EnumFieldType Value='449' Name='Engine 1 Fuel Used' FieldType='NUMBER' Signed='false'
+ Resolution='0.0001' Unit='L' Bits='32'/>
+      <EnumFieldType Value='464' Name='Engine 0 Fuel Used' FieldType='NUMBER' Signed='false'
+ Resolution='0.0001' Unit='L' Bits='32'/>
+      <EnumFieldType Value='465' Name='Engine 1 Fuel Used' FieldType='NUMBER' Signed='false'
+ Resolution='0.0001' Unit='L' Bits='32'/>
     </LookupFieldTypeEnumeration>
   </LookupFieldTypeEnumerations>
   <PGNs>

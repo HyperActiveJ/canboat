@@ -904,6 +904,8 @@ FieldType fieldTypeList[] = {
 
     {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
+    {.name = "VOLUME_UFIX32_DML", .description = "Volume", .resolution = 0.0001, .physical = &VOLUME, .baseFieldType = "UFIX32"},
+
     {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime, .v1Type = "Time"},
 
     {.name = "DURATION", .description = "Duration", .physical = &DURATION, .pf = fieldPrintTime, .v1Type = "Time"},

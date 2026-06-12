@@ -4365,12 +4365,12 @@
         {"name": "Engine 0 Uptime", "value": 8, "FieldType": "DURATION", "Resolution": 0.25, "Unit": "s", "Bits": "32"},
         {"name": "Engine 1 Cumulative Counter", "value": 9, "FieldType": "NUMBER", "Bits": "32"},
         {"name": "Engine 1 Uptime", "value": 13, "FieldType": "DURATION", "Resolution": 0.25, "Unit": "s", "Bits": "32"},
-        {"name": "Engine 0 Work Counter", "value": 432, "FieldType": "NUMBER", "Bits": "32"},
-        {"name": "Engine 1 Work Counter", "value": 433, "FieldType": "NUMBER", "Bits": "32"},
-        {"name": "Engine 0 Work Counter", "value": 448, "FieldType": "NUMBER", "Bits": "32"},
-        {"name": "Engine 1 Work Counter", "value": 449, "FieldType": "NUMBER", "Bits": "32"},
-        {"name": "Engine 0 Work Counter", "value": 464, "FieldType": "NUMBER", "Bits": "32"},
-        {"name": "Engine 1 Work Counter", "value": 465, "FieldType": "NUMBER", "Bits": "32"}
+        {"name": "Engine 0 Fuel Used", "value": 432, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 1 Fuel Used", "value": 433, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 0 Fuel Used", "value": 448, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 1 Fuel Used", "value": 449, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 0 Fuel Used", "value": 464, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 1 Fuel Used", "value": 465, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"}
         ]
       }
     ],
