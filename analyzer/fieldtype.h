@@ -1124,6 +1124,12 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "FIX24"},
 
+    {.name          = "CURRENT_FIX32_MA",
+     .description   = "Electrical current",
+     .resolution    = .001,
+     .physical      = &ELECTRICAL_CURRENT,
+     .baseFieldType = "FIX32"},
+
     {.name          = "ELECTRIC_CHARGE_UFIX16_AH",
      .description   = "Electrical charge",
      .resolution    = 1,

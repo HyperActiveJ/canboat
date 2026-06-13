@@ -478,6 +478,9 @@ typedef struct
 #define CURRENT_FIX24_CA_FIELD(nam) \
   {.name = nam, .size = BYTES(3), .resolution = 0.01, .hasSign = true, .unit = "A", .fieldType = "CURRENT_FIX24_CA"}
 
+#define CURRENT_FIX32_MA_FIELD(nam) \
+  {.name = nam, .size = BYTES(4), .resolution = 0.001, .hasSign = true, .unit = "A", .fieldType = "CURRENT_FIX32_MA"}
+
 #define ELECTRIC_CHARGE_UFIX16_AH(nam) {.name = nam, .fieldType = "ELECTRIC_CHARGE_UFIX16_AH"}
 
 #define PEUKERT_FIELD(nam) {.name = nam, .fieldType = "PEUKERT_EXPONENT", .rangeMin = 1.0, .rangeMax = 1.5}
@@ -1225,6 +1228,31 @@ Pgn pgnList[] = {
       UINT8_FIELD("Beep Control"),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS}}
+
+    ,
+    {"Victron: DC Voltage (VREG)",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(358),
+      MATCH_FIELD(PK("Register Id"), BYTES(2), 8194, "DC Voltage (0x2002)"),
+      VOLTAGE_U16_10MV_FIELD("Voltage"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .url      = "https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf",
+     .priority = 7}
+
+    ,
+    {"Victron: DC Current (VREG)",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(358),
+      MATCH_FIELD(PK("Register Id"), BYTES(2), 8220, "DC Current (0x201C)"),
+      CURRENT_FIX32_MA_FIELD("Current"),
+      END_OF_FIELDS},
+     .url      = "https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf",
+     .priority = 7}
 
     ,
     {"Victron Battery Register",
