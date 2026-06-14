@@ -4362,9 +4362,9 @@
         "Name":"MERCURY_KEY_VALUE",
         "MaxValue":4095,
         "EnumFieldTypeValues":[
-        {"name": "Engine 0 Uptime", "value": 8, "FieldType": "DURATION", "Resolution": 0.25, "Unit": "s", "Bits": "32"},
-        {"name": "Engine 1 Cumulative Counter", "value": 9, "FieldType": "NUMBER", "Bits": "32"},
-        {"name": "Engine 1 Uptime", "value": 13, "FieldType": "DURATION", "Resolution": 0.25, "Unit": "s", "Bits": "32"},
+        {"name": "Engine 0 Distance", "value": 8, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m", "Bits": "32"},
+        {"name": "Engine 1 Runtime", "value": 9, "FieldType": "DURATION", "Resolution": 0.0001, "Unit": "s", "Bits": "32"},
+        {"name": "Engine 1 Distance", "value": 13, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m", "Bits": "32"},
         {"name": "Engine 0 Fuel Used", "value": 432, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
         {"name": "Engine 1 Fuel Used", "value": 433, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
         {"name": "Engine 0 Fuel Used", "value": 448, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
@@ -58840,7 +58840,7 @@
         "Id":"mercuryEngineKeyValueData",
         "Description":"Mercury: Engine Key-Value Data",
         "Priority":7,
-        "Explanation":"Engine diagnostic key/value pairs (uptime, cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.",
+        "Explanation":"Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Lookups","Interval"

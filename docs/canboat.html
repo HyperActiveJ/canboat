@@ -16783,7 +16783,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130824
             - Mercury: Engine Key-Value Data</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Engine diagnostic key/value pairs (uptime, cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -20979,16 +20979,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-MERCURY_KEY_VALUE">MERCURY_KEY_VALUE
         (0 - 4095)
-      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>8</td><td>Engine 0 Uptime</td><td>0.25 s</td><td>32 bits 
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>8</td><td>Engine 0 Distance</td><td>1 m</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>9</td><td>Engine 1 Cumulative Counter</td><td> </td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9</td><td>Engine 1 Runtime</td><td>0.0001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>13</td><td>Engine 1 Uptime</td><td>0.25 s</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>13</td><td>Engine 1 Distance</td><td>1 m</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>432</td><td>Engine 0 Fuel Used</td><td>0.0001 L</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>432</td><td>Engine 0 Fuel Used</td><td>0.0001 L</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>433</td><td>Engine 1 Fuel Used</td><td>0.0001 L</td><td>32 bits 

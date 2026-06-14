@@ -8304,7 +8304,7 @@ Pgn pgnList[] = {
      .repeatingField1 = UINT8_MAX,
      .repeatingCount1 = 3,
      .repeatingStart1 = 4,
-     .explanation     = "Engine diagnostic key/value pairs (uptime, cumulative counters, configuration) sent by the Mercury "
+     .explanation     = "Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury "
                         "VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Reverse engineered "
                         "from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's "
                         "internal engine-data structure and only partially identified."}
