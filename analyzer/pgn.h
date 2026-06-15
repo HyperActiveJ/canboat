@@ -8443,16 +8443,17 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(144),
       RESERVED_FIELD(4),
-      BINARY_FIELD("Status Field 1", 4, ""),
-      BINARY_FIELD("Status Field 2", 4, ""),
-      BINARY_FIELD("Status Field 3", 4, ""),
-      BINARY_FIELD("Status Field 4", BYTES(1), ""),
+      BINARY_FIELD("Field A", 4, "Decoded but unused on the receive path (reserved)"),
+      BINARY_FIELD("Capability Data 1", 4, "Per-engine capability data forwarded to the helm model"),
+      BINARY_FIELD("Capability Data 2", 4, "Per-engine capability data forwarded to the helm model"),
+      BINARY_FIELD("Capabilities", BYTES(1), "Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability"),
       END_OF_FIELDS},
      .priority    = 7,
-     .explanation = "Per-engine status/identity beacon sent by the Mercury VesselView-Link gateway (one source address per engine). "
-                    "Field layout as observed; field meanings not yet identified. "
-                    "Observed on the wire as a constant 5-byte payload with only Status Fields 2 and 3 toggling together "
-                    "between 0x0/0x0 and 0xF/0xF."}
+     .explanation = "Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). "
+                    "Layout as observed: the last byte "
+                    "is a capability bitmask (a capability bitmask), and the two "
+                    "preceding nibbles are per-engine capability data forwarded to the helm data model. Observed as a constant 5-byte "
+                    "payload (Capabilities = 0x03 = beacon + cruise-control), the two data nibbles toggling together 0x0/0x0 vs 0xF/0xF per engine."}
 
     ,
     {"Maretron: Dometic HVAC Status",
