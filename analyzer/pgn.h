@@ -8263,6 +8263,27 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
+    {"Navico: Keyed Parameter Table",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_FIELD("Id"),
+      MATCH_FIELD(PK("Sub-type"), BYTES(1), 1, "Keyed parameter table"),
+      UINT16_FIELD(PK("Record Key")),
+      UINT8_FIELD("Type Tag"),
+      UINT16_FIELD("Value"),
+      UINT8_FIELD("Flags"),
+      UINT16_FIELD("Parameter"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT16_FIELD("Signature"),
+      END_OF_FIELDS},
+     .priority    = 3,
+     .explanation = "Navico keyed parameter-table broadcast: each sub-type-1 frame reports one record "
+                    "(Record Key) with its Value, type tag, flags and a per-record signature. Other "
+                    "sub-types use different body layouts and fall through to the generic decode."}
+
+    ,
     {"Navico: Unknown 1",
      130822,
      PACKET_INCOMPLETE,
