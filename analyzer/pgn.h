@@ -7757,6 +7757,44 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    /* Fusion status message ids below (Fusion is a
+       Garmin brand). */
+    {"Fusion: Speed Volume Current Speed",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32863, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD(PK("Source ID")),
+      UINT16_FIELD("Speed"),
+      UINT8_FIELD("Enabled"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Ignition Switch State",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32859, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD("State"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Menu Lock Id",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32786, FUSION_STATUS_MESSAGE_ID),
+      UINT32_FIELD("Lock Id"),
+      UINT8_FIELD("Flags"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
     {"Fusion: Track Position",
      130820,
      PACKET_COMPLETE,
