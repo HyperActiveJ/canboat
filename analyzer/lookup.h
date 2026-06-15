@@ -3273,6 +3273,19 @@ LOOKUP(SBAS_SV, 17, "137")
 LOOKUP(SBAS_SV, 18, "138")
 LOOKUP_END
 
+LOOKUP_TYPE(MERCURY_COMMAND_OPCODE, BYTES(1))
+LOOKUP(MERCURY_COMMAND_OPCODE, 0, "Horn Control")
+LOOKUP(MERCURY_COMMAND_OPCODE, 1, "Maintenance Reset Command")
+LOOKUP(MERCURY_COMMAND_OPCODE, 2, "Maintenance Reset Response")
+LOOKUP(MERCURY_COMMAND_OPCODE, 4, "Cruise Control")
+LOOKUP(MERCURY_COMMAND_OPCODE, 5, "Global Brightness")
+LOOKUP(MERCURY_COMMAND_OPCODE, 6, "Active Trim Command")
+LOOKUP(MERCURY_COMMAND_OPCODE, 8, "Autopilot Command")
+LOOKUP(MERCURY_COMMAND_OPCODE, 9, "Active Exhaust")
+LOOKUP(MERCURY_COMMAND_OPCODE, 12, "Oil Level Check Command")
+LOOKUP(MERCURY_COMMAND_OPCODE, 13, "Oil Level Reset Response")
+LOOKUP_END
+
 // Keep this at the end, so a next include does not need to do this
 #undef LOOKUP_TYPE
 #undef LOOKUP_TYPE_TRIPLET

@@ -1688,6 +1688,20 @@ Pgn pgnList[] = {
      {COMPANY(144), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Navico: Engine Identity/Config",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(275),
+      UINT8_FIELD("Field A"),
+      UINT8_FIELD("Init State"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT16_FIELD("Config Code"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
     {"BEP Marine: CZone Circuit Control",
      65280,
      PACKET_INCOMPLETE,
@@ -8376,6 +8390,19 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
+    {"Mercury: Command/Response",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      LOOKUP_FIELD("Opcode", BYTES(1), MERCURY_COMMAND_OPCODE),
+      BINARY_FIELD("Data", BYTES(30), NULL),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function and the "
+                    "following data is opcode-specific."}
+
+    ,
     {"Maretron: Switch Indicator Status",
      130826,
      PACKET_COMPLETE,
@@ -8401,6 +8428,23 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     /* Uwe Lovas has seen this from EP-70R */
+    ,
+    {"Mercury: BAM Digital-Data Proxy",
+     130826,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      UINT8_FIELD("Type"),
+      UINT8_FIELD("Instance"),
+      SIMPLE_FIELD("Field 4", 2),
+      RESERVED_FIELD(6),
+      UINT8_FIELD("Flag"),
+      BINARY_FIELD("Data", BYTES(32), NULL),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Variable-length Mercury digital-data proxy channel; the trailing data block is opcode/instance-specific "
+                    "and may be empty."}
+
     ,
     {"Lowrance: unknown",
      130827,
