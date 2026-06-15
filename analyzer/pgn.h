@@ -1694,7 +1694,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {COMPANY(275),
       UINT8_FIELD("Field A"),
-      UINT8_FIELD("Init State"),
+      UINT8_FIELD("Run State"),
       RESERVED_FIELD(BYTES(1)),
       UINT16_FIELD("Config Code"),
       RESERVED_FIELD(BYTES(1)),
