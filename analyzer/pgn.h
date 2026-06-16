@@ -8284,6 +8284,29 @@ Pgn pgnList[] = {
                     "sub-types use different body layouts and fall through to the generic decode."}
 
     ,
+    {"Navico: Alert",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_FIELD("Id"),
+      MATCH_FIELD(PK("Sub-type"), BYTES(1), 2, "Alert"),
+      MATCH_FIELD(PK("Record Key"), BYTES(2), 32792, "Alert indices"),
+      RESERVED_FIELD(BYTES(2)),
+      UINT32_FIELD("Alert ID"),
+      UINT32_FIELD("Handle"),
+      UINT16_FIELD("Action Text Index"),
+      UINT16_FIELD("Long Text Index"),
+      UINT16_FIELD("Short Text Index"),
+      UINT16_FIELD("Field 4"),
+      END_OF_FIELDS},
+     .priority    = 3,
+     .explanation = "Navico sub-type-2 alert numeric record (Record Key 0x8018): an Alert ID plus a handle, then "
+                    "three line indices into the device fault-text catalogs (action, long, short) and a fourth "
+                    "16-bit field. The paired text record (Record Key 0x8008) carries the same Alert ID with the "
+                    "rendered strings."}
+
+    ,
     {"Navico: Unknown 1",
      130822,
      PACKET_INCOMPLETE,
