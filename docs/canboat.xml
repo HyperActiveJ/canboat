@@ -3571,13 +3571,13 @@ limitations under the License.
  Resolution='0.0001' Unit='L' Bits='32'/>
       <EnumFieldType Value='433' Name='Engine 1 Fuel Used' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='L' Bits='32'/>
-      <EnumFieldType Value='448' Name='Engine 0 Fuel Used' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='448' Name='Engine 0 Fuel Used Trip' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='L' Bits='32'/>
-      <EnumFieldType Value='449' Name='Engine 1 Fuel Used' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='449' Name='Engine 1 Fuel Used Trip' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='L' Bits='32'/>
-      <EnumFieldType Value='464' Name='Engine 0 Fuel Used' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='464' Name='Engine 0 Fuel Used Season' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='L' Bits='32'/>
-      <EnumFieldType Value='465' Name='Engine 1 Fuel Used' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='465' Name='Engine 1 Fuel Used Season' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='L' Bits='32'/>
     </LookupFieldTypeEnumeration>
   </LookupFieldTypeEnumerations>
@@ -13012,18 +13012,14 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65313</PGN>
-      <Id>navicoProprietary</Id>
-      <Description>Navico: Proprietary</Description>
+      <Id>navicoDepthQuality</Id>
+      <Description>Navico: Depth Quality</Description>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -13070,13 +13066,40 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
+          <Id>instance</Id>
+          <Name>Instance</Name>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>depthQuality</Id>
+          <Name>Depth Quality</Name>
+          <Description>Depth signal quality ratio (0=no bottom lock .. ~1.0 = good)</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-1.27</RangeMin>
+          <RangeMax>1.24</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -54886,6 +54909,129 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>16777.212</RangeMax>
           <FieldType>DURATION</FieldType>
           <PhysicalQuantity>DURATION</PhysicalQuantity>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionRdsData</Id>
+      <Description>Fusion: RDS Data</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>8</FieldCount>
+      <Length>39</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>RDS Data</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32850</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>rdsType</Id>
+          <Name>RDS Type</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>programmeType</Id>
+          <Name>Programme Type</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>rds</Id>
+          <Name>RDS</Name>
+          <BitLength>256</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_LZ</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

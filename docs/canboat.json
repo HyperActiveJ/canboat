@@ -4391,10 +4391,10 @@
         {"name": "Engine 1 Distance", "value": 13, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m", "Bits": "32"},
         {"name": "Engine 0 Fuel Used", "value": 432, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
         {"name": "Engine 1 Fuel Used", "value": 433, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
-        {"name": "Engine 0 Fuel Used", "value": 448, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
-        {"name": "Engine 1 Fuel Used", "value": 449, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
-        {"name": "Engine 0 Fuel Used", "value": 464, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
-        {"name": "Engine 1 Fuel Used", "value": 465, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"}
+        {"name": "Engine 0 Fuel Used Trip", "value": 448, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 1 Fuel Used Trip", "value": 449, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 0 Fuel Used Season", "value": 464, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
+        {"name": "Engine 1 Fuel Used Season", "value": 465, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"}
         ]
       }
     ],
@@ -13538,13 +13538,13 @@
       },
       {
         "PGN":65313,
-        "Id":"navicoProprietary",
-        "Description":"Navico: Proprietary",
+        "Id":"navicoDepthQuality",
+        "Description":"Navico: Depth Quality",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":4,
+        "FieldCount":6,
         "Length":8,
         "Fields":[
           {
@@ -13591,13 +13591,40 @@
           },
           {
             "Order":4,
-            "Id":"data",
-            "Name":"Data",
-            "BitLength":48,
+            "Id":"instance",
+            "Name":"Instance",
+            "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"depthQuality",
+            "Name":"Depth Quality",
+            "Description":"Depth signal quality ratio (0=no bottom lock .. ~1.0 = good)",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":0.01,
+            "Signed":true,
+            "RangeMin":-1.27,
+            "RangeMax":1.24,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":32,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
           }
         ]
       },
@@ -54767,6 +54794,128 @@
             "RangeMax":16777.212,
             "FieldType":"DURATION",
             "PhysicalQuantity":"DURATION"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionRdsData",
+        "Description":"Fusion: RDS Data",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":8,
+        "Length":39,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"RDS Data",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32850,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"sourceId",
+            "Name":"Source ID",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"rdsType",
+            "Name":"RDS Type",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"programmeType",
+            "Name":"Programme Type",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"rds",
+            "Name":"RDS",
+            "BitLength":256,
+            "BitOffset":56,
+            "BitStart":0,
+            "FieldType":"STRING_LZ"
           }
         ]
       },

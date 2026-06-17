@@ -2330,11 +2330,20 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
-    {"Navico: Proprietary",
+    {"Navico: Depth Quality",
      65313,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_FIELD("Instance"),
+      {.name       = "Depth Quality",
+       .size       = BYTES(1),
+       .resolution = 0.01,
+       .hasSign    = true,
+       .fieldType  = "FIX8",
+       .description = "Depth signal quality ratio (0=no bottom lock .. ~1.0 = good)"},
+      RESERVED_FIELD(BYTES(4)),
+      END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65314",
@@ -7815,6 +7824,20 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32777, FUSION_STATUS_MESSAGE_ID),
       UINT8_FIELD(PK("Source ID")),
       DURATION_UFIX24_MS_FIELD("Progress", NULL),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: RDS Data",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32850, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD(PK("Source ID")),
+      UINT8_FIELD("RDS Type"),
+      UINT8_FIELD("Programme Type"),
+      STRINGLZ_FIELD("RDS", BYTES(32)),
       END_OF_FIELDS},
      .priority = 7}
 
