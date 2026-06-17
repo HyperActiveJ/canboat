@@ -2424,9 +2424,6 @@ LOOKUP(FUSION_STATUS_MESSAGE_ID, 32810, "SiriusXM Parental Request")
 LOOKUP(FUSION_STATUS_MESSAGE_ID, 32811, "SiriusXM Diagnostics")
 LOOKUP(FUSION_STATUS_MESSAGE_ID, 32812, "SiriusXM Presets")
 LOOKUP(FUSION_STATUS_MESSAGE_ID, 32813, "Zone Name")
-// Fusion status message ids (Fusion is a Garmin brand).
-// (32786 "Menu Lock ID" already
-// present above; a PGN def for it is added in pgn.h.)
 LOOKUP(FUSION_STATUS_MESSAGE_ID, 32819, "IP Setting")
 LOOKUP(FUSION_STATUS_MESSAGE_ID, 32829, "System Capabilities")
 LOOKUP(FUSION_STATUS_MESSAGE_ID, 32830, "Part Number")

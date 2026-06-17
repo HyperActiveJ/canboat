@@ -59838,7 +59838,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>mercuryEngineKeyValueData</Id>
       <Description>Mercury: Engine Key-Value Data</Description>
     <Priority>7</Priority>
-      <Explanation>Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</Explanation>
+      <Explanation>Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -61060,7 +61060,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>mercuryEngineStatus</Id>
       <Description>Mercury: Engine Status</Description>
     <Priority>7</Priority>
-      <Explanation>Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). Layout as observed: the last byte is a capability bitmask (a capability bitmask), and the two preceding nibbles are per-engine capability data forwarded to the helm data model. Observed as a constant 5-byte payload (Capabilities = 0x03 = beacon + cruise-control), the two data nibbles toggling together 0x0/0x0 vs 0xF/0xF per engine.</Explanation>
+      <Explanation>Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability), and the two preceding nibbles are per-engine capability data forwarded to the helm data model. Observed as a constant 5-byte payload (Capabilities = 0x03 = beacon + cruise-control), the two data nibbles toggling together 0x0/0x0 vs 0xF/0xF per engine.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -61128,7 +61128,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>fieldA</Id>
           <Name>Field A</Name>
-          <Description>Decoded but unused on the receive path (reserved)</Description>
+          <Description>Reserved (unused)</Description>
           <BitLength>4</BitLength>
           <BitOffset>20</BitOffset>
           <BitStart>4</BitStart>

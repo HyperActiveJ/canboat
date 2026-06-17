@@ -7771,8 +7771,6 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
-    /* Fusion status message ids below (Fusion is a
-       Garmin brand). */
     {"Fusion: Speed Volume Current Speed",
      130820,
      PACKET_COMPLETE,
@@ -8401,9 +8399,8 @@ Pgn pgnList[] = {
      .repeatingCount1 = 3,
      .repeatingStart1 = 4,
      .explanation     = "Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury "
-                        "VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Reverse engineered "
-                        "from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's "
-                        "internal engine-data structure and only partially identified."}
+                        "VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Keys are raw offsets "
+                        "into the gateway's internal engine-data structure and only partially identified."}
 
     ,
     {"Maretron: Data Instance Channel Correlation",
@@ -8545,15 +8542,14 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(144),
       RESERVED_FIELD(4),
-      BINARY_FIELD("Field A", 4, "Decoded but unused on the receive path (reserved)"),
+      BINARY_FIELD("Field A", 4, "Reserved (unused)"),
       BINARY_FIELD("Capability Data 1", 4, "Per-engine capability data forwarded to the helm model"),
       BINARY_FIELD("Capability Data 2", 4, "Per-engine capability data forwarded to the helm model"),
       BINARY_FIELD("Capabilities", BYTES(1), "Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability"),
       END_OF_FIELDS},
      .priority    = 7,
      .explanation = "Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). "
-                    "Layout as observed: the last byte "
-                    "is a capability bitmask (a capability bitmask), and the two "
+                    "The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability), and the two "
                     "preceding nibbles are per-engine capability data forwarded to the helm data model. Observed as a constant 5-byte "
                     "payload (Capabilities = 0x03 = beacon + cruise-control), the two data nibbles toggling together 0x0/0x0 vs 0xF/0xF per engine."}
 

@@ -17024,7 +17024,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130824
             - Mercury: Engine Key-Value Data</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Reverse engineered from the gateway firmware and validated against bus captures; keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&amp;G PGN 130824. Keys are raw offsets into the gateway's internal engine-data structure and only partially identified.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -17415,7 +17415,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130829
             - Mercury: Engine Status</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). Layout as observed: the last byte is a capability bitmask (a capability bitmask), and the two preceding nibbles are per-engine capability data forwarded to the helm data model. Observed as a constant 5-byte payload (Capabilities = 0x03 = beacon + cruise-control), the two data nibbles toggling together 0x0/0x0 vs 0xF/0xF per engine.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability), and the two preceding nibbles are per-engine capability data forwarded to the helm data model. Observed as a constant 5-byte payload (Capabilities = 0x03 = beacon + cruise-control), the two data nibbles toggling together 0x0/0x0 vs 0xF/0xF per engine.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -17436,7 +17436,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Field A</td><td>Decoded but unused on the receive path (reserved)</td><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Field A</td><td>Reserved (unused)</td><td/><td>4 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>6</td><td>Capability Data 1</td><td>Per-engine capability data forwarded to the helm model</td><td/><td>4 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Capability Data 2</td><td>Per-engine capability data forwarded to the helm model</td><td/><td>4 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Capabilities</td><td>Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability</td><td/><td>8 bits
