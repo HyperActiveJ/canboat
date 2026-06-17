@@ -7842,6 +7842,55 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Fusion: Multiroom",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32824, FUSION_STATUS_MESSAGE_ID),
+      LOOKUP_FIELD("Enabled", BYTES(1), YES_NO),
+      UINT8_FIELD("IP Address 1"),
+      UINT8_FIELD("IP Address 2"),
+      UINT8_FIELD("IP Address 3"),
+      UINT8_FIELD("IP Address 4"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Multiroom Status",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32825, FUSION_STATUS_MESSAGE_ID),
+      LOOKUP_FIELD("Available", BYTES(1), YES_NO),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Processing Bypass",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32832, FUSION_STATUS_MESSAGE_ID),
+      LOOKUP_FIELD("Bypass", BYTES(1), YES_NO),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Mono",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32862, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD("Zone"),
+      LOOKUP_FIELD("Enabled", BYTES(1), YES_NO),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
     {"Fusion: Tuner",
      130820,
      PACKET_COMPLETE,
