@@ -3565,8 +3565,18 @@ limitations under the License.
  Resolution='1' Unit='m' Bits='32'/>
       <EnumFieldType Value='9' Name='Engine 1 Runtime' FieldType='DURATION' Signed='false'
  Resolution='0.0001' Unit='s' Bits='32'/>
+      <EnumFieldType Value='10' Name='Water Distance' FieldType='NUMBER' Signed='false'
+ Resolution='1' Unit='m' Bits='32'/>
       <EnumFieldType Value='13' Name='Engine 1 Distance' FieldType='NUMBER' Signed='false'
  Resolution='1' Unit='m' Bits='32'/>
+      <EnumFieldType Value='256' Name='Engine 0 Intake Temp' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='257' Name='Engine 1 Intake Temp' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='288' Name='Engine 0 Throttle' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='289' Name='Engine 1 Throttle' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='%' Bits='16'/>
       <EnumFieldType Value='432' Name='Engine 0 Fuel Used' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='L' Bits='32'/>
       <EnumFieldType Value='433' Name='Engine 1 Fuel Used' FieldType='NUMBER' Signed='false'

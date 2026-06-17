@@ -4388,7 +4388,12 @@
         "EnumFieldTypeValues":[
         {"name": "Engine 0 Distance", "value": 8, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m", "Bits": "32"},
         {"name": "Engine 1 Runtime", "value": 9, "FieldType": "DURATION", "Resolution": 0.0001, "Unit": "s", "Bits": "32"},
+        {"name": "Water Distance", "value": 10, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m", "Bits": "32"},
         {"name": "Engine 1 Distance", "value": 13, "FieldType": "NUMBER", "Resolution": 1, "Unit": "m", "Bits": "32"},
+        {"name": "Engine 0 Intake Temp", "value": 256, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "K", "Bits": "16"},
+        {"name": "Engine 1 Intake Temp", "value": 257, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "K", "Bits": "16"},
+        {"name": "Engine 0 Throttle", "value": 288, "FieldType": "NUMBER", "Resolution": 0.1, "Unit": "%", "Bits": "16"},
+        {"name": "Engine 1 Throttle", "value": 289, "FieldType": "NUMBER", "Resolution": 0.1, "Unit": "%", "Bits": "16"},
         {"name": "Engine 0 Fuel Used", "value": 432, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
         {"name": "Engine 1 Fuel Used", "value": 433, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
         {"name": "Engine 0 Fuel Used Trip", "value": 448, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "L", "Bits": "32"},
