@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 tests
 
 all:	tests
 
@@ -169,4 +169,13 @@ test17:
 	diff $(TEMPDIR)/short-reserved.out short-reserved.out
 	diff $(TEMPDIR)/short-reserved.err short-reserved.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17
+#
+# This tests the proprietary PGN decodes added on this branch
+# (Mercury / Navico / Fusion / Victron) against representative real-world frames.
+#
+test18:
+	$(ANALYZER) < pgn-boat-test.in > $(TEMPDIR)/pgn-boat-test.out -debug -q -fixtime pgn-boat-test 2> $(TEMPDIR)/pgn-boat-test.err
+	diff $(TEMPDIR)/pgn-boat-test.out pgn-boat-test.out
+	diff $(TEMPDIR)/pgn-boat-test.err pgn-boat-test.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18

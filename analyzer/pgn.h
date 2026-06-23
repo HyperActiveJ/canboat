@@ -491,6 +491,9 @@ typedef struct
 #define CURRENT_FIX24_CA_FIELD(nam) \
   {.name = nam, .size = BYTES(3), .resolution = 0.01, .hasSign = true, .unit = "A", .fieldType = "CURRENT_FIX24_CA"}
 
+#define CURRENT_FIX32_MA_FIELD(nam) \
+  {.name = nam, .size = BYTES(4), .resolution = 0.001, .hasSign = true, .unit = "A", .fieldType = "CURRENT_FIX32_MA"}
+
 #define ELECTRIC_CHARGE_UFIX16_AH(nam) {.name = nam, .fieldType = "ELECTRIC_CHARGE_UFIX16_AH"}
 
 #define PEUKERT_FIELD(nam) {.name = nam, .fieldType = "PEUKERT_EXPONENT", .rangeMin = 1.0, .rangeMax = 1.5}
@@ -1247,6 +1250,31 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Victron: DC Voltage (VREG)",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(358),
+      MATCH_FIELD(PK("Register Id"), BYTES(2), 8194, "DC Voltage (0x2002)"),
+      VOLTAGE_U16_10MV_FIELD("Voltage"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .url      = "https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf",
+     .priority = 7}
+
+    ,
+    {"Victron: DC Current (VREG)",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(358),
+      MATCH_FIELD(PK("Register Id"), BYTES(2), 8220, "DC Current (0x201C)"),
+      CURRENT_FIX32_MA_FIELD("Current"),
+      END_OF_FIELDS},
+     .url      = "https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf",
+     .priority = 7}
+
+    ,
     {"Victron Battery Register",
      61184,
      PACKET_INCOMPLETE,
@@ -1679,6 +1707,20 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_SINGLE,
      {COMPANY(144), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Navico: Engine Identity/Config",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(275),
+      UINT8_FIELD("Field A"),
+      UINT8_FIELD("Run State"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT16_FIELD("Config Code"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"BEP Marine: CZone Circuit Control",
@@ -2309,11 +2351,20 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
-    {"Navico: Proprietary",
+    {"Navico: Depth Quality",
      65313,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_FIELD("Instance"),
+      {.name       = "Depth Quality",
+       .size       = BYTES(1),
+       .resolution = 0.01,
+       .hasSign    = true,
+       .fieldType  = "FIX8",
+       .description = "Depth signal quality ratio (0=no bottom lock .. ~1.0 = good)"},
+      RESERVED_FIELD(BYTES(4)),
+      END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65314",
@@ -4457,7 +4508,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Low DC Voltage State", 2, GOOD_WARNING_ERROR),
       LOOKUP_FIELD("Ripple State", 2, GOOD_WARNING_ERROR),
       RESERVED_FIELD(BYTES(4)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     ,
     {"DC Voltage/Current",
@@ -7590,11 +7642,19 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Navico: Unknown",
+    {"Navico: Feature Unlock",
      130817,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
-     {COMPANY(275), UINT8_FIELD("A"), UINT8_FIELD("B"), UINT8_FIELD("C"), UINT8_FIELD("D"), UINT8_FIELD("E"), END_OF_FIELDS},
+     {COMPANY(275),
+      UINT16_FIELD("Session Nonce"),
+      UINT8_FIELD("Record Count"),
+      UINT8_FIELD("Feature Type"),
+      UINT8_FIELD("Validity Flag"),
+      UINT8_FIELD("Duration"),
+      UINT16_FIELD("CRC"),
+      END_OF_FIELDS},
+     .interval = UINT16_MAX,
      .priority = 7}
 
     ,
@@ -7981,6 +8041,42 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Fusion: Speed Volume Current Speed",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32863, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD(PK("Source ID")),
+      UINT16_FIELD("Speed"),
+      UINT8_FIELD("Enabled"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Ignition Switch State",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32859, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD("State"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Menu Lock Id",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32786, FUSION_STATUS_MESSAGE_ID),
+      UINT32_FIELD("Lock Id"),
+      UINT8_FIELD("Flags"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
     {"Fusion: Track Position",
      130820,
      PACKET_COMPLETE,
@@ -7989,6 +8085,69 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32777, FUSION_STATUS_MESSAGE_ID),
       UINT8_FIELD(PK("Source ID")),
       DURATION_UFIX24_MS_FIELD("Progress", NULL),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: RDS Data",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32850, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD(PK("Source ID")),
+      UINT8_FIELD("RDS Type"),
+      UINT8_FIELD("Programme Type"),
+      STRINGLZ_FIELD("RDS", BYTES(32)),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Multiroom",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32824, FUSION_STATUS_MESSAGE_ID),
+      LOOKUP_FIELD("Enabled", BYTES(1), YES_NO),
+      UINT8_FIELD("IP Address 1"),
+      UINT8_FIELD("IP Address 2"),
+      UINT8_FIELD("IP Address 3"),
+      UINT8_FIELD("IP Address 4"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Multiroom Status",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32825, FUSION_STATUS_MESSAGE_ID),
+      LOOKUP_FIELD("Available", BYTES(1), YES_NO),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Processing Bypass",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32832, FUSION_STATUS_MESSAGE_ID),
+      LOOKUP_FIELD("Bypass", BYTES(1), YES_NO),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Fusion: Mono",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD(PK("Message ID"), BYTES(2), 32862, FUSION_STATUS_MESSAGE_ID),
+      UINT8_FIELD("Zone"),
+      LOOKUP_FIELD("Enabled", BYTES(1), YES_NO),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -8435,6 +8594,50 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
+    {"Navico: Keyed Parameter Table",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_FIELD("Id"),
+      MATCH_FIELD(PK("Sub-type"), BYTES(1), 1, "Keyed parameter table"),
+      UINT16_FIELD(PK("Record Key")),
+      UINT8_FIELD("Type Tag"),
+      UINT16_FIELD("Value"),
+      UINT8_FIELD("Flags"),
+      UINT16_FIELD("Parameter"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT16_FIELD("Signature"),
+      END_OF_FIELDS},
+     .priority    = 3,
+     .explanation = "Navico keyed parameter-table broadcast: each sub-type-1 frame reports one record "
+                    "(Record Key) with its Value, type tag, flags and a per-record signature. Other "
+                    "sub-types use different body layouts and fall through to the generic decode."}
+
+    ,
+    {"Navico: Alert",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_FIELD("Id"),
+      MATCH_FIELD(PK("Sub-type"), BYTES(1), 2, "Alert"),
+      MATCH_FIELD(PK("Record Key"), BYTES(2), 32792, "Alert indices"),
+      RESERVED_FIELD(BYTES(2)),
+      UINT32_FIELD("Alert ID"),
+      UINT32_FIELD("Handle"),
+      UINT16_FIELD("Action Text Index"),
+      UINT16_FIELD("Long Text Index"),
+      UINT16_FIELD("Short Text Index"),
+      UINT16_FIELD("Field 4"),
+      END_OF_FIELDS},
+     .priority    = 3,
+     .explanation = "Navico sub-type-2 alert numeric record (Record Key 0x8018): an Alert ID plus a handle, then "
+                    "three line indices into the device fault-text catalogs (action, long, short) and a fourth "
+                    "16-bit field. The paired text record (Record Key 0x8008) carries the same Alert ID with the "
+                    "rendered strings."}
+
+    ,
     {"Navico: Unknown 1",
      130822,
      PACKET_INCOMPLETE,
@@ -8515,6 +8718,23 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Mercury: Engine Key-Value Data",
+     130824,
+     PACKET_LOOKUPS_UNKNOWN,
+     PACKET_FAST,
+     {COMPANY(144),
+      LOOKUP_DYNAMIC_FIELD_KEY("Key", 12, MERCURY_KEY_VALUE),
+      DYNAMIC_FIELD_LENGTH("Length", 4, "Length of field 6"),
+      DYNAMIC_FIELD_VALUE("Value", "Data value"),
+      END_OF_FIELDS},
+     .priority        = 7,
+     .repeatingField1 = UINT8_MAX,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 4,
+     .explanation     = "Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury "
+                        "VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Keys are only partially identified."}
+
+    ,
     {"Maretron: Data Instance Channel Correlation",
      130825,
      PACKET_COMPLETE,
@@ -8529,11 +8749,25 @@ Pgn pgnList[] = {
      .priority = 6}
 
     ,
-    {"Navico: Unknown 2",
+    {"Navico: NDP2k Alert",
      130825,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_FIELD("Instance"),
+      UINT8_FIELD("Record ID"),
+      UINT16_FIELD("Alert Type"),
+      UINT16_FIELD("Alert ID"),
+      LOOKUP_FIELD("Alert State", 3, ALERT_STATE),
+      SIMPLE_FIELD("Action Flag", 1),
+      LOOKUP_FIELD("Alert Severity", 4, ALERT_TYPE),
+      UINT16_FIELD("Value"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Navico NDP2k alert status record (mfg 275): Alert Type + Alert ID identify the fault, Alert "
+                    "State tracks its lifecycle (Normal -> Active -> Silenced -> Acknowledged), and Alert Severity "
+                    "classifies it. The paired Mercury 130822 sub-type-2 records carry the same Alert ID with the "
+                    "human fault text."}
 
 
     ,
@@ -8542,6 +8776,37 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+    ,
+    {"Mercury: Cruise Control Data",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      MATCH_LOOKUP_FIELD("Opcode", BYTES(1), 4, MERCURY_COMMAND_OPCODE),
+      UINT8_FIELD("Engine Instance"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_DESC_FIELD("Cruise State", "Cruise engagement/mode byte; 0 = disengaged, 5 = engaged"),
+      {.name = "Cruise RPM Setpoint", .size = BYTES(2), .resolution = 1, .unit = "rpm", .fieldType = "UFIX16"},
+      {.name = "Cruise Speed Setpoint", .size = BYTES(2), .resolution = 0.01, .unit = "km/h", .fieldType = "UFIX16"},
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Opcode 4 (Cruise Control) sub-message of Mercury PGN 130825: engine instance, a cruise "
+                    "engagement/mode byte (0 = disengaged, 5 = engaged), and the cruise RPM and speed setpoints "
+                    "(0xFFFF = not available). Some payload bytes are not yet identified."}
+    ,
+    {"Mercury: Command/Response",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      LOOKUP_FIELD("Opcode", BYTES(1), MERCURY_COMMAND_OPCODE),
+      BINARY_FIELD("Data", BYTES(30), NULL),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function and the "
+                    "following data is opcode-specific."}
+
     ,
     {"Maretron: Switch Indicator Status",
      130826,
@@ -8568,6 +8833,23 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     /* Uwe Lovas has seen this from EP-70R */
+    ,
+    {"Mercury: BAM Digital-Data Proxy",
+     130826,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      UINT8_FIELD("Type"),
+      UINT8_FIELD("Instance"),
+      SIMPLE_FIELD("Field 4", 2),
+      RESERVED_FIELD(6),
+      UINT8_FIELD("Flag"),
+      BINARY_FIELD("Data", BYTES(32), NULL),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Variable-length Mercury digital-data proxy channel; the trailing data block is opcode/instance-specific "
+                    "and may be empty."}
+
     ,
     {"Lowrance: unknown",
      130827,
@@ -8606,9 +8888,19 @@ Pgn pgnList[] = {
     ,
     {"Mercury: Engine Status",
      130829,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(144), END_OF_FIELDS}}
+     {COMPANY(144),
+      RESERVED_FIELD(4),
+      BINARY_FIELD("Field A", 4, "Reserved (unused)"),
+      BINARY_FIELD("Sub Helm", 4, "Helm-station sub-address (Mercury multi-helm); byte 3 low nibble"),
+      BINARY_FIELD("Helm", 4, "Helm-station address (Mercury multi-helm); byte 3 high nibble"),
+      BINARY_FIELD("Capabilities", BYTES(1), "Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). "
+                    "The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability); byte 3 carries the "
+                    "Helm and Sub Helm station addresses for Mercury multi-helm installations."}
 
     ,
     {"Maretron: Dometic HVAC Status",

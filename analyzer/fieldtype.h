@@ -682,6 +682,16 @@ FieldType fieldTypeList[] = {
      .resolution    = 0.001,
      .baseFieldType = "UFIX16"},
 
+    {.name          = "UFIX8_2",
+     .description   = "Fixed point unsigned with 2 digits resolution",
+     .resolution    = 0.01,
+     .baseFieldType = "UFIX8"},
+
+    {.name          = "UFIX16_6",
+     .description   = "Fixed point unsigned with 6 digits resolution",
+     .resolution    = 0.000001,
+     .baseFieldType = "UFIX16"},
+
     {.name          = "DILUTION_OF_PRECISION_FIX16",
      .description   = "Dilution of precision",
      .url           = "https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
@@ -904,6 +914,8 @@ FieldType fieldTypeList[] = {
 
     {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
+    {.name = "VOLUME_UFIX32_DML", .description = "Volume", .resolution = 0.0001, .physical = &VOLUME, .baseFieldType = "UFIX32"},
+
     {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime, .v1Type = "Time"},
 
     {.name = "DURATION", .description = "Duration", .physical = &DURATION, .pf = fieldPrintTime, .v1Type = "Time"},
@@ -1114,6 +1126,12 @@ FieldType fieldTypeList[] = {
      .resolution    = .01,
      .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "FIX24"},
+
+    {.name          = "CURRENT_FIX32_MA",
+     .description   = "Electrical current",
+     .resolution    = .001,
+     .physical      = &ELECTRICAL_CURRENT,
+     .baseFieldType = "FIX32"},
 
     {.name          = "ELECTRIC_CHARGE_UFIX16_AH",
      .description   = "Electrical charge",
