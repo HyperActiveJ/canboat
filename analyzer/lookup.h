@@ -3510,6 +3510,16 @@ LOOKUP(MERCURY_COMMAND_OPCODE, 12, "Oil Level Check Command")
 LOOKUP(MERCURY_COMMAND_OPCODE, 13, "Oil Level Reset Response")
 LOOKUP_END
 
+LOOKUP_TYPE(MERCURY_SINGLE_LEVER_MODE, BITS(3))
+LOOKUP(MERCURY_SINGLE_LEVER_MODE, 0, "Single Lever Mode")
+LOOKUP(MERCURY_SINGLE_LEVER_MODE, 1, "Throttle Only Mode")
+LOOKUP(MERCURY_SINGLE_LEVER_MODE, 2, "Docking Mode")
+LOOKUP(MERCURY_SINGLE_LEVER_MODE, 3, "SmartCraft Troll No Comms")
+LOOKUP(MERCURY_SINGLE_LEVER_MODE, 4, "SmartCraft Cruise No Comms")
+LOOKUP(MERCURY_SINGLE_LEVER_MODE, 5, "SmartCraft Autopilot No Comms")
+LOOKUP(MERCURY_SINGLE_LEVER_MODE, 6, "Reserved")
+LOOKUP_END
+
 // Keep this at the end, so a next include does not need to do this
 #undef LOOKUP_TYPE
 #undef LOOKUP_TYPE_TRIPLET

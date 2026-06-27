@@ -5150,6 +5150,44 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Enum Block</td><td>p8:14 = early small-enum fields (p10/p11 in {00,03}, p12 in {00,01,03}), present even when the data fields are N/A</td><td/><td>48 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Data</td><td>Remaining data fields, mostly not-available in observed traffic (0xFF / 0x7FFF/0x7FFFFFFF). N/A markers expose s16 boundaries at body bytes [29],[33],[37],[41]. Field widths/scales/names are GPSMAP-producer-firmware bound.</td><td/><td>224 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Garmin: GLM Lighting Control</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>2711</td></tr></table></p><p>Garmin proprietary marine-lighting and audio-zone control sub-protocol (Garmin Lighting Module, GLM) carried inside the Garmin 126720 proprietary container, selected by Sub-protocol ID 2711. The container framing (Manufacturer/Industry trio, Sub-protocol ID, two wrapper bytes, 16-bit Message ID, then a message body) matches the sibling Garmin 126720 AHRS records. The per-message body fields are serialized through Garmin's generic descriptor-driven framework and are not yet byte-decoded, so the body is left as binary.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            16
+            bytes long and contains 8 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>229:
+                  Garmin</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>2711:
+                  </td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Wrapper Byte 1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Wrapper Byte 2</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Message ID</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Data</td><td/><td/><td>64 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Seatalk1: Pilot Mode</h3><p>
@@ -15197,6 +15235,78 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130816">0x1FF00:
+            PGN 130816
+            - Mercury: Alarm</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Mercury (mfg 144) proprietary display alarm PGN, decoded by Garmin gfmsld deserialize_pgn_130816 @0x2ED9B0. A fixed header (DDF reader 0x3808B0, descriptor pool 0x639680+0x20, 6 bit-fields) carrying a fault-record count (firmware clamps to &lt;=17), followed by that many 12-byte fault records (DDF reader 0x380A20, descriptor pool 0x639680+0x30, 12 bit-fields per record). Field names are firmware-authoritative from the shared Mercury DDF descriptor pool at 0x639680; each field's bit width is the descriptor metadata kind word (the bit-level DDF engine 0x17147C tracks a bit cursor and rounds each record up to a byte boundary, matching the confirmed 12-byte record stride). Value labels (fault catalog, feature/version enums) are runtime/capture-gated and omitted.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 7
+            bytes long and contains 23 fields.
+
+            
+        The 13 fields starting at field 
+        11 
+        (with name "Fault Number")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>144:
+                  Mercury Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Helm Number</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Number Of Faults</td><td>Count of fault records that follow (firmware clamps to &lt;=17)</td><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Message Version</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Feature</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Version</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">11<div>Set 1</div></td><td>Fault Number</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Fault Message Version</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">14<div>Set 1</div></td><td>Fault Feature</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">15<div>Set 1</div></td><td>Fault Version</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">16<div>Set 1</div></td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">17<div>Set 1</div></td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">18<div>Set 1</div></td><td>Reserved</td><td/><td/><td>10 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">19<div>Set 1</div></td><td>Popup ID</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">20<div>Set 1</div></td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">21<div>Set 1</div></td><td>Manufacturer ID Field Number</td><td/><td><div class="xs">0 .. 1020</div></td><td>10 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">22<div>Set 1</div></td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">23<div>Set 1</div></td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130817">0x1FF01:
             PGN 130817
             - Navico: Unknown</h3><p>
@@ -15437,6 +15547,52 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>CRC</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130817">0x1FF01:
+            PGN 130817
+            - Mercury: Vessel Configuration</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Mercury proprietary vessel / feature configuration. A message-version byte and a feature count are followed by that many feature records, each carrying a 16-bit feature identifier and a 16-bit feature setting (value). The enumerations for the feature identifier and setting are not yet known.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 4
+            bytes long and contains 7 fields.
+
+            
+        The 2 fields starting at field 
+        6 
+        (with name "Feature")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        5 
+        (with name "Feature Count".)
+      
+              The default priority (as observed in the field) is 7.
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>144:
+                  Mercury Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message Version</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Feature Count</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>Feature</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Feature Setting</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130818">0x1FF02:
@@ -17852,7 +18008,64 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1768 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130822">0x1FF06:
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
+            PGN 130821
+            - Mercury: Pop-up Notification</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Mercury display pop-up notification. A header (version + pop-up count) followed by a repeating set of pop-up records. Each pop-up record carries a nested variable-length button array (a per-record button count followed by that many button records) which the flat field model cannot represent; the repeating stride here is the scalar pop-up record only and is faithful for the zero-button case. Field names are taken from the device decoder's field-descriptor pool; their value labels (pop-up id, engine state, single-lever mode enumerations) are not enumerated in the decoder.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 4
+            bytes long and contains 14 fields.
+
+            
+        The 8 fields starting at field 
+        7 
+        (with name "Pop-up ID")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        5 
+        (with name "Pop-up Count".)
+      
+              The default priority (as observed in the field) is 7.
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>144:
+                  Mercury Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Version</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Pop-up Count</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">7<div>Set 1</div></td><td>Pop-up ID</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Manufacturer ID Field Number</td><td/><td><div class="xs">0 .. 1020</div></td><td>10 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Reserved</td><td/><td/><td>43 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Engine State</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>Single Lever Mode</td><td/><td><div class="xs">0 .. 125</div></td><td>7 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">14<div>Set 1</div></td><td>Reserved</td><td/><td/><td>158 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130822">0x1FF06:
             PGN 130822
             - Navico: Unknown 1</h3><p>
               This PGN description applies when the following field(s) match:
@@ -18052,6 +18265,59 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Signature</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130822">0x1FF06:
+            PGN 130822
+            - Mercury: Proprietary Display Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Mercury (manufacturer 144) proprietary display-status PGN, decoded structurally from the Garmin gfmsld N2K Mercury module (deserialize_pgn_130822 @0x2EDF90, ndp_n2k_mercury.c, unit 4431 aarch64). Distinct from the Navico (275) 130822 'Keyed Parameter Table' variant; the two are separated by the manufacturer-code match. The field layout is firmware-derived from the gfmsld DDF (descriptor-driven) bit-level deserializer: a packed 8-bit display header (Engine Instance / Helm Number / Fault Number / Message Version, names from the shared Mercury display field pool at 0x639680) followed by five fixed-width data fields (u8/u8/u16/u8/u32, little-endian). The first four data fields are presence-flagged against an all-ones not-available sentinel (0xFF / 0xFFFF); the u32 is always present. The data fields are anonymous in firmware (no descriptor names) and their value semantics/lookups are runtime/capture-gated.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 12 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>144:
+                  Mercury Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Engine Instance</td><td>Firmware field engine_inst (Mercury display pool idx0)</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Helm Number</td><td>Firmware field helm_number (Mercury display pool idx1)</td><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Fault Number</td><td>Firmware field fault_number (Mercury display pool idx2)</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Message Version</td><td>Firmware field message_version (Mercury display pool idx3)</td><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field 8</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Field 9</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Field 10</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Field 11</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Field 12</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
@@ -18726,7 +18992,35 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130831">0x1FF0F:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130830">0x1FF0E:
+            PGN 130830
+            - Mercury: Single Lever Mode</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Mercury proprietary single-lever (shift/throttle) control-mode status/request. The Single Lever Mode field reports the active lever-control mode; the trailing bits are reserved. Exact field bit-widths are resolved by the device firmware at runtime; the discriminator is modelled here as a 3-bit lookup.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            3
+            bytes long and contains 5 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>144:
+                  Mercury Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Single Lever Mode</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-MERCURY_SINGLE_LEVER_MODE">MERCURY_SINGLE_LEVER_MODE</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>5 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130831">0x1FF0F:
             PGN 130831
             - Maretron: Universal Configuration FP</h3><p>
               This PGN description applies when the following field(s) match:
@@ -22162,7 +22456,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>120</td></tr><tr><td>1</td><td>121</td></tr><tr><td>2</td><td>122</td></tr><tr><td>3</td><td>123</td></tr><tr><td>4</td><td>124</td></tr><tr><td>5</td><td>125</td></tr><tr><td>6</td><td>126</td></tr><tr><td>7</td><td>127</td></tr><tr><td>8</td><td>128</td></tr><tr><td>9</td><td>129</td></tr><tr><td>10</td><td>130</td></tr><tr><td>11</td><td>131</td></tr><tr><td>12</td><td>132</td></tr><tr><td>13</td><td>133</td></tr><tr><td>14</td><td>134</td></tr><tr><td>15</td><td>135</td></tr><tr><td>16</td><td>136</td></tr><tr><td>17</td><td>137</td></tr><tr><td>18</td><td>138</td></tr></table><h3 id="lookup-MERCURY_COMMAND_OPCODE">MERCURY_COMMAND_OPCODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h3 id="lookup-MERCURY_SINGLE_LEVER_MODE">MERCURY_SINGLE_LEVER_MODE
+        (0 - 7)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Single Lever Mode</td></tr><tr><td>1</td><td>Throttle Only Mode</td></tr><tr><td>2</td><td>Docking Mode</td></tr><tr><td>3</td><td>SmartCraft Troll No Comms</td></tr><tr><td>4</td><td>SmartCraft Cruise No Comms</td></tr><tr><td>5</td><td>SmartCraft Autopilot No Comms</td></tr><tr><td>6</td><td>Reserved</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
         (0 - 255)
       </h3><table><tr><th>Value in other field</th><th>Value</th><th>Description</th></tr><tr><td>10</td><td>130</td><td>Diagnostic</td></tr><tr><td>10</td><td>140</td><td>Bus Traffic Logger</td></tr><tr><td>20</td><td>110</td><td>Alarm Enunciator</td></tr><tr><td>20</td><td>130</td><td>Emergency Position Indicating Radio Beacon (EPIRB)</td></tr><tr><td>20</td><td>135</td><td>Man Overboard</td></tr><tr><td>20</td><td>140</td><td>Voyage Data Recorder</td></tr><tr><td>20</td><td>150</td><td>Camera</td></tr><tr><td>25</td><td>130</td><td>PC Gateway</td></tr><tr><td>25</td><td>131</td><td>NMEA 2000 to Analog Gateway</td></tr><tr><td>25</td><td>132</td><td>Analog to NMEA 2000 Gateway</td></tr><tr><td>25</td><td>133</td><td>NMEA 2000 to Serial Gateway</td></tr><tr><td>25</td><td>135</td><td>NMEA 0183 Gateway</td></tr><tr><td>25</td><td>136</td><td>NMEA Network Gateway</td></tr><tr><td>25</td><td>137</td><td>NMEA 2000 Wireless Gateway</td></tr><tr><td>25</td><td>140</td><td>Router</td></tr><tr><td>25</td><td>150</td><td>Bridge</td></tr><tr><td>25</td><td>160</td><td>Repeater</td></tr><tr><td>30</td><td>130</td><td>Binary Event Monitor</td></tr><tr><td>30</td><td>140</td><td>Load Controller</td></tr><tr><td>30</td><td>141</td><td>AC/DC Input</td></tr><tr><td>30</td><td>150</td><td>Function Controller</td></tr><tr><td>35</td><td>140</td><td>Engine</td></tr><tr><td>35</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>35</td><td>142</td><td>Solar Panel (Solar Array)</td></tr><tr><td>35</td><td>143</td><td>Wind Generator (DC)</td></tr><tr><td>35</td><td>144</td><td>Fuel Cell</td></tr><tr><td>35</td><td>145</td><td>Network Power Supply</td></tr><tr><td>35</td><td>151</td><td>AC Generator</td></tr><tr><td>35</td><td>152</td><td>AC Bus</td></tr><tr><td>35</td><td>153</td><td>AC Mains (Utility/Shore)</td></tr><tr><td>35</td><td>154</td><td>AC Output</td></tr><tr><td>35</td><td>160</td><td>Power Converter - Battery Charger</td></tr><tr><td>35</td><td>161</td><td>Power Converter - Battery Charger+Inverter</td></tr><tr><td>35</td><td>162</td><td>Power Converter - Inverter</td></tr><tr><td>35</td><td>163</td><td>Power Converter - DC</td></tr><tr><td>35</td><td>170</td><td>Battery</td></tr><tr><td>35</td><td>180</td><td>Engine Gateway</td></tr><tr><td>40</td><td>130</td><td>Follow-up Controller</td></tr><tr><td>40</td><td>140</td><td>Mode Controller</td></tr><tr><td>40</td><td>150</td><td>Autopilot</td></tr><tr><td>40</td><td>155</td><td>Rudder</td></tr><tr><td>40</td><td>160</td><td>Heading Sensors</td></tr><tr><td>40</td><td>170</td><td>Trim (Tabs)/Interceptors</td></tr><tr><td>40</td><td>180</td><td>Attitude (Pitch, Roll, Yaw) Control</td></tr><tr><td>50</td><td>130</td><td>Engineroom Monitoring</td></tr><tr><td>50</td><td>140</td><td>Engine</td></tr><tr><td>50</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>50</td><td>150</td><td>Engine Controller</td></tr><tr><td>50</td><td>151</td><td>AC Generator</td></tr><tr><td>50</td><td>155</td><td>Motor</td></tr><tr><td>50</td><td>160</td><td>Engine Gateway</td></tr><tr><td>50</td><td>165</td><td>Transmission</td></tr><tr><td>50</td><td>170</td><td>Throttle/Shift Control</td></tr><tr><td>50</td><td>180</td><td>Actuator</td></tr><tr><td>50</td><td>190</td><td>Gauge Interface</td></tr><tr><td>50</td><td>200</td><td>Gauge Large</td></tr><tr><td>50</td><td>210</td><td>Gauge Small</td></tr><tr><td>60</td><td>130</td><td>Bottom Depth</td></tr><tr><td>60</td><td>135</td><td>Bottom Depth/Speed</td></tr><tr><td>60</td><td>136</td><td>Bottom Depth/Speed/Temperature</td></tr><tr><td>60</td><td>140</td><td>Ownship Attitude</td></tr><tr><td>60</td><td>145</td><td>Ownship Position (GNSS)</td></tr><tr><td>60</td><td>150</td><td>Ownship Position (Loran C)</td></tr><tr><td>60</td><td>155</td><td>Speed</td></tr><tr><td>60</td><td>160</td><td>Turn Rate Indicator</td></tr><tr><td>60</td><td>170</td><td>Integrated Navigation</td></tr><tr><td>60</td><td>175</td><td>Integrated Navigation System</td></tr><tr><td>60</td><td>190</td><td>Navigation Management</td></tr><tr><td>60</td><td>195</td><td>Automatic Identification System (AIS)</td></tr><tr><td>60</td><td>200</td><td>Radar</td></tr><tr><td>60</td><td>201</td><td>Infrared Imaging</td></tr><tr><td>60</td><td>205</td><td>ECDIS</td></tr><tr><td>60</td><td>210</td><td>ECS</td></tr><tr><td>60</td><td>220</td><td>Direction Finder</td></tr><tr><td>60</td><td>230</td><td>Voyage Status</td></tr><tr><td>70</td><td>130</td><td>EPIRB</td></tr><tr><td>70</td><td>140</td><td>AIS</td></tr><tr><td>70</td><td>150</td><td>DSC</td></tr><tr><td>70</td><td>160</td><td>Data Receiver/Transceiver</td></tr><tr><td>70</td><td>170</td><td>Satellite</td></tr><tr><td>70</td><td>180</td><td>Radio-telephone (MF/HF)</td></tr><tr><td>70</td><td>190</td><td>Radiotelephone</td></tr><tr><td>75</td><td>130</td><td>Temperature</td></tr><tr><td>75</td><td>140</td><td>Pressure</td></tr><tr><td>75</td><td>150</td><td>Fluid Level</td></tr><tr><td>75</td><td>160</td><td>Flow</td></tr><tr><td>75</td><td>170</td><td>Humidity</td></tr><tr><td>80</td><td>130</td><td>Time/Date Systems</td></tr><tr><td>80</td><td>140</td><td>VDR</td></tr><tr><td>80</td><td>150</td><td>Integrated Instrumentation</td></tr><tr><td>80</td><td>160</td><td>General Purpose Displays</td></tr><tr><td>80</td><td>170</td><td>General Sensor Box</td></tr><tr><td>80</td><td>180</td><td>Weather Instruments</td></tr><tr><td>80</td><td>190</td><td>Transducer/General</td></tr><tr><td>80</td><td>200</td><td>NMEA 0183 Converter</td></tr><tr><td>85</td><td>130</td><td>Atmospheric</td></tr><tr><td>85</td><td>160</td><td>Aquatic</td></tr><tr><td>90</td><td>130</td><td>HVAC</td></tr><tr><td>100</td><td>130</td><td>Scale (Catch)</td></tr><tr><td>110</td><td>130</td><td>Button Interface</td></tr><tr><td>110</td><td>135</td><td>Switch Interface</td></tr><tr><td>110</td><td>140</td><td>Analog Interface</td></tr><tr><td>120</td><td>130</td><td>Display</td></tr><tr><td>120</td><td>140</td><td>Alarm Enunciator</td></tr><tr><td>125</td><td>130</td><td>Multimedia Player</td></tr><tr><td>125</td><td>140</td><td>Multimedia Controller</td></tr></table><h2 id="bitfield-enumerations">Bitfield Lookup enumerations</h2><h3 id="lookupbit-STATION_STATUS">STATION_STATUS
         (0 - 2^3-1)
