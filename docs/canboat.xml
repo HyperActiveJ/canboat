@@ -2893,6 +2893,15 @@ limitations under the License.
       <EnumPair Value='12' Name='Oil Level Check Command' />
       <EnumPair Value='13' Name='Oil Level Reset Response' />
     </LookupEnumeration>
+    <LookupEnumeration Name='MERCURY_SINGLE_LEVER_MODE' MaxValue='7'>
+      <EnumPair Value='0' Name='Single Lever Mode' />
+      <EnumPair Value='1' Name='Throttle Only Mode' />
+      <EnumPair Value='2' Name='Docking Mode' />
+      <EnumPair Value='3' Name='SmartCraft Troll No Comms' />
+      <EnumPair Value='4' Name='SmartCraft Cruise No Comms' />
+      <EnumPair Value='5' Name='SmartCraft Autopilot No Comms' />
+      <EnumPair Value='6' Name='Reserved' />
+    </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
     <LookupIndirectEnumeration Name='DEVICE_FUNCTION' MaxValue='255'>
@@ -20565,6 +20574,139 @@ limitations under the License.
           <Description>Remaining data fields; unset fields use the not-available sentinels (0xFF / 0x7FFF/0x7FFFFFFF), which expose signed-16 boundaries at body bytes [29],[33],[37],[41]. The per-field widths/scales/names are not decoded.</Description>
           <BitLength>224</BitLength>
           <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>garminGlmLightingControl</Id>
+      <Description>Garmin: GLM Lighting Control</Description>
+    <Priority>7</Priority>
+      <Explanation>Garmin proprietary marine-lighting and audio-zone control sub-protocol (Garmin Lighting Module, GLM) carried inside the Garmin 126720 proprietary container, selected by Sub-protocol ID 2711. The container framing (Manufacturer/Industry trio, Sub-protocol ID, two wrapper bytes, 16-bit Message ID, then a message body) matches the sibling Garmin 126720 AHRS records. The per-message body fields are not yet byte-decoded, so the body is left as binary.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>8</FieldCount>
+      <Length>16</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Garmin</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>229</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>subProtocolId</Id>
+          <Name>Sub-protocol ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>2711</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>wrapperByte1</Id>
+          <Name>Wrapper Byte 1</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>wrapperByte2</Id>
+          <Name>Wrapper Byte 2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -58640,6 +58782,322 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130816</PGN>
+      <Id>mercuryAlarm</Id>
+      <Description>Mercury: Alarm</Description>
+    <Priority>7</Priority>
+      <Explanation>Mercury proprietary display alarm PGN. A fixed header (6 bit-fields) carries a fault-record count (maximum 17), followed by that many 12-byte fault records (12 bit-fields per record). The value labels (fault catalog, feature/version enumerations) are not enumerated here.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>23</FieldCount>
+      <MinLength>7</MinLength>
+      <RepeatingFieldSet1Size>13</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>11</RepeatingFieldSet1StartField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Mercury Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>144</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>helmNumber</Id>
+          <Name>Helm Number</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <UnknownValue>63</UnknownValue>
+          <OutOfRangeValue>62</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>numberOfFaults</Id>
+          <Name>Number Of Faults</Name>
+          <Description>Count of fault records that follow (maximum 17).</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <UnknownValue>63</UnknownValue>
+          <OutOfRangeValue>62</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>messageVersion</Id>
+          <Name>Message Version</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>feature</Id>
+          <Name>Feature</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>version</Id>
+          <Name>Version</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>reserved10</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>faultNumber</Id>
+          <Name>Fault Number</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <UnknownValue>63</UnknownValue>
+          <OutOfRangeValue>62</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>faultMessageVersion</Id>
+          <Name>Fault Message Version</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>62</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>reserved13</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>faultFeature</Id>
+          <Name>Fault Feature</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>faultVersion</Id>
+          <Name>Fault Version</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>82</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>reserved16</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>84</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>reserved17</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>92</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>reserved18</Id>
+          <Name>Reserved</Name>
+          <BitLength>10</BitLength>
+          <BitOffset>100</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>popupId</Id>
+          <Name>Popup ID</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>110</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16380</RangeMax>
+          <UnknownValue>16383</UnknownValue>
+          <OutOfRangeValue>16382</OutOfRangeValue>
+          <ReservedValue>16381</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>reserved20</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>124</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>manufacturerIdFieldNumber</Id>
+          <Name>Manufacturer ID Field Number</Name>
+          <BitLength>10</BitLength>
+          <BitOffset>132</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1020</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>22</Order>
+          <Id>reserved22</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>142</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>23</Order>
+          <Id>reserved23</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>150</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130817</PGN>
       <Id>navicoUnknown</Id>
       <Description>Navico: Unknown</Description>
@@ -59468,6 +59926,133 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Name>CRC</Name>
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130817</PGN>
+      <Id>mercuryVesselConfiguration</Id>
+      <Description>Mercury: Vessel Configuration</Description>
+    <Priority>7</Priority>
+      <Explanation>Mercury proprietary vessel / feature configuration. A message-version byte and a feature count are followed by that many feature records, each carrying a 16-bit feature identifier and a 16-bit feature setting (value). The enumerations for the feature identifier and setting are not yet known.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <MinLength>4</MinLength>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
+      <TransmissionIrregular>true</TransmissionIrregular>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Mercury Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>144</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageVersion</Id>
+          <Name>Message Version</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>featureCount</Id>
+          <Name>Feature Count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>feature</Id>
+          <Name>Feature</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>featureSetting</Id>
+          <Name>Feature Setting</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -67612,6 +68197,213 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130821</PGN>
+      <Id>mercuryPopUpNotification</Id>
+      <Description>Mercury: Pop-up Notification</Description>
+    <Priority>7</Priority>
+      <Explanation>Mercury display pop-up notification. A header (version + pop-up count) followed by a repeating set of pop-up records. Each pop-up record carries a nested variable-length button array (a per-record button count followed by that many button records) which the flat field model cannot represent; the repeating stride here is the scalar pop-up record only and is faithful for the zero-button case. The value labels (pop-up id, engine state, single-lever mode enumerations) are not enumerated here.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>14</FieldCount>
+      <MinLength>4</MinLength>
+      <RepeatingFieldSet1Size>8</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>7</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>5</RepeatingFieldSet1CountField>
+      <TransmissionIrregular>true</TransmissionIrregular>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Mercury Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>144</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>version</Id>
+          <Name>Version</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>popUpCount</Id>
+          <Name>Pop-up Count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>18</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>popUpId</Id>
+          <Name>Pop-up ID</Name>
+          <BitLength>14</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16380</RangeMax>
+          <UnknownValue>16383</UnknownValue>
+          <OutOfRangeValue>16382</OutOfRangeValue>
+          <ReservedValue>16381</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>manufacturerIdFieldNumber</Id>
+          <Name>Manufacturer ID Field Number</Name>
+          <BitLength>10</BitLength>
+          <BitOffset>54</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1020</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>reserved10</Id>
+          <Name>Reserved</Name>
+          <BitLength>43</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>engineState</Id>
+          <Name>Engine State</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>107</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved12</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>109</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>singleLeverMode</Id>
+          <Name>Single Lever Mode</Name>
+          <BitLength>7</BitLength>
+          <BitOffset>115</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>125</RangeMax>
+          <UnknownValue>127</UnknownValue>
+          <OutOfRangeValue>126</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>reserved14</Id>
+          <Name>Reserved</Name>
+          <BitLength>158</BitLength>
+          <BitOffset>122</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130822</PGN>
       <Id>navicoUnknown1</Id>
       <Description>Navico: Unknown 1</Description>
@@ -68364,6 +69156,207 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>mercuryProprietaryDisplayStatus</Id>
+      <Description>Mercury: Proprietary Display Status</Description>
+    <Priority>7</Priority>
+      <Explanation>Mercury proprietary display-status PGN. Distinct from the Navico 130822 'Keyed Parameter Table' variant; the two are separated by the manufacturer code. A packed 8-bit display header (Engine Instance / Helm Number / Fault Number / Message Version) is followed by five fixed-width data fields (u8/u8/u16/u8/u32, little-endian). The first four data fields are presence-flagged against an all-ones not-available sentinel (0xFF / 0xFFFF); the u32 is always present. The data fields' value semantics/lookups are not enumerated here.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>12</FieldCount>
+      <Length>12</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Mercury Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>144</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>engineInstance</Id>
+          <Name>Engine Instance</Name>
+          <Description>Engine instance (Mercury display header field).</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <UnknownValue>15</UnknownValue>
+          <OutOfRangeValue>14</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>helmNumber</Id>
+          <Name>Helm Number</Name>
+          <Description>Helm number (Mercury display header field).</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>faultNumber</Id>
+          <Name>Fault Number</Name>
+          <Description>Fault number (Mercury display header field).</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>21</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>messageVersion</Id>
+          <Name>Message Version</Name>
+          <Description>Message version (Mercury display header field).</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>23</BitOffset>
+          <BitStart>7</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>field8</Id>
+          <Name>Field 8</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>field9</Id>
+          <Name>Field 9</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>field10</Id>
+          <Name>Field 10</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>field11</Id>
+          <Name>Field 11</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>field12</Id>
+          <Name>Field 12</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -70642,6 +71635,90 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130830</PGN>
+      <Id>mercurySingleLeverMode</Id>
+      <Description>Mercury: Single Lever Mode</Description>
+    <Priority>7</Priority>
+      <Explanation>Mercury proprietary single-lever (shift/throttle) control-mode status/request. The Single Lever Mode field reports the active lever-control mode; the trailing bits are reserved.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>5</FieldCount>
+      <Length>3</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Mercury Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>144</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>singleLeverMode</Id>
+          <Name>Single Lever Mode</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MERCURY_SINGLE_LEVER_MODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>5</BitLength>
+          <BitOffset>19</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
