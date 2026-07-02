@@ -4831,6 +4831,15 @@
         ]
       },
       {
+        "Name":"NAVICO_FEATURE_TYPE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Mercury UI", "Value":0},
+          {"Name":"Suzuki Repower Panel", "Value":2},
+          {"Name":"Helios Panel", "Value":3}
+        ]
+      },
+      {
         "Name":"MERCURY_SINGLE_LEVER_MODE",
         "MaxValue":7,
         "EnumValues":[
@@ -63410,6 +63419,7 @@
             "Order":4,
             "Id":"sessionNonce",
             "Name":"Session Nonce",
+            "Description":"Solicited-response nonce; echoed from the request and used as the CRC input",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -63426,6 +63436,7 @@
             "Order":5,
             "Id":"recordCount",
             "Name":"Record Count",
+            "Description":"Number of feature records that follow",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -63452,12 +63463,14 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"NAVICO_FEATURE_TYPE"
           },
           {
             "Order":7,
             "Id":"validityFlag",
             "Name":"Validity Flag",
+            "Description":"1 = feature active",
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
@@ -63474,6 +63487,7 @@
             "Order":8,
             "Id":"duration",
             "Name":"Duration",
+            "Description":"Feature unlock window in minutes",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
@@ -63490,6 +63504,7 @@
             "Order":9,
             "Id":"crc",
             "Name":"CRC",
+            "Description":"CRC-16/X-25 authentication tag over [magic 0x5B6FB8E9 LE][nonce BE][records][count]",
             "BitLength":16,
             "BitOffset":64,
             "BitStart":0,

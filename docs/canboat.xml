@@ -3883,6 +3883,11 @@ limitations under the License.
       <EnumPair Value='12' Name='Oil Level Check Command' />
       <EnumPair Value='13' Name='Oil Level Reset Response' />
     </LookupEnumeration>
+    <LookupEnumeration Name='NAVICO_FEATURE_TYPE' MaxValue='255'>
+      <EnumPair Value='0' Name='Mercury UI' />
+      <EnumPair Value='2' Name='Suzuki Repower Panel' />
+      <EnumPair Value='3' Name='Helios Panel' />
+    </LookupEnumeration>
     <LookupEnumeration Name='MERCURY_SINGLE_LEVER_MODE' MaxValue='7'>
       <EnumPair Value='0' Name='Single Lever Mode' />
       <EnumPair Value='1' Name='Throttle Only Mode' />
@@ -63801,6 +63806,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>sessionNonce</Id>
           <Name>Session Nonce</Name>
+          <Description>Solicited-response nonce; echoed from the request and used as the CRC input</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -63817,6 +63823,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>recordCount</Id>
           <Name>Record Count</Name>
+          <Description>Number of feature records that follow</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -63843,12 +63850,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>NAVICO_FEATURE_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>validityFlag</Id>
           <Name>Validity Flag</Name>
+          <Description>1 = feature active</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -63865,6 +63874,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>duration</Id>
           <Name>Duration</Name>
+          <Description>Feature unlock window in minutes</Description>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -63881,6 +63891,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>9</Order>
           <Id>crc</Id>
           <Name>CRC</Name>
+          <Description>CRC-16/X-25 authentication tag over [magic 0x5B6FB8E9 LE][nonce BE][records][count]</Description>
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>

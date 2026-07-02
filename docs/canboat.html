@@ -16126,22 +16126,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Session Nonce</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Session Nonce</td><td>Solicited-response nonce; echoed from the request and used as the CRC input</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Record Count</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Record Count</td><td>Number of feature records that follow</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Feature Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Validity Flag</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-NAVICO_FEATURE_TYPE">NAVICO_FEATURE_TYPE</a></td><td/></tr><tr><td>7</td><td>Validity Flag</td><td>1 = feature active</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Duration</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Duration</td><td>Feature unlock window in minutes</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>CRC</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>CRC</td><td>CRC-16/X-25 authentication tag over [magic 0x5B6FB8E9 LE][nonce BE][records][count]</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130817">0x1FF01:
@@ -23544,7 +23544,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>120</td></tr><tr><td>1</td><td>121</td></tr><tr><td>2</td><td>122</td></tr><tr><td>3</td><td>123</td></tr><tr><td>4</td><td>124</td></tr><tr><td>5</td><td>125</td></tr><tr><td>6</td><td>126</td></tr><tr><td>7</td><td>127</td></tr><tr><td>8</td><td>128</td></tr><tr><td>9</td><td>129</td></tr><tr><td>10</td><td>130</td></tr><tr><td>11</td><td>131</td></tr><tr><td>12</td><td>132</td></tr><tr><td>13</td><td>133</td></tr><tr><td>14</td><td>134</td></tr><tr><td>15</td><td>135</td></tr><tr><td>16</td><td>136</td></tr><tr><td>17</td><td>137</td></tr><tr><td>18</td><td>138</td></tr></table><h3 id="lookup-MERCURY_COMMAND_OPCODE">MERCURY_COMMAND_OPCODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>7</td><td>Active Trim Status</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h3 id="lookup-MERCURY_SINGLE_LEVER_MODE">MERCURY_SINGLE_LEVER_MODE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>7</td><td>Active Trim Status</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h3 id="lookup-NAVICO_FEATURE_TYPE">NAVICO_FEATURE_TYPE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Mercury UI</td></tr><tr><td>2</td><td>Suzuki Repower Panel</td></tr><tr><td>3</td><td>Helios Panel</td></tr></table><h3 id="lookup-MERCURY_SINGLE_LEVER_MODE">MERCURY_SINGLE_LEVER_MODE
         (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Single Lever Mode</td></tr><tr><td>1</td><td>Throttle Only Mode</td></tr><tr><td>2</td><td>Docking Mode</td></tr><tr><td>3</td><td>SmartCraft Troll No Comms</td></tr><tr><td>4</td><td>SmartCraft Cruise No Comms</td></tr><tr><td>5</td><td>SmartCraft Autopilot No Comms</td></tr><tr><td>6</td><td>Reserved</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
         (0 - 255)
