@@ -80952,7 +80952,7 @@
         "Id":"navicoAsciiIdentifier",
         "Description":"Navico: ASCII Identifier",
         "Priority":7,
-        "Explanation":"A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). The frame builder writes a length byte followed by that many ASCII characters (per-device identifier text, e.g. a serial number). Observed in live captures.",
+        "Explanation":"A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). The frame builder writes a length byte followed by that many ASCII characters (per-device identifier text). Observed carrying the device's NMEA 2000 model serial code (as in PGN 126996), newline-terminated.",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -81147,72 +81147,6 @@
             "ReservedValue":65533,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
-          }
-        ]
-      },
-      {
-        "PGN":130847,
-        "Id":"navicoModelSerialCode",
-        "Description":"Navico: Model Serial Code",
-        "Priority":7,
-        "Type":"Fast",
-        "Complete":false,
-        "Missing":["Interval"
-        ],
-        "FieldCount":4,
-        "Length":131,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Navico",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":275,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2044,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          },
-          {
-            "Order":4,
-            "Id":"modelSerialCode",
-            "Name":"Model Serial Code",
-            "Description":"Device NMEA 2000 model serial code (PGN 126996), length-prefixed, newline-terminated",
-            "BitLength":1032,
-            "BitOffset":16,
-            "BitStart":0,
-            "FieldType":"STRING_LZ"
           }
         ]
       },

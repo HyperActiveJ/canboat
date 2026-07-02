@@ -10195,7 +10195,8 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .explanation = "A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). "
                     "The frame builder writes a length byte followed by that many ASCII characters (per-device "
-                    "identifier text, e.g. a serial number). Observed in live captures.",
+                    "identifier text). Observed carrying the device's NMEA 2000 model serial code (as in PGN "
+                    "126996), newline-terminated.",
      .priority    = 7}
 
     ,
@@ -10210,16 +10211,6 @@ Pgn pgnList[] = {
       UINT16_FIELD("Device Number"),
       VOLTAGE_U16_10MV_FIELD("Node Voltage"),
       END_OF_FIELDS}}
-
-    ,
-    {"Navico: Model Serial Code",
-     130847,
-     PACKET_INTERVAL_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(275),
-      {.name = "Model Serial Code", .size = BYTES(129), .description = "Device NMEA 2000 model serial code (PGN 126996), length-prefixed, newline-terminated", .fieldType = "STRING_LZ"},
-      END_OF_FIELDS},
-     .priority = 7}
 
     ,
     {"SeaTalk: Waypoint Information",

@@ -81735,7 +81735,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>navicoAsciiIdentifier</Id>
       <Description>Navico: ASCII Identifier</Description>
     <Priority>7</Priority>
-      <Explanation>A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). The frame builder writes a length byte followed by that many ASCII characters (per-device identifier text, e.g. a serial number). Observed in live captures.</Explanation>
+      <Explanation>A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). The frame builder writes a length byte followed by that many ASCII characters (per-device identifier text). Observed carrying the device's NMEA 2000 model serial code (as in PGN 126996), newline-terminated.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -81939,73 +81939,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130847</PGN>
-      <Id>navicoModelSerialCode</Id>
-      <Description>Navico: Model Serial Code</Description>
-    <Priority>7</Priority>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>131</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Navico</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>275</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2044</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>modelSerialCode</Id>
-          <Name>Model Serial Code</Name>
-          <Description>Device NMEA 2000 model serial code (PGN 126996), length-prefixed, newline-terminated</Description>
-          <BitLength>1032</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <FieldType>STRING_LZ</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
