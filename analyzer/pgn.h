@@ -4977,7 +4977,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Low DC Voltage State", 2, GOOD_WARNING_ERROR),
       LOOKUP_FIELD("Ripple State", 2, GOOD_WARNING_ERROR),
       RESERVED_FIELD(BYTES(4)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .interval = 1500}
 
     ,
     {"DC Voltage/Current",
