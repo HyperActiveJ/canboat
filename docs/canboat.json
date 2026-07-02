@@ -4831,6 +4831,16 @@
         ]
       },
       {
+        "Name":"NAVICO_RUN_STATE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Off", "Value":0},
+          {"Name":"Starting", "Value":4},
+          {"Name":"On", "Value":5},
+          {"Name":"Stopping", "Value":6}
+        ]
+      },
+      {
         "Name":"NAVICO_FEATURE_TYPE",
         "MaxValue":255,
         "EnumValues":[
@@ -10054,6 +10064,7 @@
             "Order":5,
             "Id":"runState",
             "Name":"Run State",
+            "Description":"Per-source ignition/power lifecycle state; cycles Off -> Starting -> On at key-on and On -> Stopping -> Off at key-off",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -10064,7 +10075,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"NAVICO_RUN_STATE"
           },
           {
             "Order":6,
@@ -76122,23 +76134,33 @@
             "Order":6,
             "Id":"subHelm",
             "Name":"Sub Helm",
-            "Description":"Helm-station sub-address (Mercury multi-helm); byte 3 low nibble",
+            "Description":"Helm-station sub-address (Mercury multi-helm); byte 3 low nibble. All-ones = unassigned / not a helm station (the engine gateway); 0-14 = a physical helm display's configured index",
             "BitLength":4,
             "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
+            "FieldType":"NUMBER"
           },
           {
             "Order":7,
             "Id":"helm",
             "Name":"Helm",
-            "Description":"Helm-station address (Mercury multi-helm); byte 3 high nibble",
+            "Description":"Helm-station address (Mercury multi-helm); byte 3 high nibble. All-ones = unassigned / not a helm station (the engine gateway); 0-14 = a physical helm display's configured index",
             "BitLength":4,
             "BitOffset":28,
             "BitStart":4,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
+            "FieldType":"NUMBER"
           },
           {
             "Order":8,

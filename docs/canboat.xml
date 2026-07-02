@@ -3883,6 +3883,12 @@ limitations under the License.
       <EnumPair Value='12' Name='Oil Level Check Command' />
       <EnumPair Value='13' Name='Oil Level Reset Response' />
     </LookupEnumeration>
+    <LookupEnumeration Name='NAVICO_RUN_STATE' MaxValue='255'>
+      <EnumPair Value='0' Name='Off' />
+      <EnumPair Value='4' Name='Starting' />
+      <EnumPair Value='5' Name='On' />
+      <EnumPair Value='6' Name='Stopping' />
+    </LookupEnumeration>
     <LookupEnumeration Name='NAVICO_FEATURE_TYPE' MaxValue='255'>
       <EnumPair Value='0' Name='Mercury UI' />
       <EnumPair Value='2' Name='Suzuki Repower Panel' />
@@ -9525,6 +9531,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>runState</Id>
           <Name>Run State</Name>
+          <Description>Per-source ignition/power lifecycle state; cycles Off -&gt; Starting -&gt; On at key-on and On -&gt; Stopping -&gt; Off at key-off</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -9535,7 +9542,8 @@ limitations under the License.
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>NAVICO_RUN_STATE</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
@@ -76745,23 +76753,33 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>6</Order>
           <Id>subHelm</Id>
           <Name>Sub Helm</Name>
-          <Description>Helm-station sub-address (Mercury multi-helm); byte 3 low nibble</Description>
+          <Description>Helm-station sub-address (Mercury multi-helm); byte 3 low nibble. All-ones = unassigned / not a helm station (the engine gateway); 0-14 = a physical helm display's configured index</Description>
           <BitLength>4</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <UnknownValue>15</UnknownValue>
+          <OutOfRangeValue>14</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>helm</Id>
           <Name>Helm</Name>
-          <Description>Helm-station address (Mercury multi-helm); byte 3 high nibble</Description>
+          <Description>Helm-station address (Mercury multi-helm); byte 3 high nibble. All-ones = unassigned / not a helm station (the engine gateway); 0-14 = a physical helm display's configured index</Description>
           <BitLength>4</BitLength>
           <BitOffset>28</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <UnknownValue>15</UnknownValue>
+          <OutOfRangeValue>14</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
