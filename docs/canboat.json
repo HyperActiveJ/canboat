@@ -20430,15 +20430,14 @@
             "Order":10,
             "Id":"headingToSteer",
             "Name":"Heading to Steer",
-            "Description":"Values at or above 1000 rad signal no active order",
+            "Description":"Absolute heading on the full circle (0 .. 2 pi); values at or above 1000 rad signal no active order",
             "BitLength":32,
             "BitOffset":72,
             "BitStart":0,
             "Unit":"rad",
-            "Resolution":1,
             "Signed":true,
-            "RangeMin":-3.1415926,
-            "RangeMax":3.1415926,
+            "RangeMin":0,
+            "RangeMax":6.2831852,
             "FieldType":"FLOAT",
             "PhysicalQuantity":"ANGLE"
           }

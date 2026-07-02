@@ -3055,7 +3055,13 @@ Pgn pgnList[] = {
       MATCH_FIELD("Field Group", BYTES(1), 0, "0"),
       MATCH_FIELD(PK("Field"), BYTES(1), 11, "Heading to Steer"),
       RESERVED_FIELD(BYTES(1)),
-      FLOAT_FIELD("Heading to Steer", "FLOAT_RAD", "Values at or above 1000 rad signal no active order"),
+      {.name        = "Heading to Steer",
+       .size        = BYTES(4),
+       .hasSign     = true,
+       .fieldType   = "FLOAT_RAD",
+       .description = "Absolute heading on the full circle (0 .. 2 pi); values at or above 1000 rad signal no active order",
+       .rangeMin    = 0,
+       .rangeMax    = 6.2831852},
       END_OF_FIELDS },
      .priority    = 7}
 
