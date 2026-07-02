@@ -264,13 +264,18 @@ BO_ 2566848766 PGN_65280_multiplexed: 8 Vector__XXX
  SG_ m39207_unknownF m39207 : 60|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_unknownE m39207 : 59|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_unknownD m39207 : 57|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39187_reserved8 m39187 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_unknownC m39207 : 56|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_unknownB m39207 : 54|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_commandActive m39207 : 53|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_unknownA m39207 : 52|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_levelOrValue m39207 : 48|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m40767_reserved5 m40767 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39187_configCode m39187 : 40|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39187_reserved6 m39187 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_fieldB m39207 : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39187_runState m39187 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39187_fieldA m39187 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_circuitId m39207 : 16|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39056_data_3 m39056 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39049_data_2 m39049 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
@@ -2737,7 +2742,7 @@ VAL_ 2566781950 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566782718 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566783486 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566784254 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
-VAL_ 2566848766 manufacturerIndustry 40767 "Furuno" 39087 "Honda Marine" 39084 "Yanmar Marine" 39049 "Maretron" 39056 "Mercury Marine" 39207 "BEP Marine 2" ;
+VAL_ 2566848766 manufacturerIndustry 40767 "Furuno" 39087 "Honda Marine" 39084 "Yanmar Marine" 39049 "Maretron" 39056 "Mercury Marine" 39207 "BEP Marine 2" 39187 "Navico" ;
 VAL_ 2566849022 manufacturerIndustry 39084 "Yanmar Marine" 39207 "BEP Marine 2" ;
 VAL_ 2566849278 manufacturerIndustry 39049 "Maretron" 39207 "BEP Marine 2" ;
 VAL_ 2566849534 industryCode 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine Industry" 5 "Industrial" ;
@@ -3036,13 +3041,18 @@ SG_MUL_VAL_ 2566848766 m39084_data_1 manufacturerIndustry 39084-39084;
 SG_MUL_VAL_ 2566848766 m39049_data_2 manufacturerIndustry 39049-39049;
 SG_MUL_VAL_ 2566848766 m39056_data_3 manufacturerIndustry 39056-39056;
 SG_MUL_VAL_ 2566848766 m39207_circuitId manufacturerIndustry 39207-39207;
+SG_MUL_VAL_ 2566848766 m39187_fieldA manufacturerIndustry 39187-39187;
+SG_MUL_VAL_ 2566848766 m39187_runState manufacturerIndustry 39187-39187;
 SG_MUL_VAL_ 2566848766 m39207_fieldB manufacturerIndustry 39207-39207;
+SG_MUL_VAL_ 2566848766 m39187_reserved6 manufacturerIndustry 39187-39187;
+SG_MUL_VAL_ 2566848766 m39187_configCode manufacturerIndustry 39187-39187;
 SG_MUL_VAL_ 2566848766 m40767_reserved5 manufacturerIndustry 40767-40767;
 SG_MUL_VAL_ 2566848766 m39207_levelOrValue manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m39207_unknownA manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m39207_commandActive manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m39207_unknownB manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m39207_unknownC manufacturerIndustry 39207-39207;
+SG_MUL_VAL_ 2566848766 m39187_reserved8 manufacturerIndustry 39187-39187;
 SG_MUL_VAL_ 2566848766 m39207_unknownD manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m39207_unknownE manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m39207_unknownF manufacturerIndustry 39207-39207;
