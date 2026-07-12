@@ -3952,17 +3952,6 @@ limitations under the License.
       <EnumPair Value='12' Name='Oil Level Check Command' />
       <EnumPair Value='13' Name='Oil Level Reset Response' />
     </LookupEnumeration>
-    <LookupEnumeration Name='NAVICO_RUN_STATE' MaxValue='255'>
-      <EnumPair Value='0' Name='Off' />
-      <EnumPair Value='4' Name='Starting' />
-      <EnumPair Value='5' Name='On' />
-      <EnumPair Value='6' Name='Stopping' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='NAVICO_FEATURE_TYPE' MaxValue='255'>
-      <EnumPair Value='0' Name='Mercury UI' />
-      <EnumPair Value='2' Name='Suzuki Repower Panel' />
-      <EnumPair Value='3' Name='Helios Panel' />
-    </LookupEnumeration>
     <LookupEnumeration Name='MERCURY_SINGLE_LEVER_MODE' MaxValue='7'>
       <EnumPair Value='0' Name='Single Lever Mode' />
       <EnumPair Value='1' Name='Throttle Only Mode' />

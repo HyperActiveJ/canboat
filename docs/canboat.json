@@ -4948,25 +4948,6 @@
         ]
       },
       {
-        "Name":"NAVICO_RUN_STATE",
-        "MaxValue":255,
-        "EnumValues":[
-          {"Name":"Off", "Value":0},
-          {"Name":"Starting", "Value":4},
-          {"Name":"On", "Value":5},
-          {"Name":"Stopping", "Value":6}
-        ]
-      },
-      {
-        "Name":"NAVICO_FEATURE_TYPE",
-        "MaxValue":255,
-        "EnumValues":[
-          {"Name":"Mercury UI", "Value":0},
-          {"Name":"Suzuki Repower Panel", "Value":2},
-          {"Name":"Helios Panel", "Value":3}
-        ]
-      },
-      {
         "Name":"MERCURY_SINGLE_LEVER_MODE",
         "MaxValue":7,
         "EnumValues":[
