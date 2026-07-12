@@ -4,7 +4,7 @@
             7.1.0.
           </p><h3>Copyright</h3><p class="xs">CANboat version v7.1.0
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
 
 This file is part of CANboat.
@@ -342,7 +342,7 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Arbitrary address capable</td><td>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</td><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr></table><p>
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20150910070107/http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf">https://web.archive.org/web/20150910070107/http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf</a></p><h2 id="pgn-61184">0xEF00: Manufacturer Proprietary single-frame addressed</h2><p>Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-61184">0xEF00:
             PGN 61184
@@ -490,7 +490,39 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Dim Value</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-61440">0xF000-0xFEFF: Standardized single-frame non-addressed</h2><p>PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-65001">0xFDE9:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-61184">0xEF00:
+            PGN 61184
+            - Simnet: Keep Alive</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 7 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Command</td><td>Command selector; 49 keeps the addressed device awake</td><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Reply</td><td>0 = request, 1 = reply</td><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Value</td><td>Only meaningful in a reply (carries a status); left unset (0xFF) in a request</td><td/><td>32 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h2 id="pgn-61440">0xF000-0xFEFF: Standardized single-frame non-addressed</h2><p>PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-65001">0xFDE9:
             PGN 65001
             - Bus #1 Phase C Basic AC Quantities</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -1344,6 +1376,34 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65280">0xFF00:
             PGN 65280
+            - Navico: Device Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Low-rate proprietary status broadcast seen from Navico/B&amp;G/Simrad devices (MFDs, autopilots). The first payload byte distinguishes the sender's software platform - NOS-generation devices emit it at about 4 Hz, NEON-generation devices far less often. The remaining bytes are constant in all observed traffic, so their meaning is not yet known.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 5 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Report Type</td><td>Tracks the emitting device's software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this roughly four times a second, NEON devices at a much lower rate.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Data</td><td>Payload; constant in all observed traffic</td><td/><td>40 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65280">0xFF00:
+            PGN 65280
             - BEP Marine: CZone Circuit Control</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>CZone circuit control command from a plotter (or other commander) to CZone modules. The plotter broadcasts; each module independently checks whether the 16-bit Circuit ID matches one of its own. Observed wire patterns: byte 6 = 0xF1 for ON commands, 0xF2 for OFF: Level Or Value = 1 (ON) or 2 (OFF) with Command Active and several flag bits asserted. The seven Unknown bits in bytes 6-7 have not yet been mapped to specific actions (likely candidates: dim direction, momentary vs latched, transient vs persistent, dim ramp-rate select, source priority).</p><p>
@@ -1399,42 +1459,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>3 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
-              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65280.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65280.md</a></p><h3 id="pgn-65280">0xFF00:
-            PGN 65280
-            - Navico: Engine Identity/Config</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             single-frame 
-            PGN is
-            8
-            bytes long and contains 8 fields.
-
-            
-              The default priority (as observed in the field) is 7.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
-                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Field A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Run State</td><td>Per-source ignition/power lifecycle state; cycles Off -&gt; Starting -&gt; On at key-on and On -&gt; Stopping -&gt; Off at key-off</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-NAVICO_RUN_STATE">NAVICO_RUN_STATE</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Config Code</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65281">0xFF01:
+              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65280.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65280.md</a></p><h3 id="pgn-65281">0xFF01:
             PGN 65281
             - Yanmar: Engine Data B</h3><p>
               This PGN description applies when the following field(s) match:
@@ -2297,6 +2322,57 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>48 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65293">0xFF0D:
             PGN 65293
+            - Lowrance: GPS Configuration</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>140</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>GPS antenna configuration broadcast by Navico GPS/navigation sources - the Lowrance-manufacturer counterpart of the Simnet LGC-2000 Configuration. The field boundaries are known but the individual settings are not yet identified. The first byte matches the sender's source address in the observed traffic.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 14 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>140:
+                  Lowrance</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>E</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>F</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>G</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>3 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>13</td><td>H</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>I</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65293">0xFF0D:
+            PGN 65293
             - Diverse Yacht Services: Load Cell</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>641</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
@@ -2674,7 +2750,39 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65304">0xFF18:
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65303">0xFF17:
+            PGN 65303
+            - Lowrance: Vessel Setup - Engine and Tank Configuration</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>140</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Vessel-setup configuration sent by a Lowrance/Navico display when the operator changes the number of engines, number of fuel tanks, or total fuel capacity on the Vessel Setup page. Confirmed against a capture where the values were changed from (1 engine, 1 tank, 1200 L) to (2 engines, 3 tanks, 200 L).</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>140:
+                  Lowrance</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Number of Engines</td><td>Engine count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Number of Fuel Tanks</td><td>Fuel-tank count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Total Fuel Capacity</td><td/><td>0.1 <a href="#pq-VOLUME">L</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65304">0xFF18:
             PGN 65304
             - Suzuki: Engine Data E</h3><p>
               This PGN description applies when the following field(s) match:
@@ -2720,7 +2828,39 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65305">0xFF19:
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65304">0xFF18:
+            PGN 65304
+            - Lowrance: Vessel Setup - Engine and Tank Configuration Broadcast</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>140</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and total fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default (1 engine, 1 tank, 1200 L) by autopilot-computer and display devices.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>140:
+                  Lowrance</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Number of Engines</td><td>Engine count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Number of Fuel Tanks</td><td>Fuel-tank count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Total Fuel Capacity</td><td/><td>0.1 <a href="#pq-VOLUME">L</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Device Status</h3><p>
               This PGN description applies when the following field(s) match:
@@ -2943,7 +3083,7 @@ limitations under the License.
              single-frame 
             PGN is
             8
-            bytes long and contains 7 fields.
+            bytes long and contains 8 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -2965,8 +3105,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Battery Charge Status</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65310">0xFF1E:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>A</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65310">0xFF1E:
             PGN 65310
             - BEP Marine: Proprietary PGN 65310</h3><p>
               This PGN description applies when the following field(s) match:
@@ -3023,7 +3166,7 @@ limitations under the License.
              single-frame 
             PGN is
             8
-            bytes long and contains 6 fields.
+            bytes long and contains 7 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -3042,7 +3185,10 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Signal Strength</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65313">0xFF21:
             PGN 65313
             - Navico: Depth Quality</h3><p>
@@ -3122,7 +3268,7 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Neutral</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>6 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>6 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
@@ -4495,7 +4641,7 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-PGN_LIST_FUNCTION">PGN_LIST_FUNCTION</a></td><td>true</td></tr><tr class="repeatmarker"><td class="repeating">2<div>Set 1</div></td><td>PGN</td><td/><td><div class="xs">0 .. 262143</div></td><td>24 bits
-                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin AHRS ATT: COG Source Valid Flag</h3><p>
               This PGN description applies when the following field(s) match:
@@ -4518,10 +4664,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4530,10 +4676,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>67:
-                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  COG Source Valid Flag</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>COG Source Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                      lookup
+                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>COG Source Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4559,10 +4705,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4571,10 +4717,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>65:
-                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Device Flags</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Device Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                      lookup
+                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>Device Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4600,10 +4746,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4612,10 +4758,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>40:
-                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Calibration Matrix Present</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Calibration Matrix Present</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>Calibration Matrix Present</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4641,10 +4787,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4653,10 +4799,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>52:
-                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Set North State</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Set North State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>Set North State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4684,10 +4830,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4702,8 +4848,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>11:
                   Heading to Steer</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Heading to Steer</td><td>Absolute heading on the full circle (0 .. 2 pi); values at or above 1000 rad signal no active order</td><td> <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>32 bits
                   
                         signed
@@ -4732,10 +4878,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4750,8 +4896,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>114:
                   Rate of Turn</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Rate of Turn</td><td/><td><a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
                   
                         signed
@@ -4780,10 +4926,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4798,8 +4944,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>115:
                   Rate of Turn Order</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Rate of Turn Order</td><td/><td><a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
                   
                         signed
@@ -4828,10 +4974,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4846,8 +4992,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>246:
                   Speed</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Speed</td><td/><td><a href="#pq-SPEED">m/s</a><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
                   
                         signed
@@ -4876,10 +5022,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4894,9 +5040,9 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>158:
                   System Voltage</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>System Voltage</td><td/><td>0.001 V<div class="xs">0 .. 65.532</div></td><td>16 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>System Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4924,10 +5070,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4942,8 +5088,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>116:
                   Turn Angle Order</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Turn Angle Order</td><td>Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)</td><td>9.58738e-05 rad</td><td>16 bits
                   
                         unsigned
@@ -4972,10 +5118,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4990,8 +5136,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>161:
                   Turn Angle Measured</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Turn Angle Measured</td><td>Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)</td><td>9.58738e-05 rad</td><td>16 bits
                   
                         unsigned
@@ -5020,10 +5166,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5038,8 +5184,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>240:
                   Engine RPM A</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Engine Speed</td><td/><td>rpm<div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -5068,10 +5214,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5086,8 +5232,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>239:
                   Engine RPM B</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Engine Speed</td><td/><td>rpm<div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -5116,10 +5262,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5134,8 +5280,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>62:
                   Response Setting</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Response Setting</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
                   
                         signed
@@ -5164,10 +5310,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5182,12 +5328,12 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>10:
                   Mode State</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Mode State</td><td>Engage/standby state command (observed 2 = Standby, 5 = Engaged)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Mode State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin Autopilot: Heartbeat</h3><p>
               This PGN description applies when the following field(s) match:
@@ -5212,10 +5358,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5230,8 +5376,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>3:
                   Heartbeat</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Heartbeat Data</td><td>Fixed helm heartbeat payload (observed 01 00 c8 00)</td><td/><td>32 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Heartbeat Data</td><td>Fixed helm heartbeat payload (observed 01 00 c8 00)</td><td/><td>32 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin Autopilot: Maneuver</h3><p>
@@ -5257,10 +5403,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                      lookup
+                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5820,7 +5966,7 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Data</td><td/><td/><td>64 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Seatalk1: Pilot Mode</h3><p>
               This PGN description applies when the following field(s) match:
@@ -6902,40 +7048,6 @@ limitations under the License.
               Source:
               <a href="https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html">https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
-            - Maretron: Slave Response</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>137</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            8
-            bytes long and contains 7 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
-                  Maretron</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Product code</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Software code</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
-            PGN 126720
             - Maretron: Proprietary Configuration</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>137</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
@@ -7234,22 +7346,22 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Temporary Silence Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>11</td><td>Acknowledge Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>11</td><td>Acknowledge Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>12</td><td>Escalation Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>12</td><td>Escalation Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>13</td><td>Temporary Silence Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>13</td><td>Temporary Silence Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>14</td><td>Acknowledge Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>14</td><td>Acknowledge Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>15</td><td>Escalation Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>15</td><td>Escalation Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>17</td><td>Acknowledge Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.84467440737096e+19</div></td><td>64 bits
                   <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>18</td><td>Trigger Condition</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
@@ -9516,7 +9628,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-TRACKING">TRACKING</a></td><td/></tr><tr><td>4</td><td>Reported Target</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>5</td><td>Target Acquisition</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>5</td><td>Target Acquisition</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-TARGET_ACQUISITION">TARGET_ACQUISITION</a></td><td/></tr><tr><td>6</td><td>Bearing Reference</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -10189,16 +10301,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-AIS_TYPE">AIS_TYPE</a></td><td/></tr><tr><td>17</td><td>Integrated Display</td><td>Whether the unit can show messages 12 and 14</td><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>18</td><td>DSC</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>18</td><td>DSC</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>19</td><td>Band</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>19</td><td>Band</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-AIS_BAND">AIS_BAND</a></td><td/></tr><tr><td>20</td><td>Can handle Msg 22</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>21</td><td>AIS mode</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>21</td><td>AIS mode</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-AIS_MODE">AIS_MODE</a></td><td/></tr><tr><td>22</td><td>AIS communication state</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -10349,10 +10461,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-ATON_TYPE">ATON_TYPE</a></td><td/></tr><tr><td>14</td><td>Off Position Indicator</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>15</td><td>Virtual AtoN Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>15</td><td>Virtual AtoN Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>16</td><td>Assigned Mode Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>16</td><td>Assigned Mode Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-AIS_ASSIGNED_MODE">AIS_ASSIGNED_MODE</a></td><td/></tr><tr><td>17</td><td>Spare</td><td/><td/><td>1 bits
@@ -11412,7 +11524,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Number of Bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -11669,7 +11781,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>1 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Safety Related Text</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><p>
@@ -16104,19 +16216,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130817
             - Navico: Feature Unlock</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
-              </p><p>
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Feature-unlock / capability report emitted by Navico devices, and the target of the 126208 Request seen on the bus (the requester filters on Feature Id as field 4). The payload is a 2-byte Feature Id and a record count; a non-zero count is believed to be followed by that many 3-byte records (never observed on the wire, so their layout is left undecoded here) and two trailing bytes.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            10
-            bytes long and contains 9 fields.
+            7
+            bytes long and contains 6 fields.
 
             
               The default priority (as observed in the field) is 7.
-            
-              It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -16126,22 +16236,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Session Nonce</td><td>Solicited-response nonce; echoed from the request and used as the CRC input</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Feature Id</td><td>Feature/object identifier. A 126208 Request for this PGN filters on this value as its field 4 (the requester asks the target to report a specific feature).</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Record Count</td><td>Number of feature records that follow</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Record Count</td><td>Number of 3-byte records that follow; 0 in every observed broadcast</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Feature Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-NAVICO_FEATURE_TYPE">NAVICO_FEATURE_TYPE</a></td><td/></tr><tr><td>7</td><td>Validity Flag</td><td>1 = feature active</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Duration</td><td>Feature unlock window in minutes</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>CRC</td><td>CRC-16/X-25 authentication tag over [magic 0x5B6FB8E9 LE][nonce BE][records][count]</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data</td><td>Trailing value (observed only with Record Count 0)</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130817">0x1FF01:
@@ -16607,7 +16708,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130820
             - BEP Marine: CZone Alarm String Response</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed. This is the only BEP Marine (manufacturer 295) variant of PGN 130820, so it matches on the manufacturer code alone and will also catch other BEP 130820 traffic; e.g. a NAC-3 autopilot emits 130820 once a second carrying comma-separated telemetry such as "1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,..." rather than an alarm string.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -18418,30 +18519,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-ALERT_RESPONSE_COMMAND">ALERT_RESPONSE_COMMAND</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>6 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
-            PGN 130820
-            - BEP Marine: Proprietary PGN 130820</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            223
-            bytes long and contains 4 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
-                  BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1768 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
             PGN 130821
             - Navico: ASCII Data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -18848,8 +18926,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Bulk Report 2</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Section</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -18861,18 +18939,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Data</td><td>Bulk variant payload (length-prefixed); layout not yet observed on the wire</td><td/><td>1728 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130822">0x1FF06:
             PGN 130822
-            - Navico: UDB Database, Bulk Report 3</h3><p>
+            - Navico: Configuration Set</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Command</td><td>3</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Command</td><td>3</td></tr></table></p><p>Command 3, formerly documented as 'Bulk Report 3'; despite that name it carries a single small per-object update, not a bulk/multi-item transfer. Unlike Command 1 'Source Report' (which continually re-broadcasts its whole table), Command 3 is change-driven - it is only sent when the object's value changes. Every frame observed so far carries exactly one Section 10 (0x0A) record at Item 1. Most Navico/Simnet parameter settings are read/written over PGN 130845 (Simnet: Key Value) instead; this PGN only carries the handful of settings - wind/depth-speed source selection and True wind direction damping - that PGN 130845 does not.</p><p>
               For a detailed explanation see:
               <a href="navico_udb.html">navico_udb.html</a></p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            223
-            bytes long and contains 10 fields.
+            
+              at least 16
+            bytes long and contains 15 fields.
 
             
               The default priority (as observed in the field) is 3.
@@ -18889,11 +18968,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Command</td><td>3:
-                  Bulk Report 3</td><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  Configuration Set</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Section</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -18902,8 +18981,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Item</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Data</td><td>Bulk variant payload (length-prefixed); layout not yet observed on the wire</td><td/><td>1728 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130822">0x1FF06:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Source Setting Id</td><td>Compacted id selecting which setting this object reports; also resolves the wire type of the Value field that follows. Different id space from the Command 1 'Source Setting Id', the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids, and PGN 130840.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-NAVICO_SOURCE_SETTING_ID">NAVICO_SOURCE_SETTING_ID</a>
+                      that defines the next variable field's type.
+                    </td><td>true</td></tr><tr><td>12</td><td>Spare</td><td/><td/><td>24 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>13</td><td>Token</td><td>Per-object identity token, constant per object</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Length</td><td>Byte length of the Value field that follows</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td>15</td><td>Value</td><td>Value for this setting; its type is resolved from Source Setting Id.</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130822">0x1FF06:
             PGN 130822
             - Navico: UDB Database, Bulk Report 4</h3><p>
               This PGN description applies when the following field(s) match:
@@ -19307,7 +19400,138 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Set Temperature</td><td/><td>0.1 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
+            PGN 130823
+            - Navico: Data Type Source Directory</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>5</td></tr></table></p><p>Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches the layout observed across all captured traffic.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 7
+            bytes long and contains 12 fields.
+
+            
+        The 4 fields starting at field 
+        9 
+        (with name "Length")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>6</td><td>Report Type</td><td>5:
+                  Data-type source directory</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Part</td><td>Sequence/part number of the directory report</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Length</td><td>Bytes following in this record: a type byte, a 16-bit data-type id and the value</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Type</td><td>Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Data Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-NAVICO_DATA_TYPE">NAVICO_DATA_TYPE</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Value</td><td>Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
+            PGN 130823
+            - Navico: Data Type Source Directory, Full Report</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>6</td></tr></table></p><p>Fuller counterpart to the Report Type 5 directory: the same {Length, Type, Data Type, Value} record list, but covering every data type the reporting object owns rather than a summary subset, so it typically carries the bound-source NAME entries. Uses the identical record format as Report Type 5 and the PGN 130822 Command 6 Object Dump.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 7
+            bytes long and contains 12 fields.
+
+            
+        The 4 fields starting at field 
+        9 
+        (with name "Length")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>6</td><td>Report Type</td><td>6:
+                  Data-type source directory (full report)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Part</td><td>Sequence/part number of the directory report</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Length</td><td>Bytes following in this record: a type byte, a 16-bit data-type id and the value</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Type</td><td>Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Data Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-NAVICO_DATA_TYPE">NAVICO_DATA_TYPE</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Value</td><td>Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
+            PGN 130823
+            - Navico: Boat Speed Polar Table</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>15</td></tr></table></p><p>Boat-speed (target performance) polar table, produced only by the B&amp;G Hercules performance processor. It is emitted as a one-shot burst of several parts (Report Type 15, Part numbers 1..N, ~20 ms apart) that must be concatenated by Part number beyond normal fast-packet reassembly. The reassembled stream is a 3-float preamble followed by repeating {uint16 count}{count x (0x04, float32)} rows; a typical table is 8 rows x 22 columns, the rows stepping the true wind speed 7.5, 10, 12.5 ... 25 kn and each row ending at true wind angle 180 deg. Because the payload is a stateful multi-part numeric table rather than per-frame fields, each part is shown here as raw bytes; reassemble the parts to recover the polar. This report is Hercules-only; NEON displays emit the Report Type 5 data-type directory instead.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            230
+            bytes long and contains 9 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>6</td><td>Report Type</td><td>15:
+                  Boat-speed polar / performance table</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Part</td><td>Part number; the table is split across several parts that must be concatenated in order</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>9</td><td>Data</td><td>Raw table fragment carried by this part</td><td/><td>1784 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
             PGN 130824
             - B&amp;G: key-value data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -19750,6 +19974,50 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>F</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130827">0x1FF0B:
+            PGN 130827
+            - Furuno: NavPilot Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1855</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>1</td></tr></table></p><p>Broadcast by Furuno NavPilot autopilots. Carries the current rudder angle and, while engaged, the commanded course to steer; the commanded course reads unset (0xFFFF) in standby. Fields A, B, C, D are not yet fully understood.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            13
+            bytes long and contains 10 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
+                  Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>1:
+                  NavPilot Status</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Rudder Angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Commanded Course</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>D</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130828">0x1FF0C:
@@ -20916,7 +21184,42 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>17</td><td>Spare</td><td/><td/><td>6 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>18</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130843">0x1FF1B:
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130842">0x1FF1A:
+            PGN 130842
+            - Simnet: AIS Silent Mode</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>4</td></tr></table></p><p>Simnet AIS silent-mode read/reply (Message ID 4 of the 130842 family, alongside the Class B static-data Part A/B forms). A source reads (Operation = Read) or reports (Operation = Reply) the AIS transceiver's silent-mode state; the two trailing bytes carry the state and are constant in the observed traffic.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            5
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>4:
+                  AIS Silent Mode</td><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Operation</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_KEY_OPERATION">SIMNET_KEY_OPERATION</a></td><td/></tr><tr><td>6</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>E</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130843">0x1FF1B:
             PGN 130843
             - Maretron: Windlass Control Command</h3><p>
               This PGN description applies when the following field(s) match:
@@ -21141,10 +21444,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Key</td><td>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
@@ -21161,7 +21464,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130846
             - Simnet: Key Value - Long</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder and the nac3-operations capture corpus.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. Devices switch from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Observed in the nac3-operations capture corpus.</p><p>
               For a detailed explanation see:
               <a href="navico_alarms_and_commands.html">navico_alarms_and_commands.html</a></p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -21190,10 +21493,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Key</td><td>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
@@ -21417,7 +21720,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21460,7 +21763,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21503,7 +21806,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21546,7 +21849,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21589,7 +21892,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21632,7 +21935,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21680,7 +21983,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>2:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>2:
                   Follow Up</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21723,7 +22026,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21772,7 +22075,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>23:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>23:
                   Timer</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21823,7 +22126,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>255:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>255:
                   Alarm</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21875,7 +22178,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21924,7 +22227,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
@@ -21964,7 +22267,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -22013,7 +22316,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -22030,18 +22333,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130852">0x1FF24:
             PGN 130852
-            - Navico: Proprietary 2 FP</h3><p>
+            - Navico: Diagnostic Data</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Device diagnostic report, returned in reply to a PGN 126208 Request Group Function for PGN 130852 that carries the Navico manufacturer (275) and Marine industry parameters. Emitted by both NEON- and Triton-generation Navico devices. After the manufacturer field and an Instance/channel byte, the frame carries a list of {Field ID, Length, Value} records to the end of the fast-packet; Length is the value width (1, 2 or 4 bytes). Field IDs index a set of CAN bus diagnostic counters; ids 4/5/7 (Rx Messages, Tx Messages, Fast Packet Errors) are confirmed against a device's on-screen bus statistics. Ids 0-3 are the rx/tx overflow and error counters (zero on a healthy bus, so their order is not yet distinguished) and id 22 relates to bus state; those are shown numerically. Bus Load shown in the device UI is computed locally and is not carried here.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            
+              at least 3
+            bytes long and contains 7 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+            
+        The 3 fields starting at field 
+        5 
+        (with name "Field ID")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
@@ -22050,7 +22359,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130856">0x1FF28:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Instance</td><td>Diagnostic channel/instance the report covers; echoed from the request (0 when unspecified)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">5<div>Set 1</div></td><td>Field ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-NAVICO_DIAGNOSTIC">NAVICO_DIAGNOSTIC</a>
+                      that defines the next variable field's type.
+                    </td><td>true</td></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Length</td><td>Value width in bytes (observed 1, 2 or 4)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Value</td><td>Counter value; rendered as a decimal number for known Field IDs, raw bytes otherwise</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130856">0x1FF28:
             PGN 130856
             - Simnet: Alarm Message</h3><p>
               This PGN description applies when the following field(s) match:
@@ -23104,7 +23426,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Single Engine or Dual Engine Port</td></tr><tr><td>1</td><td>Dual Engine Starboard</td></tr></table><h3 id="lookup-GEAR_STATUS">GEAR_STATUS
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Forward</td></tr><tr><td>1</td><td>Neutral</td></tr><tr><td>2</td><td>Reverse</td></tr></table><h3 id="lookup-DIRECTION">DIRECTION
-        (0 - 15)
+        (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Forward</td></tr><tr><td>1</td><td>Reverse</td></tr></table><h3 id="lookup-POSITION_ACCURACY">POSITION_ACCURACY
         (0 - 1)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Low</td></tr><tr><td>1</td><td>High</td></tr></table><h3 id="lookup-RAIM_FLAG">RAIM_FLAG
@@ -23127,6 +23449,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Paddle wheel</td></tr><tr><td>1</td><td>Pitot tube</td></tr><tr><td>2</td><td>Doppler</td></tr><tr><td>3</td><td>Correlation (ultra sound)</td></tr><tr><td>4</td><td>Electro Magnetic</td></tr></table><h3 id="lookup-YES_NO">YES_NO
         (0 - 3)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No</td></tr><tr><td>1</td><td>Yes</td></tr></table><h3 id="lookup-YES_NO_1BIT">YES_NO_1BIT
+        (0 - 1)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No</td></tr><tr><td>1</td><td>Yes</td></tr></table><h3 id="lookup-OK_WARNING">OK_WARNING
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>OK</td></tr><tr><td>1</td><td>Warning</td></tr></table><h3 id="lookup-OFF_ON">OFF_ON
@@ -23165,9 +23489,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>129</td><td>Seatalk1</td></tr><tr><td>22</td><td>Hull Type</td></tr><tr><td>38</td><td>Auto Turn</td></tr><tr><td>12</td><td>Settings</td></tr><tr><td>2</td><td>Rudder Limit</td></tr><tr><td>3</td><td>Rudder Damping</td></tr><tr><td>4</td><td>Rudder Offset</td></tr><tr><td>6</td><td>Reverse Rudder Reference</td></tr><tr><td>8</td><td>Cruise Speed</td></tr><tr><td>11</td><td>Power Steer Mode</td></tr><tr><td>15</td><td>Wind Type</td></tr><tr><td>17</td><td>Auto Turn</td></tr><tr><td>18</td><td>Calibration Lock</td></tr><tr><td>20</td><td>Gybe Inhibit</td></tr><tr><td>21</td><td>Compass Offset</td></tr><tr><td>23</td><td>Drive Type</td></tr><tr><td>25</td><td>Response Level</td></tr><tr><td>26</td><td>Max Compass Deviation</td></tr><tr><td>27</td><td>Hard Over Time</td></tr><tr><td>29</td><td>Debug Level</td></tr><tr><td>33</td><td>Compass Lock</td></tr><tr><td>34</td><td>Speed Input</td></tr><tr><td>35</td><td>Compass Linearisation Progress</td></tr><tr><td>36</td><td>ACU Debug Level</td></tr><tr><td>37</td><td>Wind Shift Alarm</td></tr><tr><td>39</td><td>Auto Turn Timeout</td></tr></table><h3 id="lookup-SEATALK1_COMMAND">SEATALK1_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr><tr><td>1</td><td>Equipment ID</td></tr><tr><td>5</td><td>Engine RPM and PITCH</td></tr><tr><td>16</td><td>Apparent Wind Angle</td></tr><tr><td>17</td><td>Apparent Wind Speed</td></tr><tr><td>32</td><td>Speed through water</td></tr><tr><td>33</td><td>Trip Mileage</td></tr><tr><td>34</td><td>Total Mileage</td></tr><tr><td>35</td><td>Water temperature (ST50)</td></tr><tr><td>36</td><td>Display units for Mileage &amp; Speed</td></tr><tr><td>37</td><td>Total &amp; Trip Log</td></tr><tr><td>38</td><td>Speed through water (with average)</td></tr><tr><td>39</td><td>Water temperature</td></tr><tr><td>48</td><td>Set lamp Intensity</td></tr><tr><td>54</td><td>Cancel MOB (Man Over Board) condition</td></tr><tr><td>56</td><td>Codelock data</td></tr><tr><td>80</td><td>LAT position</td></tr><tr><td>81</td><td>LON position</td></tr><tr><td>82</td><td>Speed over Ground</td></tr><tr><td>83</td><td>Course over Ground (COG)</td></tr><tr><td>84</td><td>GMT-time</td></tr><tr><td>85</td><td>TRACK keystroke on GPS unit</td></tr><tr><td>86</td><td>Date</td></tr><tr><td>87</td><td>Sat Info</td></tr><tr><td>88</td><td>LAT/LON (raw unfiltered)</td></tr><tr><td>89</td><td>Set Count Down Timer</td></tr><tr><td>97</td><td>Issued by E-80 multifunction display at initialization</td></tr><tr><td>101</td><td>Select Fathom display units for depth display</td></tr><tr><td>102</td><td>Wind alarm</td></tr><tr><td>104</td><td>Alarm acknowledgment keystroke</td></tr><tr><td>108</td><td>Second equipment-ID datagram</td></tr><tr><td>110</td><td>MOB (Man Over Board)</td></tr><tr><td>112</td><td>Keystroke on Raymarine A25006 ST60 Maxiview Remote Control</td></tr><tr><td>128</td><td>Set Lamp Intensity</td></tr><tr><td>129</td><td>Sent by course computer during setup</td></tr><tr><td>130</td><td>Target waypoint name</td></tr><tr><td>131</td><td>Sent by course computer</td></tr><tr><td>132</td><td>Compass heading Autopilot course and Rudder position</td></tr><tr><td>133</td><td>Navigation to waypoint information</td></tr><tr><td>134</td><td>Keystroke</td></tr><tr><td>135</td><td>Set Response level</td></tr><tr><td>136</td><td>Autopilot Parameter</td></tr><tr><td>137</td><td>Compass heading sent by ST40 compass instrument</td></tr><tr><td>144</td><td>Device Indentification</td></tr><tr><td>145</td><td>Set Rudder gain</td></tr><tr><td>146</td><td>Set Autopilot Parameter</td></tr><tr><td>147</td><td>Enter AP-Setup</td></tr><tr><td>149</td><td>Replaces command 84 while autopilot is in value setting mode</td></tr><tr><td>153</td><td>Compass variation</td></tr><tr><td>154</td><td>Version String</td></tr><tr><td>156</td><td>Compass heading and Rudder position</td></tr><tr><td>158</td><td>Waypoint definition</td></tr><tr><td>161</td><td>Destination Waypoint Info</td></tr><tr><td>162</td><td>Arrival Info</td></tr><tr><td>164</td><td>Broadcast query/response to identify devices</td></tr><tr><td>165</td><td>GPS and DGPS Info</td></tr><tr><td>167</td><td>Unknown meaning</td></tr><tr><td>168</td><td>Alarm ON/OFF for Guard</td></tr><tr><td>171</td><td>Alarm ON/OFF for Guard</td></tr></table><h3 id="lookup-SEATALK1_ATT">SEATALK1_ATT
-        (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr></table><h3 id="lookup-SEATALK_ALARM_STATUS">SEATALK_ALARM_STATUS
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr><tr><td>1</td><td>Equipment ID</td></tr><tr><td>5</td><td>Engine RPM and PITCH</td></tr><tr><td>16</td><td>Apparent Wind Angle</td></tr><tr><td>17</td><td>Apparent Wind Speed</td></tr><tr><td>32</td><td>Speed through water</td></tr><tr><td>33</td><td>Trip Mileage</td></tr><tr><td>34</td><td>Total Mileage</td></tr><tr><td>35</td><td>Water temperature (ST50)</td></tr><tr><td>36</td><td>Display units for Mileage &amp; Speed</td></tr><tr><td>37</td><td>Total &amp; Trip Log</td></tr><tr><td>38</td><td>Speed through water (with average)</td></tr><tr><td>39</td><td>Water temperature</td></tr><tr><td>48</td><td>Set lamp Intensity</td></tr><tr><td>54</td><td>Cancel MOB (Man Over Board) condition</td></tr><tr><td>56</td><td>Codelock data</td></tr><tr><td>80</td><td>LAT position</td></tr><tr><td>81</td><td>LON position</td></tr><tr><td>82</td><td>Speed over Ground</td></tr><tr><td>83</td><td>Course over Ground (COG)</td></tr><tr><td>84</td><td>GMT-time</td></tr><tr><td>85</td><td>TRACK keystroke on GPS unit</td></tr><tr><td>86</td><td>Date</td></tr><tr><td>87</td><td>Sat Info</td></tr><tr><td>88</td><td>LAT/LON (raw unfiltered)</td></tr><tr><td>89</td><td>Set Count Down Timer</td></tr><tr><td>97</td><td>Issued by E-80 multifunction display at initialization</td></tr><tr><td>101</td><td>Select Fathom display units for depth display</td></tr><tr><td>102</td><td>Wind alarm</td></tr><tr><td>104</td><td>Alarm acknowledgment keystroke</td></tr><tr><td>108</td><td>Second equipment-ID datagram</td></tr><tr><td>110</td><td>MOB (Man Over Board)</td></tr><tr><td>112</td><td>Keystroke on Raymarine A25006 ST60 Maxiview Remote Control</td></tr><tr><td>128</td><td>Set Lamp Intensity</td></tr><tr><td>129</td><td>Sent by course computer during setup</td></tr><tr><td>130</td><td>Target waypoint name</td></tr><tr><td>131</td><td>Sent by course computer</td></tr><tr><td>132</td><td>Compass heading Autopilot course and Rudder position</td></tr><tr><td>133</td><td>Navigation to waypoint information</td></tr><tr><td>134</td><td>Keystroke</td></tr><tr><td>135</td><td>Set Response level</td></tr><tr><td>136</td><td>Autopilot Parameter</td></tr><tr><td>137</td><td>Compass heading sent by ST40 compass instrument</td></tr><tr><td>144</td><td>Device Indentification</td></tr><tr><td>145</td><td>Set Rudder gain</td></tr><tr><td>146</td><td>Set Autopilot Parameter</td></tr><tr><td>147</td><td>Enter AP-Setup</td></tr><tr><td>149</td><td>Replaces command 84 while autopilot is in value setting mode</td></tr><tr><td>153</td><td>Compass variation</td></tr><tr><td>154</td><td>Version String</td></tr><tr><td>156</td><td>Compass heading and Rudder position</td></tr><tr><td>158</td><td>Waypoint definition</td></tr><tr><td>161</td><td>Destination Waypoint Info</td></tr><tr><td>162</td><td>Arrival Info</td></tr><tr><td>164</td><td>Broadcast query/response to identify devices</td></tr><tr><td>165</td><td>GPS and DGPS Info</td></tr><tr><td>167</td><td>Unknown meaning</td></tr><tr><td>168</td><td>Alarm ON/OFF for Guard</td></tr><tr><td>171</td><td>Alarm ON/OFF for Guard</td></tr></table><h3 id="lookup-SEATALK_ALARM_STATUS">SEATALK_ALARM_STATUS
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Alarm condition not met</td></tr><tr><td>1</td><td>Alarm condition met and not silenced</td></tr><tr><td>2</td><td>Alarm condition met and silenced</td></tr></table><h3 id="lookup-SEATALK_ALARM_ID">SEATALK_ALARM_ID
         (0 - 255)
@@ -23184,7 +23506,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>All zones</td></tr><tr><td>1</td><td>Zone 1</td></tr><tr><td>2</td><td>Zone 2</td></tr><tr><td>3</td><td>Zone 3</td></tr><tr><td>4</td><td>Zone 4</td></tr></table><h3 id="lookup-ENTERTAINMENT_SOURCE">ENTERTAINMENT_SOURCE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Vessel alarm</td></tr><tr><td>1</td><td>AM</td></tr><tr><td>2</td><td>FM</td></tr><tr><td>3</td><td>Weather</td></tr><tr><td>4</td><td>DAB</td></tr><tr><td>5</td><td>Aux</td></tr><tr><td>6</td><td>USB</td></tr><tr><td>7</td><td>CD</td></tr><tr><td>8</td><td>MP3</td></tr><tr><td>9</td><td>Apple iOS</td></tr><tr><td>10</td><td>Android</td></tr><tr><td>11</td><td>Bluetooth</td></tr><tr><td>12</td><td>Sirius XM</td></tr><tr><td>13</td><td>Pandora</td></tr><tr><td>14</td><td>Spotify</td></tr><tr><td>15</td><td>Slacker</td></tr><tr><td>16</td><td>Songza</td></tr><tr><td>17</td><td>Apple Radio</td></tr><tr><td>18</td><td>Last FM</td></tr><tr><td>19</td><td>Ethernet</td></tr><tr><td>20</td><td>Video MP4</td></tr><tr><td>21</td><td>Video DVD</td></tr><tr><td>22</td><td>Video BluRay</td></tr><tr><td>23</td><td>HDMI</td></tr><tr><td>24</td><td>Video</td></tr></table><h3 id="lookup-ENTERTAINMENT_PLAY_STATUS">ENTERTAINMENT_PLAY_STATUS
-        (0 - 65535)
+        (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Play</td></tr><tr><td>1</td><td>Pause</td></tr><tr><td>2</td><td>Stop</td></tr><tr><td>3</td><td>FF 1x</td></tr><tr><td>4</td><td>FF 2x</td></tr><tr><td>5</td><td>FF 3x</td></tr><tr><td>6</td><td>FF 4x</td></tr><tr><td>7</td><td>RW 1x</td></tr><tr><td>8</td><td>RW 2x</td></tr><tr><td>9</td><td>RW 3x</td></tr><tr><td>10</td><td>RW 4x</td></tr><tr><td>11</td><td>Skip ahead</td></tr><tr><td>12</td><td>Skip back</td></tr><tr><td>13</td><td>Jog ahead</td></tr><tr><td>14</td><td>Jog back</td></tr><tr><td>15</td><td>Seek up</td></tr><tr><td>16</td><td>Seek down</td></tr><tr><td>17</td><td>Scan up</td></tr><tr><td>18</td><td>Scan down</td></tr><tr><td>19</td><td>Tune up</td></tr><tr><td>20</td><td>Tune down</td></tr><tr><td>21</td><td>Slow motion .75x</td></tr><tr><td>22</td><td>Slow motion .5x</td></tr><tr><td>23</td><td>Slow motion .25x</td></tr><tr><td>24</td><td>Slow motion .125x</td></tr></table><h3 id="lookup-ENTERTAINMENT_REPEAT_STATUS">ENTERTAINMENT_REPEAT_STATUS
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>One</td></tr><tr><td>2</td><td>All</td></tr></table><h3 id="lookup-ENTERTAINMENT_SHUFFLE_STATUS">ENTERTAINMENT_SHUFFLE_STATUS
@@ -23224,7 +23546,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>Extend</td></tr><tr><td>2</td><td>Retract</td></tr></table><h3 id="lookup-THRUSTER_MOTOR_TYPE">THRUSTER_MOTOR_TYPE
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>12VDC</td></tr><tr><td>1</td><td>24VDC</td></tr><tr><td>2</td><td>48VDC</td></tr><tr><td>3</td><td>24VAC</td></tr><tr><td>4</td><td>Hydraulic</td></tr></table><h3 id="lookup-BOOT_STATE">BOOT_STATE
-        (0 - 15)
+        (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>in Startup Monitor</td></tr><tr><td>1</td><td>running Bootloader</td></tr><tr><td>2</td><td>running Application</td></tr></table><h3 id="lookup-ACCESS_LEVEL">ACCESS_LEVEL
         (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Locked</td></tr><tr><td>1</td><td>unlocked level 1</td></tr><tr><td>2</td><td>unlocked level 2</td></tr></table><h3 id="lookup-TRANSMISSION_INTERVAL">TRANSMISSION_INTERVAL
@@ -23253,9 +23575,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Queried</td></tr><tr><td>1</td><td>Passed</td></tr><tr><td>2</td><td>Failed - timeout</td></tr><tr><td>3</td><td>Failed - tilt error</td></tr><tr><td>4</td><td>Failed - other</td></tr><tr><td>5</td><td>In progress</td></tr></table><h3 id="lookup-AIRMAR_TEMPERATURE_INSTANCE">AIRMAR_TEMPERATURE_INSTANCE
         (0 - 3)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Device Sensor</td></tr><tr><td>1</td><td>Onboard Water Sensor</td></tr><tr><td>2</td><td>Optional Water Sensor</td></tr></table><h3 id="lookup-AIRMAR_FILTER">AIRMAR_FILTER
-        (0 - 15)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No filter</td></tr><tr><td>1</td><td>Basic IIR filter</td></tr></table><h3 id="lookup-CONTROLLER_STATE">CONTROLLER_STATE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Device Sensor</td></tr><tr><td>1</td><td>Onboard Water Sensor</td></tr><tr><td>2</td><td>Optional Water Sensor</td></tr></table><h3 id="lookup-CONTROLLER_STATE">CONTROLLER_STATE
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Error Active</td></tr><tr><td>1</td><td>Error Passive</td></tr><tr><td>2</td><td>Bus Off</td></tr></table><h3 id="lookup-EQUIPMENT_STATUS">EQUIPMENT_STATUS
         (0 - 3)
@@ -23375,7 +23695,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr><tr><td>2</td><td>Auto locked</td></tr><tr><td>3</td><td>Auto</td></tr></table><h3 id="lookup-SIMNET_NIGHT_MODE_COLOR">SIMNET_NIGHT_MODE_COLOR
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Red</td></tr><tr><td>1</td><td>Green</td></tr><tr><td>2</td><td>Blue</td></tr><tr><td>3</td><td>White</td></tr><tr><td>4</td><td>Magenta</td></tr></table><h3 id="lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Red</td></tr><tr><td>1</td><td>Green</td></tr><tr><td>2</td><td>Blue</td></tr><tr><td>3</td><td>White</td></tr><tr><td>4</td><td>Magenta</td></tr></table><h3 id="lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>None</td></tr><tr><td>1</td><td>Default</td></tr><tr><td>2</td><td>Group 1</td></tr><tr><td>3</td><td>Group 2</td></tr><tr><td>4</td><td>Group 3</td></tr><tr><td>5</td><td>Group 4</td></tr><tr><td>6</td><td>Group 5</td></tr><tr><td>7</td><td>Group 6</td></tr></table><h3 id="lookup-SIMNET_HOUR_DISPLAY">SIMNET_HOUR_DISPLAY
         (0 - 255)
@@ -23383,13 +23703,33 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>MM/dd/yyyy</td></tr><tr><td>2</td><td>dd/MM/yyyy</td></tr></table><h3 id="lookup-SIMNET_BACKLIGHT_LEVEL">SIMNET_BACKLIGHT_LEVEL
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>10% (Min)</td></tr><tr><td>1</td><td>Day mode</td></tr><tr><td>4</td><td>Night mode</td></tr><tr><td>11</td><td>20%</td></tr><tr><td>22</td><td>30%</td></tr><tr><td>33</td><td>40%</td></tr><tr><td>44</td><td>50%</td></tr><tr><td>55</td><td>60%</td></tr><tr><td>66</td><td>70%</td></tr><tr><td>77</td><td>80%</td></tr><tr><td>88</td><td>90%</td></tr><tr><td>99</td><td>100% (Max)</td></tr></table><h3 id="lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>10% (Min)</td></tr><tr><td>1</td><td>Day mode</td></tr><tr><td>4</td><td>Night mode</td></tr><tr><td>11</td><td>20%</td></tr><tr><td>22</td><td>30%</td></tr><tr><td>33</td><td>40%</td></tr><tr><td>44</td><td>50%</td></tr><tr><td>55</td><td>60%</td></tr><tr><td>66</td><td>70%</td></tr><tr><td>77</td><td>80%</td></tr><tr><td>88</td><td>90%</td></tr><tr><td>99</td><td>100% (Max)</td></tr></table><h3 id="lookup-SIMNET_HEADING_UNIT">SIMNET_HEADING_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Magnetic</td></tr><tr><td>1</td><td>True</td></tr></table><h3 id="lookup-SIMNET_WIND_SPEED_UNIT">SIMNET_WIND_SPEED_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Knots</td></tr><tr><td>1</td><td>Meters per second</td></tr><tr><td>2</td><td>Miles per hour</td></tr><tr><td>3</td><td>Kilometers per hour</td></tr></table><h3 id="lookup-SIMNET_SPEED_UNIT">SIMNET_SPEED_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Knots</td></tr><tr><td>1</td><td>Kilometers per hour</td></tr><tr><td>2</td><td>Miles per hour</td></tr></table><h3 id="lookup-SIMNET_TEMPERATURE_UNIT">SIMNET_TEMPERATURE_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Celsius</td></tr><tr><td>1</td><td>Fahrenheit</td></tr></table><h3 id="lookup-SIMNET_DISTANCE_UNIT">SIMNET_DISTANCE_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Nautical miles</td></tr><tr><td>1</td><td>Kilometers</td></tr><tr><td>2</td><td>Miles</td></tr></table><h3 id="lookup-SIMNET_DISTANCE_SMALL_UNIT">SIMNET_DISTANCE_SMALL_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Feet</td></tr><tr><td>1</td><td>Meters</td></tr><tr><td>2</td><td>Yards</td></tr></table><h3 id="lookup-SIMNET_DEPTH_UNIT">SIMNET_DEPTH_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Meters</td></tr><tr><td>1</td><td>Feet</td></tr><tr><td>2</td><td>Fathoms</td></tr></table><h3 id="lookup-SIMNET_VOLUME_UNIT">SIMNET_VOLUME_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Liters</td></tr><tr><td>1</td><td>Gallons</td></tr></table><h3 id="lookup-SIMNET_PRESSURE_UNIT">SIMNET_PRESSURE_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>PSI</td></tr><tr><td>3</td><td>Kilopascal</td></tr><tr><td>5</td><td>Inches of mercury</td></tr><tr><td>6</td><td>Bar</td></tr></table><h3 id="lookup-SIMNET_BARO_PRESSURE_UNIT">SIMNET_BARO_PRESSURE_UNIT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Millibar</td></tr><tr><td>2</td><td>Hectopascal</td></tr><tr><td>5</td><td>Inches of mercury</td></tr></table><h3 id="lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Follow/Non Follow</td></tr><tr><td>6</td><td>Standby</td></tr><tr><td>9</td><td>Heading mode</td></tr><tr><td>10</td><td>Nav mode</td></tr><tr><td>12</td><td>No Drift mode</td></tr><tr><td>13</td><td>Non Follow Up mode</td></tr><tr><td>14</td><td>Follow Up mode</td></tr><tr><td>15</td><td>Wind mode</td></tr><tr><td>17</td><td>Tack</td></tr><tr><td>18</td><td>Square (Turn)</td></tr><tr><td>19</td><td>C-Turn</td></tr><tr><td>20</td><td>U-Turn</td></tr><tr><td>21</td><td>Spiral (Turn)</td></tr><tr><td>22</td><td>Zig Zag (Turn)</td></tr><tr><td>23</td><td>Lazy-S (Turn)</td></tr><tr><td>24</td><td>Depth (Turn)</td></tr><tr><td>26</td><td>Change course</td></tr><tr><td>61</td><td>Timer sync</td></tr><tr><td>107</td><td>MOB Activated</td></tr><tr><td>108</td><td>MOB Deactivated</td></tr><tr><td>112</td><td>Ping port end</td></tr><tr><td>113</td><td>Ping starboard end</td></tr></table><h3 id="lookup-SIMNET_DIRECTION">SIMNET_DIRECTION
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Port</td></tr><tr><td>3</td><td>Starboard</td></tr><tr><td>4</td><td>Left rudder (port)</td></tr><tr><td>5</td><td>Right rudder (starboard)</td></tr></table><h3 id="lookup-SIMNET_ALARM_COMMAND">SIMNET_ALARM_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>56</td><td>Deactivate</td></tr><tr><td>57</td><td>Activate</td></tr><tr><td>58</td><td>Acknowledge</td></tr><tr><td>68</td><td>Silence</td></tr><tr><td>104</td><td>Alarm History</td></tr><tr><td>107</td><td>MOB Activated</td></tr><tr><td>108</td><td>MOB Cancelled</td></tr></table><h3 id="lookup-SIMNET_EVENT_TYPE">SIMNET_EVENT_TYPE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>56</td><td>Deactivate</td></tr><tr><td>57</td><td>Activate</td></tr><tr><td>58</td><td>Acknowledge</td></tr><tr><td>68</td><td>Silence</td></tr><tr><td>88</td><td>Tack/Gybe Confirm</td></tr><tr><td>104</td><td>Alarm History</td></tr><tr><td>107</td><td>MOB Activated</td></tr><tr><td>108</td><td>MOB Cancelled</td></tr></table><h3 id="lookup-SIMNET_EVENT_TYPE">SIMNET_EVENT_TYPE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Follow Up</td></tr><tr><td>10</td><td>AP Command</td></tr><tr><td>23</td><td>Timer</td></tr><tr><td>31</td><td>Siren</td></tr><tr><td>36</td><td>AIS vessel selected</td></tr><tr><td>255</td><td>Alarm</td></tr></table><h3 id="lookup-SIMNET_TIMER_EVENT">SIMNET_TIMER_EVENT
         (0 - 65535)
@@ -23403,9 +23743,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AM</td></tr><tr><td>1</td><td>FM</td></tr><tr><td>2</td><td>Aux</td></tr><tr><td>3</td><td>Sirius</td></tr><tr><td>4</td><td>Ipod</td></tr><tr><td>5</td><td>USB</td></tr><tr><td>6</td><td>DVD</td></tr><tr><td>7</td><td>VHF</td></tr><tr><td>8</td><td>Invalid</td></tr><tr><td>9</td><td>MTP</td></tr><tr><td>10</td><td>Bluetooth</td></tr><tr><td>11</td><td>ARC</td></tr><tr><td>12</td><td>Android</td></tr><tr><td>13</td><td>Pandora</td></tr><tr><td>14</td><td>DAB</td></tr><tr><td>15</td><td>AirPlay</td></tr><tr><td>16</td><td>UPNP</td></tr><tr><td>17</td><td>Unknown</td></tr></table><h3 id="lookup-FUSION_SIRIUS_COM_STATE">FUSION_SIRIUS_COM_STATE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>Off</td></tr><tr><td>2</td><td>Initialising</td></tr><tr><td>3</td><td>On</td></tr></table><h3 id="lookup-FUSION_SIRIUS_ALERT">FUSION_SIRIUS_ALERT
-        (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>None</td></tr><tr><td>2</td><td>Antenna</td></tr><tr><td>3</td><td>NoSignal</td></tr><tr><td>4</td><td>Subscription Update</td></tr></table><h3 id="lookup-FUSION_SIRIUS_TUNING_MODE">FUSION_SIRIUS_TUNING_MODE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>Off</td></tr><tr><td>2</td><td>Initialising</td></tr><tr><td>3</td><td>On</td></tr></table><h3 id="lookup-FUSION_SIRIUS_TUNING_MODE">FUSION_SIRIUS_TUNING_MODE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Normal</td></tr><tr><td>2</td><td>Category</td></tr><tr><td>3</td><td>Preset</td></tr></table><h3 id="lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID
         (0 - 65535)
@@ -23457,7 +23795,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Day</td></tr><tr><td>1</td><td>Night</td></tr><tr><td>13</td><td>Color</td></tr></table><h3 id="lookup-GARMIN_COLOR">GARMIN_COLOR
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Day full color</td></tr><tr><td>1</td><td>Day high contrast</td></tr><tr><td>2</td><td>Night full color</td></tr><tr><td>3</td><td>Night red/black</td></tr><tr><td>4</td><td>Night green/black</td></tr></table><h3 id="lookup-GARMIN_BACKLIGHT_LEVEL">GARMIN_BACKLIGHT_LEVEL
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Day full color</td></tr><tr><td>1</td><td>Day high contrast</td></tr><tr><td>2</td><td>Night full color</td></tr><tr><td>3</td><td>Night red/black</td></tr><tr><td>4</td><td>Night green/black</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Standby</td></tr><tr><td>3</td><td>Shadow Drive</td></tr><tr><td>5</td><td>Engaged</td></tr></table><h3 id="lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID
+        (0 - 65535)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1900</td><td>AHRS ATT transport</td></tr><tr><td>5904</td><td>Autopilot transport</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>3</td><td>Heartbeat</td></tr><tr><td>10</td><td>Mode State</td></tr><tr><td>11</td><td>Heading to Steer</td></tr><tr><td>62</td><td>Response Setting</td></tr><tr><td>114</td><td>Rate of Turn</td></tr><tr><td>115</td><td>Rate of Turn Order</td></tr><tr><td>116</td><td>Turn Angle Order</td></tr><tr><td>158</td><td>System Voltage</td></tr><tr><td>161</td><td>Turn Angle Measured</td></tr><tr><td>239</td><td>Engine RPM B</td></tr><tr><td>240</td><td>Engine RPM A</td></tr><tr><td>246</td><td>Speed</td></tr></table><h3 id="lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID
+        (0 - 65535)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>40</td><td>Calibration Matrix Present</td></tr><tr><td>52</td><td>Set North State</td></tr><tr><td>65</td><td>Device Flags</td></tr><tr><td>67</td><td>COG Source Valid Flag</td></tr></table><h3 id="lookup-GARMIN_BACKLIGHT_LEVEL">GARMIN_BACKLIGHT_LEVEL
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>0%</td></tr><tr><td>1</td><td>5%</td></tr><tr><td>2</td><td>10%</td></tr><tr><td>3</td><td>15%</td></tr><tr><td>4</td><td>20%</td></tr><tr><td>5</td><td>25%</td></tr><tr><td>6</td><td>30%</td></tr><tr><td>7</td><td>35%</td></tr><tr><td>8</td><td>40%</td></tr><tr><td>9</td><td>45%</td></tr><tr><td>10</td><td>50%</td></tr><tr><td>11</td><td>55%</td></tr><tr><td>12</td><td>60%</td></tr><tr><td>13</td><td>65%</td></tr><tr><td>14</td><td>70%</td></tr><tr><td>15</td><td>75%</td></tr><tr><td>16</td><td>80%</td></tr><tr><td>17</td><td>85%</td></tr><tr><td>18</td><td>90%</td></tr><tr><td>19</td><td>95%</td></tr><tr><td>20</td><td>100%</td></tr></table><h3 id="lookup-SEATALK_PILOT_MODE_16">SEATALK_PILOT_MODE_16
         (0 - 65535)
@@ -23498,7 +23844,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>F3E/G3E simplex, telephone</td></tr><tr><td>1</td><td>F3E/G3E duplex, telephone</td></tr><tr><td>2</td><td>J3E, telephone</td></tr><tr><td>3</td><td>H3E, telephone</td></tr><tr><td>4</td><td>F1B/J2B FEC NBDP, telex/teleprinter</td></tr><tr><td>5</td><td>F1B/J2B ARQ NBDP, telex/teleprinter</td></tr><tr><td>6</td><td>F1B/J2B receive only, teleprinter/DSC</td></tr><tr><td>7</td><td>F1B/J2B, teleprinter/DSC</td></tr><tr><td>8</td><td>A1A Morse, tape recorder</td></tr><tr><td>9</td><td>A1A Morse, Morse key/head set</td></tr><tr><td>10</td><td>F1C/F2C/F3C, FAX machine</td></tr></table><h3 id="lookup-POWER_MODE">POWER_MODE
         (0 - 1)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>High</td></tr><tr><td>1</td><td>Low</td></tr></table><h3 id="lookup-BROADCAST_INDICATOR">BROADCAST_INDICATOR
-        (0 - 15)
+        (0 - 1)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Broadcast geo area message</td></tr><tr><td>1</td><td>Addressed message</td></tr></table><h3 id="lookup-BANDWIDTH">BANDWIDTH
         (0 - 1)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Default</td></tr><tr><td>1</td><td>12.5 kHz</td></tr></table><h3 id="lookup-FLOOD_STATE">FLOOD_STATE
@@ -23569,7 +23915,33 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^7-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Navigation Method</td></tr><tr><td>1</td><td>XTE Limit</td></tr></table><h3 id="lookupbit-DISABLED_SATELLITES">DISABLED_SATELLITES
         (0 - 2^39-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Disable SV #1</td></tr><tr><td>1</td><td>Disable SV #2</td></tr><tr><td>2</td><td>Disable SV #3</td></tr><tr><td>3</td><td>Disable SV #4</td></tr><tr><td>4</td><td>Disable SV #5</td></tr><tr><td>5</td><td>Disable SV #6</td></tr><tr><td>6</td><td>Disable SV #7</td></tr><tr><td>7</td><td>Disable SV #8</td></tr><tr><td>8</td><td>Disable SV #9</td></tr><tr><td>9</td><td>Disable SV #10</td></tr><tr><td>10</td><td>Disable SV #11</td></tr><tr><td>11</td><td>Disable SV #12</td></tr><tr><td>12</td><td>Disable SV #13</td></tr><tr><td>13</td><td>Disable SV #14</td></tr><tr><td>14</td><td>Disable SV #15</td></tr><tr><td>15</td><td>Disable SV #16</td></tr><tr><td>16</td><td>Disable SV #17</td></tr><tr><td>17</td><td>Disable SV #18</td></tr><tr><td>18</td><td>Disable SV #19</td></tr><tr><td>19</td><td>Disable SV #20</td></tr><tr><td>20</td><td>Disable SV #21</td></tr><tr><td>21</td><td>Disable SV #22</td></tr><tr><td>22</td><td>Disable SV #23</td></tr><tr><td>23</td><td>Disable SV #24</td></tr><tr><td>24</td><td>Disable SV #25</td></tr><tr><td>25</td><td>Disable SV #26</td></tr><tr><td>26</td><td>Disable SV #27</td></tr><tr><td>27</td><td>Disable SV #28</td></tr><tr><td>28</td><td>Disable SV #29</td></tr><tr><td>29</td><td>Disable SV #30</td></tr><tr><td>30</td><td>Disable SV #31</td></tr><tr><td>31</td><td>Disable SV #32</td></tr><tr><td>32</td><td>Disable SV #33</td></tr><tr><td>33</td><td>Disable SV #34</td></tr><tr><td>34</td><td>Disable SV #35</td></tr><tr><td>35</td><td>Disable SV #36</td></tr><tr><td>36</td><td>Disable SV #37</td></tr><tr><td>37</td><td>Disable SV #38</td></tr><tr><td>38</td><td>Disable SV #39</td></tr><tr><td>39</td><td>Disable SV #40</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Disable SV #1</td></tr><tr><td>1</td><td>Disable SV #2</td></tr><tr><td>2</td><td>Disable SV #3</td></tr><tr><td>3</td><td>Disable SV #4</td></tr><tr><td>4</td><td>Disable SV #5</td></tr><tr><td>5</td><td>Disable SV #6</td></tr><tr><td>6</td><td>Disable SV #7</td></tr><tr><td>7</td><td>Disable SV #8</td></tr><tr><td>8</td><td>Disable SV #9</td></tr><tr><td>9</td><td>Disable SV #10</td></tr><tr><td>10</td><td>Disable SV #11</td></tr><tr><td>11</td><td>Disable SV #12</td></tr><tr><td>12</td><td>Disable SV #13</td></tr><tr><td>13</td><td>Disable SV #14</td></tr><tr><td>14</td><td>Disable SV #15</td></tr><tr><td>15</td><td>Disable SV #16</td></tr><tr><td>16</td><td>Disable SV #17</td></tr><tr><td>17</td><td>Disable SV #18</td></tr><tr><td>18</td><td>Disable SV #19</td></tr><tr><td>19</td><td>Disable SV #20</td></tr><tr><td>20</td><td>Disable SV #21</td></tr><tr><td>21</td><td>Disable SV #22</td></tr><tr><td>22</td><td>Disable SV #23</td></tr><tr><td>23</td><td>Disable SV #24</td></tr><tr><td>24</td><td>Disable SV #25</td></tr><tr><td>25</td><td>Disable SV #26</td></tr><tr><td>26</td><td>Disable SV #27</td></tr><tr><td>27</td><td>Disable SV #28</td></tr><tr><td>28</td><td>Disable SV #29</td></tr><tr><td>29</td><td>Disable SV #30</td></tr><tr><td>30</td><td>Disable SV #31</td></tr><tr><td>31</td><td>Disable SV #32</td></tr><tr><td>32</td><td>Disable SV #33</td></tr><tr><td>33</td><td>Disable SV #34</td></tr><tr><td>34</td><td>Disable SV #35</td></tr><tr><td>35</td><td>Disable SV #36</td></tr><tr><td>36</td><td>Disable SV #37</td></tr><tr><td>37</td><td>Disable SV #38</td></tr><tr><td>38</td><td>Disable SV #39</td></tr><tr><td>39</td><td>Disable SV #40</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-NAVICO_DIAGNOSTIC">NAVICO_DIAGNOSTIC
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>4</td><td>Rx Messages</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Tx Messages</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Fast Packet Errors</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-NAVICO_SOURCE_SETTING_ID">NAVICO_SOURCE_SETTING_ID
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>17</td><td>Wind Source Count</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>18</td><td>Wind Source 1</td><td>1 </td><td>64 bits 
+              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>19</td><td>Wind Source 2</td><td>1 </td><td>64 bits 
+              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>20</td><td>Boat Speed Source Count</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>21</td><td>Port Boat Speed Source</td><td>1 </td><td>64 bits 
+              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>22</td><td>Starboard Boat Speed Source</td><td>1 </td><td>64 bits 
+              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>24</td><td>True Wind Direction Damping</td><td>1 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr></table><h3 id="lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE
         (0 - 16777215)
       </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Heading Offset</td><td>0.0001 rad</td><td>16 bits 
               
@@ -23598,19 +23970,76 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1024</td><td>Field angle</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1800</td><td>Anchor depth</td><td>0.01 m</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1280</td><td>Heading damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1283</td><td>Apparent wind damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1285</td><td>Boat speed damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1329</td><td>Trim angle damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1335</td><td>SOG damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1336</td><td>COG damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1337</td><td>Heel angle damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1345</td><td>Tide damping</td><td>0.0909091 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1349</td><td>True wind speed damping</td><td>0.00900901 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>1800</td><td>Anchor depth</td><td>0.01 m</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4863</td><td>Backlight level</td><td> </td><td>8 bits 
               
                   lookup
-                  <a href="#lookup-SIMNET_BACKLIGHT_LEVEL">SIMNET_BACKLIGHT_LEVEL</a></td></tr><tr><td>5160</td><td>Time format</td><td> </td><td>8 bits 
+                  <a href="#lookup-SIMNET_BACKLIGHT_LEVEL">SIMNET_BACKLIGHT_LEVEL</a></td></tr><tr><td>5120</td><td>Heading unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_HEADING_UNIT">SIMNET_HEADING_UNIT</a></td></tr><tr><td>5123</td><td>Wind speed unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_WIND_SPEED_UNIT">SIMNET_WIND_SPEED_UNIT</a></td></tr><tr><td>5125</td><td>Speed unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_SPEED_UNIT">SIMNET_SPEED_UNIT</a></td></tr><tr><td>5126</td><td>Temperature unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_TEMPERATURE_UNIT">SIMNET_TEMPERATURE_UNIT</a></td></tr><tr><td>5127</td><td>Distance unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_DISTANCE_UNIT">SIMNET_DISTANCE_UNIT</a></td></tr><tr><td>5128</td><td>Depth unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_DEPTH_UNIT">SIMNET_DEPTH_UNIT</a></td></tr><tr><td>5134</td><td>Volume unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_VOLUME_UNIT">SIMNET_VOLUME_UNIT</a></td></tr><tr><td>5160</td><td>Time format</td><td> </td><td>8 bits 
               
                   lookup
                   <a href="#lookup-SIMNET_TIME_FORMAT">SIMNET_TIME_FORMAT</a></td></tr><tr><td>5161</td><td>Time hour display</td><td> </td><td>8 bits 
               
                   lookup
-                  <a href="#lookup-SIMNET_HOUR_DISPLAY">SIMNET_HOUR_DISPLAY</a></td></tr><tr><td>9983</td><td>Night mode</td><td> </td><td>8 bits 
+                  <a href="#lookup-SIMNET_HOUR_DISPLAY">SIMNET_HOUR_DISPLAY</a></td></tr><tr><td>5163</td><td>Pressure unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_PRESSURE_UNIT">SIMNET_PRESSURE_UNIT</a></td></tr><tr><td>5164</td><td>Barometric pressure unit</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_BARO_PRESSURE_UNIT">SIMNET_BARO_PRESSURE_UNIT</a></td></tr><tr><td>5174</td><td>Distance unit (companion)</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>9983</td><td>Night mode</td><td> </td><td>8 bits 
               
                   lookup
                   <a href="#lookup-SIMNET_NIGHT_MODE">SIMNET_NIGHT_MODE</a></td></tr><tr><td>11524</td><td>True wind shift</td><td>0.0001 rad</td><td>16 bits 
@@ -23625,7 +24054,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>32789</td><td>Alert bits</td><td> </td><td>64 bits 
               
                   bitfield
-                  <a href="#lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD</a></td></tr><tr><td>40711</td><td>Race timer auto start</td><td> </td><td>8 bits 
+                  <a href="#lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD</a></td></tr><tr><td>36871</td><td>Distance unit (small)</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_DISTANCE_SMALL_UNIT">SIMNET_DISTANCE_SMALL_UNIT</a></td></tr><tr><td>40711</td><td>Race timer auto start</td><td> </td><td>8 bits 
               
                   lookup
                   <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>44079</td><td>Night mode color</td><td> </td><td>8 bits 
@@ -23717,7 +24149,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>59</td><td>User 4</td><td>0.01 </td><td>32 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60</td><td>Roll Rate</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60</td><td>Roll Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>64</td><td>Forestay</td><td>0.001 </td><td>32 bits 
@@ -23726,6 +24158,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>65</td><td>Water Speed</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>68</td><td>Yaw Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
+              
+                    signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>73</td><td>Current Set</td><td>0.0001 rad</td><td>16 bits 
               
                     unsigned
@@ -23819,7 +24254,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>157</td><td>Wind Angle to Mast</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>158</td><td>Pitch Angle</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>158</td><td>Pitch Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>163</td><td>Daggerboard Position</td><td> </td><td>16 bits 

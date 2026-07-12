@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -32,8 +32,8 @@ typedef struct
   uint32_t pgn;
   uint8_t  dst;
   uint8_t  src;
-  uint8_t  len;
-  uint8_t  data[FASTPACKET_MAX_SIZE];
+  uint16_t len; // Up to MAX_PGN_SIZE, so this does not fit in a uint8_t
+  uint8_t  data[MAX_PGN_SIZE];
 } RawMessage;
 
 bool parseFastFormat(StringBuffer *src, RawMessage *msg);
@@ -48,5 +48,6 @@ int  parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absol
 int  parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson);
 bool parseTimestamp(const char *msg, uint64_t *when);
+void normalizeTimestamp(const char *in, char *out, size_t outLen);
 
 #endif

@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -42,60 +42,60 @@ static bool unhandledBitLength(const char *fieldName, size_t length)
   return false;
 }
 
-static char  mbuf[8192];
-static char *mp = mbuf;
+// The message output buffer uses the shared growable StringBuffer (common.h)
+// rather than a fixed size: a message can be much larger than a single
+// fast-packet payload (223 bytes) once ISO Transport Protocol reassembly is
+// in play (up to 1785 bytes), and the human-readable/-debug rendering of a
+// large repeating field group can need many times that in characters (e.g.
+// GNSS Sats in View with a large satellite list). A fixed buffer would
+// silently truncate instead of erroring.
+static StringBuffer mbuf = {0};
 
 extern void mprintf(const char *format, ...)
 {
   va_list ap;
-  int     remain;
 
   va_start(ap, format);
-  remain = sizeof(mbuf) - (mp - mbuf) - 1;
-  if (remain > 0)
-  {
-    mp += vsnprintf(mp, remain, format, ap);
-  }
+  sbAppendFormatV(&mbuf, format, ap);
   va_end(ap);
 }
 
 extern void mreset(void)
 {
-  mp = mbuf;
+  sbEmpty(&mbuf);
 }
 
 extern void mset(size_t location)
 {
-  mp = mbuf + location;
+  sbTruncate(&mbuf, location);
 }
 
 extern char mchr(size_t location)
 {
-  return mbuf[location];
+  return mbuf.data[location];
 }
 
 extern void minsert(size_t location, const char *str)
 {
   size_t len = strlen(str);
 
-  if (mp + len - mbuf <= sizeof(mbuf))
-  {
-    memmove(mbuf + location + len, mbuf + location, mp - mbuf - location);
-    memmove(mbuf + location, str, len);
-    mp += len;
-  }
+  sbEnsureCapacity(&mbuf, mbuf.len + len);
+  memmove(mbuf.data + location + len, mbuf.data + location, mbuf.len - location);
+  memcpy(mbuf.data + location, str, len);
+  mbuf.len += len;
+  mbuf.data[mbuf.len] = '\0';
 }
 
 extern void mwrite(FILE *stream)
 {
-  fwrite(mbuf, sizeof(char), mp - mbuf, stream);
+  fwrite(sbGet(&mbuf), sizeof(char), sbGetLength(&mbuf), stream);
   fflush(stream);
   mreset();
 }
 
 extern size_t mlocation(void)
 {
-  return mp - mbuf;
+  return sbGetLength(&mbuf);
 }
 
 extern char *getSep(void)
@@ -1463,11 +1463,16 @@ extern bool fieldPrintStringLAU(const Field   *field,
     len  = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
     data = utf8;
   }
-  else if (control > 1)
+  else if (control > 1 && control != 0xff)
   {
     logError("Unhandled string type %d in PGN\n", control);
     return false;
   }
+  // control == 1 is ASCII. control == 0xff marks an unset field: the length byte is
+  // present but the encoding byte and the content are 0xff filler (seen on the H5000
+  // pilot in PGN 126998, samples/h5000_pilot_126998.raw). printString() trims the
+  // trailing 0xff run to an empty string, so let it fall through rather than aborting
+  // the whole PGN.
 
   r = printString(fieldName, data, len);
   if (utf8 != NULL)
@@ -1544,8 +1549,9 @@ extern bool fieldPrintBinary(const Field   *field,
   return true;
 }
 
-const Field *g_ftf    = NULL;
-int64_t      g_length = 0;
+const Field *g_ftf         = NULL;
+int64_t      g_length      = 0;
+bool         g_lengthValid = false;
 
 extern bool fieldPrintKeyValue(const Field   *field,
                                const char    *fieldName,
@@ -1556,7 +1562,7 @@ extern bool fieldPrintKeyValue(const Field   *field,
 {
   bool r = false;
 
-  if (g_length != 0)
+  if (g_lengthValid)
   {
     *bits = ((size_t) g_length) * 8;
   }
@@ -1565,6 +1571,18 @@ extern bool fieldPrintKeyValue(const Field   *field,
     *bits = field->size;
   }
   logDebug("fieldPrintKeyValue('%s') bits=%zu\n", fieldName, *bits);
+
+  // An explicit length of zero means the value is present but empty (e.g. PGN 130823 directory
+  // entries that only declare a data type). Skip the field cleanly so it is simply omitted rather
+  // than triggering the "print routine did not print anything" guard in text mode.
+  if (g_lengthValid && *bits == 0)
+  {
+    g_skip        = true;
+    g_ftf         = NULL;
+    g_length      = 0;
+    g_lengthValid = false;
+    return true;
+  }
 
   if (dataLen >= ((startBit + *bits) >> 3))
   {
@@ -1593,7 +1611,7 @@ extern bool fieldPrintKeyValue(const Field   *field,
       // outcome as when the length is known (cf. PGN 130846). Without this,
       // an unknown Key (e.g. PGN 130845) prints an empty Value despite the
       // bytes being present on the bus.
-      if (*bits == 0 && startBit < dataLen * 8)
+      if (*bits == 0 && !g_lengthValid && startBit < dataLen * 8)
       {
         *bits = dataLen * 8 - startBit;
       }
@@ -1602,11 +1620,24 @@ extern bool fieldPrintKeyValue(const Field   *field,
   }
   else
   {
-    logError("PGN %u key-value has insufficient bytes for field %s\n", field->pgn ? field->pgn->pgn : 0, fieldName);
+    // The declared value runs past the end of the packet: the frame ended mid-record. This is the normal
+    // way a repeating-to-end key/value group terminates -- the device packs as many records as fit and the
+    // trailing one is cut off (e.g. a PGN 130822 Command 6 "Object Dump" whose object list exceeds the
+    // 223-byte fast-packet limit). Most such truncations already stop silently because the field loop runs
+    // out at a record boundary; when the cut instead lands inside a value field, skip that partial value
+    // cleanly and stop rather than aborting the whole PGN. Consume the remaining bytes so the caller's loop
+    // terminates.
+    logDebug("PGN %u key-value: value for field %s runs past end of packet; stopping at the partial record\n",
+             field->pgn ? field->pgn->pgn : 0,
+             fieldName);
+    g_skip = true;
+    *bits  = (dataLen * 8 > startBit) ? (dataLen * 8 - startBit) : 0;
+    r      = true;
   }
 
-  g_ftf    = NULL;
-  g_length = 0;
+  g_ftf         = NULL;
+  g_length      = 0;
+  g_lengthValid = false;
 
   return r;
 }

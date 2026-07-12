@@ -2,7 +2,7 @@
 
 Reads raw n2k ASCII data from stdin and writes it to a Linux SocketCAN device (e.g. can0).
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -42,7 +42,7 @@ unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp);
 int main(int argc, char **argv)
 {
   FILE          *file = stdin;
-  char           msg[2000];
+  char           msg[MAX_MSG_LINE_LENGTH];
   char          *milliSecond;
   int            socket;
   struct timeval frameTime;
@@ -156,6 +156,12 @@ static void writeRawPGNToCanSocket(RawMessage *msg, int socket)
   if (msg->pgn >= (1 << 18)) // PGNs can't have more than 18 bits, otherwise it overwrites priority bits
   {
     logError("Invalid PGN, too big (0x%x). Skipping.\n", msg->pgn);
+    return;
+  }
+
+  if (msg->len > FASTPACKET_MAX_SIZE) // Only reassembly, not transmission, of ISO TP messages is implemented
+  {
+    logError("PGN %u length %u exceeds fast packet maximum %u. Skipping.\n", msg->pgn, msg->len, FASTPACKET_MAX_SIZE);
     return;
   }
 

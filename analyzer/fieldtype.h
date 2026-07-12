@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -948,6 +948,8 @@ FieldType fieldTypeList[] = {
 
     {.name = "VOLUME_UFIX16_L", .description = "Volume", .resolution = 1, .physical = &VOLUME, .baseFieldType = "UFIX16"},
 
+    {.name = "VOLUME_UFIX16_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX16"},
+
     {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
     {.name = "VOLUME_UFIX32_DML", .description = "Volume", .resolution = 0.0001, .physical = &VOLUME, .baseFieldType = "UFIX32"},
@@ -1032,6 +1034,22 @@ FieldType fieldTypeList[] = {
     {.name          = "DURATION_UFIX16_MIN",
      .description   = "Time duration, 16 bits with minute resolution",
      .resolution    = 60,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    // Simnet Key Value (PGN 130845) instrument damping settings encode the displayed number of seconds
+    // scaled by a per-quantity factor (11 or 111) that does not reduce to a round SI resolution; see #730.
+    {.name          = "DURATION_UFIX16_1_11S",
+     .description   = "Time duration, 16 bits with 1/11 second resolution",
+     .resolution    = 1.0 / 11.0,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX16_1_111S",
+     .description   = "Time duration, 16 bits with 1/111 second resolution",
+     .resolution    = 1.0 / 111.0,
      .size          = 16,
      .hasSign       = False,
      .baseFieldType = "DURATION"},

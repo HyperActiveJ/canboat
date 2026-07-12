@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -78,6 +78,39 @@ typedef struct
 
 Packet reassemblyBuffer[REASSEMBLY_BUFFER_SIZE];
 
+// ISO 11783-3 Transport Protocol reassembly. Newer devices (a NEON GPS is the
+// trigger for this code) wrap PGNs too large even for fast-packet's 223-byte
+// ceiling (e.g. PGN 129540 with a large satellite list) in ISO TP instead:
+// PGN 60416 (TP.CM) announces the transfer (BAM = broadcast, no ACK; RTS =
+// addressed, with a CTS handshake we don't participate in as a passive
+// monitor), PGN 60160 (TP.DT) carries the payload in 7-byte chunks with a
+// 1-based sequence number. Both PGNs are already decoded individually
+// elsewhere in pgn.h; here they are swallowed and replaced with a single
+// synthesized frame for the target PGN, the same way fast-packet frames are
+// reassembled above.
+#define PGN_ISO_TP_CM (60416)
+#define PGN_ISO_TP_DT (60160)
+#define ISO_TP_CM_BAM (32)
+#define ISO_TP_CM_RTS (16)
+#define ISO_TP_CM_ABORT (255)
+#define ISO_TP_SLOTS (16)
+
+typedef struct
+{
+  bool     used;
+  uint8_t  src;
+  uint8_t  dst;
+  uint8_t  prio;
+  uint32_t targetPgn;
+  size_t   totalSize;
+  uint8_t  packets;
+  uint32_t received[(ISOTP_MAX_PACKETS + 31) / 32]; // Bit n is one when sequence n+1 has been received
+  char     timestamp[DATE_LENGTH];
+  uint8_t  data[ISOTP_MAX_SIZE];
+} TpSlot;
+
+TpSlot tpSlotBuffer[ISO_TP_SLOTS];
+
 bool       showRaw       = false;
 bool       showData      = false;
 bool       showBytes     = false;
@@ -109,7 +142,10 @@ static uint32_t currentTime = UINT32_MAX;
 
 static enum RawFormats detectFormat(const char *msg);
 static bool            isMsgAllowed(const RawMessage *msg);
+static bool            isTargetPgnAllowed(uint32_t pgn);
 static void            printCanFormat(RawMessage *msg);
+static void            handleIsoTpCm(const RawMessage *msg);
+static void            handleIsoTpDt(const RawMessage *msg);
 static bool            printField(const Field   *field,
                                   const char    *fieldName,
                                   const uint8_t *data,
@@ -166,7 +202,7 @@ static void usage(char **argv, char **av)
 int main(int argc, char **argv)
 {
   int    r;
-  char   msg[2000];
+  char   msg[MAX_MSG_LINE_LENGTH];
   FILE  *file = stdin;
   int    ac   = argc;
   char **av   = argv;
@@ -612,6 +648,14 @@ static bool isMsgAllowed(const RawMessage *msg)
   }
   if (onlyPgn > 0)
   {
+    // ISO Transport Protocol frames must always reach printCanFormat so the
+    // reassembler can see them, even when the user filtered on a different
+    // PGN - the target PGN is checked separately, via isTargetPgnAllowed(),
+    // once a transfer completes.
+    if (msg->pgn == PGN_ISO_TP_CM || msg->pgn == PGN_ISO_TP_DT)
+    {
+      return true;
+    }
     for (int i = 0; i < onlyPgn; i++)
     {
       if (onlyPgnList[i] == msg->pgn)
@@ -624,10 +668,27 @@ static bool isMsgAllowed(const RawMessage *msg)
   return true;
 }
 
+static bool isTargetPgnAllowed(uint32_t pgn)
+{
+  if (onlyPgn == 0)
+  {
+    return true;
+  }
+  for (int i = 0; i < onlyPgn; i++)
+  {
+    if (onlyPgnList[i] == (int) pgn)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 static void printCanRaw(const RawMessage *msg)
 {
   size_t i;
   FILE  *f = stdout;
+  char   ts[DATE_LENGTH];
 
   if (showJson)
   {
@@ -636,7 +697,8 @@ static void printCanRaw(const RawMessage *msg)
 
   if (showRaw && (!onlyPgn || onlyPgn == msg->pgn))
   {
-    fprintf(f, "%s,%u,%u,%u,%u,%u", msg->timestamp, msg->prio, msg->pgn, msg->src, msg->dst, msg->len);
+    normalizeTimestamp(msg->timestamp, ts, sizeof(ts));
+    fprintf(f, "%s,%u,%u,%u,%u,%u", ts, msg->prio, msg->pgn, msg->src, msg->dst, msg->len);
     for (i = 0; i < msg->len; i++)
     {
       fprintf(f, ",%02x", msg->data[i]);
@@ -758,6 +820,17 @@ static void printCanFormat(RawMessage *msg)
   size_t     buffer;
   Packet    *p;
 
+  if (msg->pgn == PGN_ISO_TP_CM)
+  {
+    handleIsoTpCm(msg);
+    return;
+  }
+  if (msg->pgn == PGN_ISO_TP_DT)
+  {
+    handleIsoTpDt(msg);
+    return;
+  }
+
   pgn = searchForPgn(msg->pgn);
   if (multiPackets == MULTIPACKETS_SEPARATE && pgn == NULL)
   {
@@ -822,14 +895,37 @@ static void printCanFormat(RawMessage *msg)
       p->frames = 0;
     }
 
-    if (frame == 0 && p->frames == 0)
+    if (frame == 0)
     {
-      p->size = msg->data[1];
-      if (p->size > FASTPACKET_MAX_SIZE)
+      // Frame 0 declares the payload size and thus the mask of required
+      // frame indices. Frames already held in the slot are ambiguous: an
+      // out-of-order retransmission must survive (see recombine-frames.in),
+      // but the body of a previous burst whose frame 0 was lost must not —
+      // completing against it would emit a payload gluing this frame 0
+      // onto the previous message's body, and a size mismatch would leave
+      // p->frames a strict superset of p->allFrames so the slot never
+      // completes again. The tell is completion: a genuinely reordered
+      // burst completes on a later index, stale leftovers would complete
+      // the moment frame 0 lands. Discard held bits exactly when they
+      // would complete the mask this frame declares. (allFrames == 1 is
+      // exempt: a <= 6 byte payload legitimately completes on frame 0
+      // alone, using no held data.)
+      size_t   size = msg->data[1];
+      uint32_t allFrames;
+
+      if (size > FASTPACKET_MAX_SIZE)
       {
-        p->size = FASTPACKET_MAX_SIZE;
+        size = FASTPACKET_MAX_SIZE;
       }
-      p->allFrames = (uint32_t) ((UINT64_C(1) << (1 + (p->size / 7))) - 1);
+      allFrames = (uint32_t) ((UINT64_C(1) << (1 + (size / 7))) - 1);
+
+      if (p->frames != 0 && allFrames != 1 && ((p->frames | UINT32_C(1)) & allFrames) == allFrames)
+      {
+        logError("Received incomplete fast packet PGN %u from source %u\n", msg->pgn, msg->src);
+        p->frames = 0;
+      }
+      p->size      = size;
+      p->allFrames = allFrames;
     }
 
     if (msg->len > msgIdx)
@@ -867,6 +963,216 @@ static void printCanFormat(RawMessage *msg)
       p->used   = false;
       p->frames = 0;
     }
+  }
+}
+
+// Handle a PGN 60416 TP.CM frame. BAM and RTS open a fresh session for this
+// source; Abort closes one down; the other control bytes (CTS / EOM) are
+// peer responses to an RTS session we, as a passive monitor, don't
+// participate in and are ignored.
+static void handleIsoTpCm(const RawMessage *msg)
+{
+  size_t   buffer;
+  TpSlot  *p;
+  uint8_t  control;
+  uint32_t totalSize;
+  uint8_t  packets;
+  uint32_t targetPgn;
+
+  if (msg->len == 0)
+  {
+    logError("ISO TP CM frame from source %u is empty; ignoring\n", msg->src);
+    return;
+  }
+
+  control = msg->data[0];
+
+  if (control == ISO_TP_CM_ABORT)
+  {
+    // Drop any in-flight session for this source.
+    for (buffer = 0; buffer < ISO_TP_SLOTS; buffer++)
+    {
+      if (tpSlotBuffer[buffer].used && tpSlotBuffer[buffer].src == msg->src)
+      {
+        tpSlotBuffer[buffer].used = false;
+      }
+    }
+    return;
+  }
+
+  if (control != ISO_TP_CM_BAM && control != ISO_TP_CM_RTS)
+  {
+    return;
+  }
+
+  if (msg->len < 8)
+  {
+    logError("ISO TP CM frame from source %u has %u bytes (need 8); ignoring\n", msg->src, msg->len);
+    return;
+  }
+
+  totalSize = (uint32_t) msg->data[1] + ((uint32_t) msg->data[2] << 8);
+  packets   = msg->data[3];
+  targetPgn = (uint32_t) msg->data[5] + ((uint32_t) msg->data[6] << 8) + ((uint32_t) msg->data[7] << 16);
+
+  if (packets == 0 || totalSize == 0 || totalSize > ISOTP_MAX_SIZE)
+  {
+    logError("ISO TP CM frame from source %u declares implausible size=%u packets=%u; ignoring\n", msg->src, totalSize, packets);
+    return;
+  }
+
+  // Find an existing slot for this source, otherwise claim a free one. The
+  // spec allows only one in-flight transfer per source at a time, so a new
+  // CM for a source that's already got a session simply restarts it.
+  for (buffer = 0; buffer < ISO_TP_SLOTS; buffer++)
+  {
+    if (tpSlotBuffer[buffer].used && tpSlotBuffer[buffer].src == msg->src)
+    {
+      break;
+    }
+  }
+  if (buffer == ISO_TP_SLOTS)
+  {
+    for (buffer = 0; buffer < ISO_TP_SLOTS; buffer++)
+    {
+      if (!tpSlotBuffer[buffer].used)
+      {
+        break;
+      }
+    }
+    if (buffer == ISO_TP_SLOTS)
+    {
+      logError("Out of ISO TP reassembly slots; ignoring transfer from source %u\n", msg->src);
+      return;
+    }
+  }
+
+  p            = &tpSlotBuffer[buffer];
+  p->used      = true;
+  p->src       = msg->src;
+  p->dst       = msg->dst;
+  p->prio      = msg->prio;
+  p->targetPgn = targetPgn;
+  p->totalSize = totalSize;
+  p->packets   = packets;
+  memset(p->received, 0, sizeof(p->received));
+  strncpy(p->timestamp, msg->timestamp, sizeof(p->timestamp) - 1);
+  p->timestamp[sizeof(p->timestamp) - 1] = '\0';
+  memset(p->data, 0xff, totalSize);
+
+  logDebug("ISO TP: opened session for target PGN %u from source %u, %u bytes in %u packets\n",
+           targetPgn,
+           msg->src,
+           totalSize,
+           packets);
+}
+
+// Handle a PGN 60160 TP.DT frame. Copies the 7-byte chunk into the matching
+// session's buffer at offset (seq - 1) * 7; synthesizes and decodes a frame
+// for the target PGN the moment every declared sequence number has been
+// seen. A DT frame with no matching open session (we may have missed the
+// CM) is silently ignored.
+static void handleIsoTpDt(const RawMessage *msg)
+{
+  size_t   buffer;
+  TpSlot  *p;
+  uint8_t  sequence;
+  size_t   seqZeroBased;
+  size_t   offset;
+  size_t   end;
+  size_t   copyLen;
+  size_t   available;
+  size_t   fullWords;
+  size_t   partialBits;
+  bool     allReceived;
+
+  if (msg->len == 0)
+  {
+    logError("ISO TP DT frame from source %u is empty; ignoring\n", msg->src);
+    return;
+  }
+
+  for (buffer = 0; buffer < ISO_TP_SLOTS; buffer++)
+  {
+    if (tpSlotBuffer[buffer].used && tpSlotBuffer[buffer].src == msg->src)
+    {
+      break;
+    }
+  }
+  if (buffer == ISO_TP_SLOTS)
+  {
+    logDebug("ISO TP DT frame from source %u with no open session; ignoring\n", msg->src);
+    return;
+  }
+
+  p        = &tpSlotBuffer[buffer];
+  sequence = msg->data[0];
+
+  if (sequence == 0 || sequence > p->packets)
+  {
+    logError("ISO TP DT frame from source %u has sequence %u out of range 1..%u; ignoring\n", msg->src, sequence, p->packets);
+    return;
+  }
+
+  seqZeroBased = (size_t) sequence - 1;
+  p->received[seqZeroBased / 32] |= UINT32_C(1) << (seqZeroBased % 32);
+
+  offset = seqZeroBased * FASTPACKET_BUCKET_N_SIZE;
+  end    = offset + FASTPACKET_BUCKET_N_SIZE;
+  if (end > p->totalSize)
+  {
+    end = p->totalSize;
+  }
+  copyLen   = (end > offset) ? end - offset : 0;
+  available = (msg->len > 1) ? (size_t) msg->len - 1 : 0;
+  if (copyLen > available)
+  {
+    copyLen = available;
+  }
+  if (copyLen > 0)
+  {
+    memcpy(&p->data[offset], &msg->data[1], copyLen);
+  }
+
+  // Complete iff every declared sequence number has arrived.
+  fullWords   = p->packets / 32;
+  partialBits = p->packets % 32;
+  allReceived = true;
+  for (size_t i = 0; i < fullWords; i++)
+  {
+    if (p->received[i] != UINT32_MAX)
+    {
+      allReceived = false;
+      break;
+    }
+  }
+  if (allReceived && partialBits > 0)
+  {
+    uint32_t mask = (UINT32_C(1) << partialBits) - 1;
+    if ((p->received[fullWords] & mask) != mask)
+    {
+      allReceived = false;
+    }
+  }
+  if (!allReceived)
+  {
+    return;
+  }
+
+  p->used = false;
+
+  if (isTargetPgnAllowed(p->targetPgn))
+  {
+    RawMessage synthesized;
+
+    memcpy(synthesized.timestamp, p->timestamp, sizeof(synthesized.timestamp));
+    synthesized.prio = p->prio;
+    synthesized.pgn  = p->targetPgn;
+    synthesized.dst  = p->dst;
+    synthesized.src  = p->src;
+    synthesized.len  = 0; // unused here; printPgn takes data/length as separate arguments
+
+    printPgn(&synthesized, p->data, (int) p->totalSize, showData, showJson);
   }
 }
 
@@ -972,7 +1278,8 @@ static void fillGlobalsBasedOnField(const Field *field, const uint8_t *data, siz
   if (field->dynamicFieldLength)
   {
     extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
-    g_length = value - field->dynamicFieldLengthOverhead;
+    g_length      = value - field->dynamicFieldLengthOverhead;
+    g_lengthValid = true;
     logDebug("for next field: length = %" PRId64 " (raw %" PRId64 ", overhead %u)\n",
              g_length,
              value,
@@ -995,7 +1302,7 @@ static bool printField(const Field   *field,
 
   if (fieldName == NULL)
   {
-    fieldName = field->camelName ? field->camelName : (char *) field->name;
+    fieldName = (showCamel && field->camelName) ? field->camelName : (char *) field->name;
   }
 
   resolution = field->resolution;
@@ -1145,11 +1452,13 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   size_t i;
   bool   r;
   size_t variableFields = 0; // How many variable fields remain (product of repetition count * # of fields)
+  char   ts[DATE_LENGTH];
 
   if (msg == NULL)
   {
     return false;
   }
+  normalizeTimestamp(msg->timestamp, ts, sizeof(ts));
   pgn = getMatchingPgn(msg->pgn, data, length);
   if (!pgn)
   {
@@ -1165,14 +1474,14 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
       f = stderr;
     }
 
-    fprintf(f, "%s %u %3u %3u %6u %s: ", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    fprintf(f, "%s %u %3u %3u %6u %s: ", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     for (i = 0; i < length; i++)
     {
       fprintf(f, " %2.02X", data[i]);
     }
     putc('\n', f);
 
-    fprintf(f, "%s %u %3u %3u %6u %s: ", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    fprintf(f, "%s %u %3u %3u %6u %s: ", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     for (i = 0; i < length; i++)
     {
       fprintf(f, "  %c", isalnum(data[i]) ? data[i] : '.');
@@ -1181,12 +1490,12 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   if (showJson)
   {
-    if (pgn->camelDescription)
+    if (showCamel)
     {
       mprintf("{\"%s\":", pgn->camelDescription);
     }
     mprintf("{\"timestamp\":\"%s\",\"prio\":%u,\"src\":%u,\"dst\":%u,\"pgn\":%u,\"description\":\"%s\"",
-            msg->timestamp,
+            ts,
             msg->prio,
             msg->src,
             msg->dst,
@@ -1201,7 +1510,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
       }
       mprintf("\"");
     }
-    if (pgn->camelDescription)
+    if (showCamel)
     {
       strcpy(closingBraces, "}}");
     }
@@ -1213,7 +1522,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   else
   {
-    mprintf("%s %u %3u %3u %6u %s:", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    mprintf("%s %u %3u %3u %6u %s:", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     sep = " ";
   }
   r = printFields(pgn, data, length, showData, showJson, &variableFields);
@@ -1270,6 +1579,19 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
   g_variableFieldRepeat[1] = 0;   // Can be overridden by '# of parameters'
   repetition               = 0;
   *variableFields          = 0;
+
+  // Start each PGN with clean dynamic-field state. Two ways stale state can leak into a fresh message:
+  //  - g_ftf: probing candidate PGNs in getMatchingPgn() can leave it pointing at a UINT16/etc. field, which
+  //    would make the first DYNAMIC_FIELD_VALUE of a PGN that has no preceding DYNAMIC_FIELD_KEY (e.g. the
+  //    PGN 130823 / 130822 directory records) decode its raw bytes as that stale type.
+  //  - g_length/g_lengthValid: a DYNAMIC_FIELD_LENGTH sets these for the following DYNAMIC_FIELD_VALUE, but if a
+  //    message is truncated right after the length field (the value field is never reached) the flag survives and
+  //    the next message's first value inherits a bogus length -> spurious "insufficient bytes".
+  // Both are always re-established within a well-formed message (Key/length field before each Value), so clearing
+  // them here only discards cross-message leakage.
+  g_ftf         = NULL;
+  g_length      = 0;
+  g_lengthValid = false;
 
   for (i = 0, startBit = 0; (startBit >> 3) < length; i++)
   {
@@ -1348,7 +1670,7 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     if (repetition >= 1 && !showJson)
     {
-      strcat(fieldName, field->camelName ? "_" : " ");
+      strcat(fieldName, showCamel ? "_" : " ");
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }
 

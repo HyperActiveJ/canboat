@@ -1,5 +1,5 @@
 #
-# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 #  
 # This file is part of CANboat.
 # 
@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 tests
 
 all:	tests
 
@@ -170,12 +170,92 @@ test17:
 	diff $(TEMPDIR)/short-reserved.err short-reserved.err
 
 #
+# This tests ISO 11783-3 Transport Protocol reassembly: a real 32-packet BAM
+# sequence (PGN 60416 TP.CM + PGN 60160 TP.DT) captured off a Navico NAC-3
+# broadcasting PGN 129540 (GNSS Sats in View) with a satellite list too large
+# even for fast-packet's 223-byte ceiling. Also covers a second session that
+# is aborted mid-transfer (no output expected) and a stray TP.DT frame with
+# no open session (silently ignored).
+#
+test18:
+	$(ANALYZER) -json -nv < iso-tp-test.in > $(TEMPDIR)/iso-tp-test.out -fixtime iso-tp-test 2> $(TEMPDIR)/iso-tp-test.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/iso-tp-test.out
+	diff $(TEMPDIR)/iso-tp-test.out iso-tp-test.out
+	diff $(TEMPDIR)/iso-tp-test.err iso-tp-test.err
+
+#
+# This tests that the message output buffer (print.c's mbuf, backed by the
+# shared growable StringBuffer) does not silently truncate a large decoded
+# message. A 148-satellite PGN 129540 payload - the largest a 148-satellite
+# GNSS Sats in View list reassembled via ISO Transport Protocol can be
+# (255 packets * 7 bytes, ISO TP's own ceiling) - renders to ~50KB in
+# -nv -debug -json mode, well past the old fixed 8192-byte buffer.
+#
+test19:
+	$(ANALYZER) -nv -debug -q -json < iso-tp-large-payload-test.in > $(TEMPDIR)/iso-tp-large-payload-test.out -fixtime iso-tp-large-payload-test 2> $(TEMPDIR)/iso-tp-large-payload-test.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/iso-tp-large-payload-test.out
+	diff $(TEMPDIR)/iso-tp-large-payload-test.out iso-tp-large-payload-test.out
+	diff $(TEMPDIR)/iso-tp-large-payload-test.err iso-tp-large-payload-test.err
+
+#
+# This tests that a STRING_LAU field whose encoding byte is 0xff (an unset field
+# padded with 0xff, e.g. the H5000 pilot in PGN 126998) decodes as an empty field
+# instead of raising "Unhandled string type 255" and aborting the whole PGN.
+#
+test20:
+	$(ANALYZER) -json -nv < pgn-126998-lau-ff.in > $(TEMPDIR)/pgn-126998-lau-ff.out -fixtime pgn-126998-lau-ff 2> $(TEMPDIR)/pgn-126998-lau-ff.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-126998-lau-ff.out
+	diff $(TEMPDIR)/pgn-126998-lau-ff.out pgn-126998-lau-ff.out
+	diff $(TEMPDIR)/pgn-126998-lau-ff.err pgn-126998-lau-ff.err
+
+test21:
+	$(ANALYZER) -json -nv < pgn-130823-directory.in > $(TEMPDIR)/pgn-130823-directory.out -fixtime pgn-130823-directory 2> $(TEMPDIR)/pgn-130823-directory.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-130823-directory.out
+	diff $(TEMPDIR)/pgn-130823-directory.out pgn-130823-directory.out
+	diff $(TEMPDIR)/pgn-130823-directory.err pgn-130823-directory.err
+
+test22:
+	$(ANALYZER) -json -nv < pgn-126208-request-130817.in > $(TEMPDIR)/pgn-126208-request-130817.out -fixtime pgn-126208-request-130817 2> $(TEMPDIR)/pgn-126208-request-130817.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-126208-request-130817.out
+	diff $(TEMPDIR)/pgn-126208-request-130817.out pgn-126208-request-130817.out
+	diff $(TEMPDIR)/pgn-126208-request-130817.err pgn-126208-request-130817.err
+
+test23:
+	$(ANALYZER) -json -nv < pgn-130823-truncated.in > $(TEMPDIR)/pgn-130823-truncated.out -fixtime pgn-130823-truncated 2> $(TEMPDIR)/pgn-130823-truncated.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-130823-truncated.out
+	diff $(TEMPDIR)/pgn-130823-truncated.out pgn-130823-truncated.out
+	diff $(TEMPDIR)/pgn-130823-truncated.err pgn-130823-truncated.err
+
+#
+# This tests the Garmin GHP Reactor autopilot decode over PGN 126720 (sub-protocol 5904):
+# Mode State lookup (2 Standby, 3 Shadow Drive, 5 Engaged) and System Voltage at 10 mV/bit
+# (~13 V, not the 1.3 V a 1 mV resolution would give). Frames from samples/garmin-ap-reactor-126720.raw.
+#
+test24:
+	$(ANALYZER) -json -nv < pgn-garmin-autopilot.in > $(TEMPDIR)/pgn-garmin-autopilot.out -fixtime pgn-garmin-autopilot 2> $(TEMPDIR)/pgn-garmin-autopilot.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-garmin-autopilot.out
+	diff $(TEMPDIR)/pgn-garmin-autopilot.out pgn-garmin-autopilot.out
+	diff $(TEMPDIR)/pgn-garmin-autopilot.err pgn-garmin-autopilot.err
+
+# This tests that a message that arrives already reassembled - one FAST format
+# line holding the whole payload, as produced by anything that has done the ISO
+# Transport Protocol reassembly for us - is accepted when it is longer than a
+# fast packet's 223-byte ceiling. The input is the 1779-byte PGN 129540 payload
+# of test19 collapsed onto a single line, and the expected output is byte for
+# byte what reassembling that test's 255 TP.DT frames produces.
+#
+test25:
+	$(ANALYZER) -json -nv < iso-tp-preassembled-test.in > $(TEMPDIR)/iso-tp-preassembled-test.out -fixtime iso-tp-preassembled-test 2> $(TEMPDIR)/iso-tp-preassembled-test.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/iso-tp-preassembled-test.out
+	diff $(TEMPDIR)/iso-tp-preassembled-test.out iso-tp-preassembled-test.out
+	diff $(TEMPDIR)/iso-tp-preassembled-test.err iso-tp-preassembled-test.err
+
 # This tests one representative real-world frame per proprietary (PGN, variant)
 # decode carried on this fork's decode branch, grouped by manufacturer.
 #
-test18:
+test26:
 	$(ANALYZER) < pgn-boat-test.in > $(TEMPDIR)/pgn-boat-test.out -debug -q -fixtime pgn-boat-test 2> $(TEMPDIR)/pgn-boat-test.err
 	diff $(TEMPDIR)/pgn-boat-test.out pgn-boat-test.out
 	diff $(TEMPDIR)/pgn-boat-test.err pgn-boat-test.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26

@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -146,9 +146,9 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
     return 2;
   }
 
-  if (len > FASTPACKET_MAX_SIZE)
+  if (len > MAX_PGN_SIZE)
   {
-    logError("Message size %u exceeds maximum %u: %s", len, FASTPACKET_MAX_SIZE, msg);
+    logError("Message size %u exceeds maximum %u: %s", len, MAX_PGN_SIZE, msg);
     return 2;
   }
 
@@ -466,7 +466,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
 
   char        *p;
   int          i;
-  int          b;
+  unsigned int b;
   unsigned int byt;
   int          r;
 
@@ -486,6 +486,12 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   r = sscanf(p, ",%u,%u,%u,%u,%u,%n", &prio, &pgn, &src, &dst, &bytes, &i);
   if (r == 5)
   {
+    if (bytes > MAX_PGN_SIZE)
+    {
+      logError("Message size %u exceeds maximum %u: %s\n", bytes, MAX_PGN_SIZE, sbGet(in));
+      return false;
+    }
+
     // now store the timestamp, unchanged
     memset(msg->timestamp, 0, sizeof msg->timestamp);
     memcpy(msg->timestamp, sbGet(in), CB_MIN(p - sbGet(in), sizeof msg->timestamp - 1));
@@ -498,7 +504,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
 
     p += i - 1;
 
-    for (b = 0; b < CB_MIN(bytes, FASTPACKET_MAX_SIZE); b++)
+    for (b = 0; b < bytes; b++)
     {
       if ((sscanf(p, ",%x%n", &byt, &i) == 1) && (byt < 256))
       {
@@ -568,7 +574,7 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
 
   // parse DATA
   p = nexttoken;
-  for (i = 0; i < FASTPACKET_MAX_SIZE; i++)
+  for (i = 0; i < MAX_PGN_SIZE; i++)
   {
     if (*p == '\0' || isspace((unsigned char) *p))
     {
@@ -639,4 +645,160 @@ bool parseTimestamp(const char *msg, uint64_t *when)
   *when = epoch * UINT64_C(1000) + milli;
 
   return true;
+}
+
+/*
+ * canboat's input formats carry timestamps in inconsistent shapes: ISO-8601 with a `T` and
+ * trailing `Z`, the classic canboat log form `YYYY-MM-DD-HH:MM:SS.mmm` (a dash between date and
+ * time), a comma as the millisecond separator (Actisense / Chetco), or bare time-of-day with no
+ * date at all (Actisense ASCII, Airmar). normalizeTimestamp() rewrites these into a single
+ * canonical form so downstream consumers -- and comma-delimited PLAIN lines in particular -- never
+ * trip over a stray comma inside the timestamp field.
+ *
+ *   Date-bearing -> YYYY-MM-DDTHH:MM:SS.mmmZ   (UTC: T separator, dot fraction, 3-digit millis, Z)
+ *   Time-only    -> HH:MM:SS.mmm               (no date is available, so none is invented)
+ *   Unrecognised -> returned verbatim          (an odd timestamp is never lost or corrupted)
+ *
+ * This mirrors canboat-rs's normalize_timestamp so the two implementations stay byte-for-byte
+ * comparable.
+ */
+
+static bool allDigits(const char *p, size_t n)
+{
+  for (size_t i = 0; i < n; i++)
+  {
+    if (!isdigit((unsigned char) p[i]))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+/*
+ * Parse `HH:MM:SS` with an optional `.`/`,` fraction from `s` and write `HH:MM:SS.mmm` into `out`.
+ * Returns true on success; false (leaving `out` untouched) when the shape or field ranges don't
+ * hold, so the caller can fall back to emitting the value verbatim.
+ */
+static bool normalizeTime(const char *s, char *out)
+{
+  size_t len = strlen(s);
+
+  if (len < 8 || s[2] != ':' || s[5] != ':')
+  {
+    return false;
+  }
+  if (!allDigits(s, 2) || !allDigits(s + 3, 2) || !allDigits(s + 6, 2))
+  {
+    return false;
+  }
+
+  {
+    unsigned int h   = (s[0] - '0') * 10 + (s[1] - '0');
+    unsigned int m   = (s[3] - '0') * 10 + (s[4] - '0');
+    unsigned int sec = (s[6] - '0') * 10 + (s[7] - '0');
+
+    if (h >= 24 || m >= 60 || sec >= 60)
+    {
+      return false;
+    }
+  }
+
+  /* Optional fractional seconds: a `.`/`,` at index 8 then digits. Anything after the digit run (a
+   * trailing `Z`, a timezone) is dropped -- canboat timestamps are UTC-naive. Pad/truncate the
+   * fraction to exactly three digits (milliseconds): `.1` -> `100`, `.107` -> `107`,
+   * `.10734` -> `107`. */
+  char ms[4] = "000";
+  if (len > 8)
+  {
+    if (s[8] != '.' && s[8] != ',')
+    {
+      return false;
+    }
+    for (size_t i = 9, j = 0; i < len && j < 3 && isdigit((unsigned char) s[i]); i++, j++)
+    {
+      ms[j] = s[i];
+    }
+  }
+
+  memcpy(out, s, 8);
+  out[8] = '.';
+  memcpy(out + 9, ms, 3);
+  out[12] = 0;
+  return true;
+}
+
+/* True when `ts` is already exactly `YYYY-MM-DDTHH:MM:SS.mmmZ`. */
+static bool isCanonicalTimestamp(const char *ts)
+{
+  return strlen(ts) == 24 && ts[4] == '-' && ts[7] == '-' && ts[10] == 'T' && ts[13] == ':' && ts[16] == ':'
+         && ts[19] == '.' && ts[23] == 'Z' && allDigits(ts, 4) && allDigits(ts + 5, 2) && allDigits(ts + 8, 2)
+         && allDigits(ts + 11, 2) && allDigits(ts + 14, 2) && allDigits(ts + 17, 2) && allDigits(ts + 20, 3);
+}
+
+void normalizeTimestamp(const char *in, char *out, size_t outLen)
+{
+  if (outLen < DATE_LENGTH)
+  {
+    /* Callers pass a DATE_LENGTH buffer; anything smaller can't hold the canonical form. */
+    if (outLen > 0)
+    {
+      out[0] = 0;
+    }
+    return;
+  }
+
+  /* Fast path: the common live-gateway form is already canonical, so avoid re-parsing it. */
+  if (isCanonicalTimestamp(in))
+  {
+    memcpy(out, in, strlen(in) + 1);
+    return;
+  }
+
+  /* Skip leading whitespace. */
+  const char *t = in;
+  while (isspace((unsigned char) *t))
+  {
+    t++;
+  }
+
+  /* Date-bearing: `YYYY-MM-DD` then one of [`T`, `-`, space] then time. */
+  {
+    size_t tlen = strlen(t);
+    if (tlen >= 19 && t[4] == '-' && t[7] == '-' && (t[10] == 'T' || t[10] == '-' || t[10] == ' ') && allDigits(t, 4)
+        && allDigits(t + 5, 2) && allDigits(t + 8, 2))
+    {
+      char time[13];
+      if (normalizeTime(t + 11, time))
+      {
+        memcpy(out, t, 10);
+        out[10] = 'T';
+        memcpy(out + 11, time, strlen(time));
+        out[11 + strlen(time)] = 'Z';
+        out[12 + strlen(time)] = 0;
+        return;
+      }
+    }
+  }
+
+  /* Time-only. */
+  {
+    char time[13];
+    if (normalizeTime(t, time))
+    {
+      memcpy(out, time, strlen(time) + 1);
+      return;
+    }
+  }
+
+  /* Unrecognised: emit verbatim. */
+  {
+    size_t n = strlen(in);
+    if (n >= outLen)
+    {
+      n = outLen - 1;
+    }
+    memcpy(out, in, n);
+    out[n] = 0;
+  }
 }

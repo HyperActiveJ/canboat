@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "common.h"
 
-#define LINESIZE 1024
+#define LINESIZE MAX_MSG_LINE_LENGTH
 
 bool writeonly = false;
 
