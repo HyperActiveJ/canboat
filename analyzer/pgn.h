@@ -9865,7 +9865,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_FAST,
      {COMPANY(144),
-      {.name = "Single Lever Mode", .size = BITS(3), .resolution = 1, .hasSign = false, .lookup.type = LOOKUP_TYPE_PAIR, .lookup.function.pair = lookupMERCURY_SINGLE_LEVER_MODE, .lookup.name = "MERCURY_SINGLE_LEVER_MODE", .fieldType = "LOOKUP"},
+      LOOKUP_FIELD("Single Lever Mode", BITS(3), MERCURY_SINGLE_LEVER_MODE),
       {.name = "Reserved", .size = BITS(5), .resolution = 1, .fieldType = "RESERVED"},
       END_OF_FIELDS},
      .priority = 7,
