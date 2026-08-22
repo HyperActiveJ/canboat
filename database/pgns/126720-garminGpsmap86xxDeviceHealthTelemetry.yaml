@@ -1,0 +1,107 @@
+pgn: 126720
+id: garminGpsmap86xxDeviceHealthTelemetry
+description: 'Garmin: GPSMAP 86xx Device Health Telemetry'
+type: Fast
+variantOrder: 86
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three equal scalars, slots 9-12 are four gauges. The field names are not known.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: GPSMAP device-health transport
+  match: 23
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  match: 4
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 4
+- id: scalar1
+  name: Scalar 1
+  type: FLOAT
+  description: Slots 0-2 carry equal values
+- id: scalar2
+  name: Scalar 2
+  type: FLOAT
+- id: scalar3
+  name: Scalar 3
+  type: FLOAT
+- id: value4
+  name: Value 4
+  type: FLOAT
+- id: value5
+  name: Value 5
+  type: FLOAT
+- id: value6
+  name: Value 6
+  type: FLOAT
+- id: value7
+  name: Value 7
+  type: FLOAT
+- id: value8
+  name: Value 8
+  type: FLOAT
+- id: value9
+  name: Value 9
+  type: FLOAT
+- id: utilization1
+  name: Utilization 1
+  type: FLOAT
+  description: Gauge
+- id: utilization2
+  name: Utilization 2
+  type: FLOAT
+  description: Gauge
+- id: utilization3
+  name: Utilization 3
+  type: FLOAT
+  description: Gauge
+- id: utilization4
+  name: Utilization 4
+  type: FLOAT
+  description: Gauge
+- id: value14
+  name: Value 14
+  type: FLOAT
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,10,255,62,e5,98,17,00,04,04,00,03,54,41,13,61,89,41,ed,85,ad,41,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,34,65,5e,3f,85,ed,d2,3f,9f,71,ee,3f,00,7a,82,3f,00,00,00,00"
+  expects:
+    subProtocolId: 23
+    wrapperByte1: 4
+    wrapperByte2: 4
+    value4: 0
+    value14: 0
+- raw: "2023-01-01-00:00:00.000,7,126720,1,255,62,e5,98,17,00,04,04,00,00,c0,40,00,00,c0,40,b6,c3,07,41,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,6c,e5,35,3f,dd,a9,98,3f,80,b3,b1,3f,76,a0,31,3f,00,00,00,00"
+  expects:
+    subProtocolId: 23
+    scalar1: 6.0
+    scalar2: 6.0
+    value14: 0

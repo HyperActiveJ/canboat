@@ -1,0 +1,17 @@
+name: GARMIN_MESSAGE_ID
+kind: pair
+bits: 16
+values:
+  23: GPSMAP device-health transport
+  1633: GPSMAP data-sync transport B
+  1810: GPSMAP data-sync transport A
+  1900: AHRS ATT transport
+  2272: Version/identity transport
+  2279: Device-presence transport
+  2557: GHC config-table transport
+  2558: GHC config transport
+  2707: Button-interface transport
+  2711: GLM lighting transport
+  5904: Autopilot transport
+  6471: GHC node-status transport
+  6472: GHC self-status transport

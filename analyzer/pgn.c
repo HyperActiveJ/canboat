@@ -138,13 +138,13 @@ const Pgn *getMatchingPgn(int pgnId, const uint8_t *data, int length)
       const Field *field = &pgn->fieldList[i];
       int          bits  = field->size;
 
-      if (field->unit != NULL && field->unit[0] == '=')
+      if (field->hasMatchValue)
       {
         int64_t value, desiredValue;
         int64_t maxValue;
 
         hasFixedField = true;
-        desiredValue  = strtol(field->unit + 1, 0, 10);
+        desiredValue  = field->matchValue;
         if (!extractNumber(field, data, length, startBit, field->size, &value, &maxValue) || value != desiredValue)
         {
           logDebug("getMatchingPgn: PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n",
@@ -256,12 +256,12 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
       int          bytes = (bits + 7) >> 3;
 
       logDebug("getMatchingPgnByParameters: parameter #%d = '%s' length %d\n", index, field->description, bytes);
-      if (field->unit != NULL && field->unit[0] == '=')
+      if (field->hasMatchValue)
       {
         int64_t value, desiredValue;
         int64_t maxValue;
 
-        desiredValue = strtol(field->unit + 1, 0, 10);
+        desiredValue = field->matchValue;
         if (!extractNumber(field, data, length, d << 3, field->size, &value, &maxValue) || value != desiredValue)
         {
           logDebug("getMatchingPgnByParameters: PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n",
@@ -346,102 +346,6 @@ void checkPgnList(void)
     {
       logError("Internal error: PGN %d is not found correctly\n", prev_prn);
       exit(2);
-    }
-  }
-}
-
-static char *camelize(const char *str, bool upperCamelCase, int order)
-{
-  size_t      len         = strlen(str);
-  char       *ptr         = malloc(len + 4);
-  char       *p           = ptr;
-  const char *s           = str;
-  bool        lastIsAlpha = !upperCamelCase;
-
-  if (p == NULL)
-  {
-    return NULL;
-  }
-
-  for (; *s; s++)
-  {
-    if (isalpha((unsigned char) *s) || isdigit((unsigned char) *s))
-    {
-      if (lastIsAlpha)
-      {
-        *p = tolower(*s);
-      }
-      else
-      {
-        *p          = toupper(*s);
-        lastIsAlpha = true;
-      }
-      p++;
-    }
-    else
-    {
-      lastIsAlpha = false;
-    }
-  }
-
-  if (order > 0 && (strcmp(str, "Reserved") == 0 || strcmp(str, "Spare") == 0))
-  {
-    sprintf(p, "%u", order);
-  }
-  else
-  {
-    *p = 0;
-  }
-  return ptr;
-}
-
-void camelCase(bool upperCamelCase)
-{
-  int  i, j;
-  bool haveEarlierSpareOrReserved;
-
-  for (i = 0; i < pgnListSize; i++)
-  {
-    // A PGN may pin its historic <Id> by setting .camelDescription in the initializer (the same
-    // Id-is-frozen-contract reason fields use .camelName); only camelize the description when it
-    // was not pinned.
-    if (pgnList[i].camelDescription == NULL)
-    {
-      pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase, 0);
-    }
-    else if (upperCamelCase)
-    {
-      // The pinned id is already lowerCamelCase; for the v1 (UpperCamel) output just upper-case the
-      // first letter. Re-camelizing would collapse the internal capitals (simnetParameterSet ->
-      // Simnetparameterset) because camelize() only upper-cases letters that follow a separator.
-      char *upper = malloc(strlen(pgnList[i].camelDescription) + 1);
-
-      if (upper != NULL)
-      {
-        strcpy(upper, pgnList[i].camelDescription);
-        upper[0]                    = toupper((unsigned char) upper[0]);
-        pgnList[i].camelDescription = upper;
-      }
-    }
-    haveEarlierSpareOrReserved = false;
-    for (j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
-    {
-      const char *name = pgnList[i].fieldList[j].name;
-
-      if (pgnList[i].fieldList[j].camelName == NULL)
-      {
-        pgnList[i].fieldList[j].camelName = camelize(name, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
-      }
-      else if (upperCamelCase)
-      {
-        pgnList[i].fieldList[j].camelName
-            = camelize(pgnList[i].fieldList[j].camelName, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
-      }
-
-      if (strcmp(name, "Reserved") == 0 || strcmp(name, "Spare") == 0)
-      {
-        haveEarlierSpareOrReserved = true;
-      }
     }
   }
 }

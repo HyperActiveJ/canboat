@@ -1,0 +1,39 @@
+pgn: 130830
+id: mercurySingleLeverMode
+description: 'Mercury: Single Lever Mode'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- Resolution
+- SampleData
+explanation: 'Mercury proprietary single-lever (shift/throttle) control-mode status/request. The Single Lever Mode field reports the active lever-control mode; the trailing bits are reserved.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: singleLeverMode
+  name: Single Lever Mode
+  type: LOOKUP
+  bits: 3
+  lookup: MERCURY_SINGLE_LEVER_MODE
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 5

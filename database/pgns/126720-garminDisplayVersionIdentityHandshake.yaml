@@ -1,0 +1,88 @@
+pgn: 126720
+id: garminDisplayVersionIdentityHandshake
+description: 'Garmin: Display Version/Identity Handshake'
+type: Fast
+variantOrder: 81
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Garmin version/identity handshake exchanged between the GPSMAP and the GHC. Two record types selected by the Message ID: 2307 (14-byte short) and 2308 (24-byte long). The 16-bit Version Word carries a calendar year (firmware-year version sync); the long record additionally carries a device-node id.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: Version/identity transport
+  match: 2272
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  match: 2
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 2
+- id: messageId
+  name: Message ID
+  type: UINT16
+  description: 2307 selects the 14-byte short record, 2308 the 24-byte long record
+- id: subtype
+  name: Subtype
+  type: UINT8
+  description: 0x00 / 0x01 / 0x04 / 0x05 / 0x0C
+- id: field9
+  name: Field 9
+  type: UINT8
+  description: Constant 0x12
+- id: versionWord
+  name: Version Word
+  type: UINT16
+  description: 'Calendar year (0x07E8 = 2024, 0x07E9 = 2025): display/autopilot firmware-year sync'
+- id: field12
+  name: Field 12
+  type: UINT8
+  description: Constant 0x19
+- id: tail
+  name: Tail
+  type: UINT8
+  description: 0x00 on the short record
+- id: nodeRecord
+  name: Node Record
+  type: BINARY
+  bits: 80
+  description: 'Long record (Message ID 2308) only: carries a device-node id; layout not decoded'
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,10,255,14,e5,98,e0,08,02,02,03,09,04,12,e8,07,19,00"
+  expects:
+    subProtocolId: 2272
+    messageId: 2307
+    subtype: 4
+    versionWord: 2024
+- raw: "2023-01-01-00:00:00.000,7,126720,10,255,24,e5,98,e0,08,02,02,04,09,05,12,e9,07,19,00,27,08,ff,0f,00,50,34,be,1c,01"
+  expects:
+    subProtocolId: 2272
+    messageId: 2308
+    subtype: 5
+    versionWord: 2025

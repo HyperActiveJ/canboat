@@ -1,0 +1,107 @@
+pgn: 126720
+id: garminAutopilotManeuver
+description: 'Garmin Autopilot: Maneuver'
+type: Fast
+variantOrder: 18
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: >-
+  Observed Garmin helm turn-button commands 0 through 3 use a 9-byte payload
+  ending after a zero spare byte. Other command forms may include the trailing
+  Value field, whose semantics are not yet known.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: Autopilot transport
+  match: 5904
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  match: 4
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 4
+- id: fieldGroup
+  name: Field Group
+  type: UINT8
+  match: 38
+- id: maneuverCode
+  name: Maneuver Code
+  type: LOOKUP
+  bits: 8
+  lookup: GARMIN_AUTOPILOT_MANEUVER_CODE
+- id: spare9
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: value
+  name: Value
+  type: UINT8
+  note: Not present in the observed turn-button commands; semantics for longer command forms are not yet known.
+samples:
+- raw: "2026-08-09T16:23:28.219778896-07:00,7,126720,6,0,9,e5,98,10,17,04,04,26,00,00"  # from boatkit-garmin-autopilot-controls.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: "Decrease Heading 1 Degree"
+    value: ~
+- raw: "2026-08-09T16:23:32.300450058-07:00,7,126720,6,0,9,e5,98,10,17,04,04,26,01,00"  # from boatkit-garmin-autopilot-controls.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: "Decrease Heading 10 Degrees"
+    value: ~
+- raw: "2023-01-01-00:00:00.000,7,126720,1,0,9,e5,98,10,17,04,04,26,02,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: "Increase Heading 1 Degree"
+    value: ~
+- raw: "2023-01-01-00:00:00.000,7,126720,1,0,9,e5,98,10,17,04,04,26,03,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: "Increase Heading 10 Degrees"
+    value: ~

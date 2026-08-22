@@ -1,0 +1,81 @@
+pgn: 126720
+id: garminDevicePresenceMasterAdvertiseBeacon
+description: 'Garmin: Device-Presence / Master-Advertise Beacon'
+type: Fast
+variantOrder: 80
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Garmin device-presence / master-advertise beacon, broadcast by Garmin nodes on the bus (Reactor autopilot, GHC, GPSMAP). The discriminator is the device role in Wrapper Byte 1 and the last body byte: 0x0A on the Reactor (autopilot), 0x00/0x01 on the displays and GHC. The body carries a constant protocol magic (0xD4909C97). A heartbeat/role advertisement with no event content.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: Device-presence transport
+  match: 2279
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: Device role, mirrored in the last byte
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 10
+- id: messageId
+  name: Message ID
+  type: UINT16
+  match: 259
+- id: field8
+  name: Field 8
+  type: UINT8
+  description: Constant 0x03
+- id: field9
+  name: Field 9
+  type: UINT8
+  description: Constant 0x0D
+- id: protocolMagic
+  name: Protocol Magic
+  type: UINT32
+  description: Constant protocol/product magic (0xD4909C97)
+- id: field14
+  name: Field 14
+  type: UINT8
+  description: Constant 0x01
+- id: field15
+  name: Field 15
+  type: UINT8
+  description: Constant 0x11
+- id: deviceRole
+  name: Device Role
+  type: UINT8
+  description: 'Device-class/role discriminator: 0x0A on the Reactor autopilot, 0x00/0x01 on displays and the GHC'
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,10,255,17,e5,98,e7,08,00,0a,03,01,03,0d,97,9c,90,d4,01,11,01"
+  expects:
+    subProtocolId: 2279
+    wrapperByte2: 10
+    messageId: 259
+    protocolMagic: 3566247063

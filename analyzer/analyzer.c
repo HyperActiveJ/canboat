@@ -160,7 +160,7 @@ static unsigned int    getMessageByteCount(const char *const msg);
 static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
+  printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
          "-format <fmt> "
          "[-src <src> | -dst <dst> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
@@ -172,7 +172,6 @@ static void usage(char **argv, char **av)
   printf("     -empty            Modified json format where empty values are shown as NULL\n");
   printf("     -nv               Modified json format where lookup values are shown as name, value pair\n");
   printf("     -camel            Show fieldnames in normalCamelCase\n");
-  printf("     -upper-camel      Show fieldnames in UpperCamelCase\n");
   printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
   printf("     -q                Print logging from level ERROR\n");
   printf("     -si               Show values in strict SI units: degrees Kelvin, rotation in radians/sec, etc.\n");
@@ -223,12 +222,9 @@ int main(int argc, char **argv)
     }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
+      // ids (camelName/camelDescription) are compiled into the generated
+      // tables; this only selects them for output
       showCamel = true;
-      camelCase(false);
-    }
-    else if (strcasecmp(av[1], "-upper-camel") == 0)
-    {
-      camelCase(true);
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {
@@ -303,10 +299,7 @@ int main(int argc, char **argv)
     {
       setFixedTimestamp(av[2]);
       fixedTime = true;
-      if (strstr(av[2], "n2kd") == NULL)
-      {
-        showVersion = false;
-      }
+      showVersion = false;
       ac--;
       av++;
     }
@@ -1302,6 +1295,8 @@ static bool printField(const Field   *field,
 
   if (fieldName == NULL)
   {
+    // Defensive only: both callers pass a name. Key on the mode, not on
+    // camelName presence - the generated tables set camelName everywhere.
     fieldName = (showCamel && field->camelName) ? field->camelName : (char *) field->name;
   }
 
@@ -1490,6 +1485,10 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   if (showJson)
   {
+    // The camel-id wrapper follows the -camel mode. This used to key on
+    // camelDescription presence as a proxy, which wrapped pinned-id PGNs
+    // even in plain JSON and broke down once the generated tables set
+    // camelDescription on every PGN.
     if (showCamel)
     {
       mprintf("{\"%s\":", pgn->camelDescription);
@@ -1670,6 +1669,10 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     if (repetition >= 1 && !showJson)
     {
+      // The separator follows the naming style in use ("windSpeed_2" vs
+      // "Wind Speed 2"). This used to key on camelName presence as a cheap
+      // proxy for the -camel mode, which broke down once every field
+      // carries an explicit camelName (id) from the generated tables.
       strcat(fieldName, showCamel ? "_" : " ");
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }
@@ -1694,7 +1697,7 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
  * but this may have to be refined for proprietary PGNs or PGNs with
  * other match fields.
  */
-extern bool fieldPrintVariable(const Field   *field,
+extern bool fieldPrintVariable(const Field   *variableField,
                                const char    *fieldName,
                                const uint8_t *data,
                                size_t         dataLen,
@@ -1702,6 +1705,7 @@ extern bool fieldPrintVariable(const Field   *field,
                                size_t        *bits)
 {
   bool r;
+  bool usedCatchAll = false;
 
   if (g_refPrn != 0)
   {
@@ -1711,18 +1715,61 @@ extern bool fieldPrintVariable(const Field   *field,
       size_t         variableLen    = data + dataLen - variableFields;
       g_refPgn                      = getMatchingPgnByParameters(g_refPrn, variableFields, variableLen);
     }
+    if (g_refPgn == NULL)
+    {
+      /*
+       * The parameters seen so far do not pick a single variant. That is the
+       * normal case for a request against a proprietary PGN -- 126720 has
+       * dozens of variants and a Manufacturer/Industry pair alone narrows
+       * nothing -- and it used to fail the whole 126208 record, discarding the
+       * parameters that were perfectly decodable.
+       *
+       * Borrow the catch-all definition instead. Parameter indices address the
+       * leading fields, which the variants share (a proprietary PGN opens with
+       * Manufacturer / Reserved / Industry whichever variant it turns out to
+       * be), so the field this parameter names is the right one even though
+       * the variant is still unknown.
+       *
+       * It has to be the catch-all, not merely the first definition: the first
+       * definition of 126720 is somebody's specific variant whose Manufacturer
+       * Code is a *match* field, so borrowing it makes every request from a
+       * different manufacturer fail the match and skip the record.
+       */
+      g_refPgn   = searchForUnknownPgn(g_refPrn);
+      usedCatchAll = true;
+      logDebug("Field %s: PGN %d variant unresolved, using its catch-all definition\n", fieldName, g_refPrn);
+    }
     if (g_refPgn != NULL)
     {
-      int          field    = data[startBit / 8 - 1] - 1;
-      const Field *refField = &g_refPgn->fieldList[field];
+      int field = data[startBit / 8 - 1] - 1;
 
-      if (refField)
+      if (field >= 0 && (size_t) field < g_refPgn->fieldCount)
       {
+        const Field *refField = &g_refPgn->fieldList[field];
+
+        /*
+         * Only when we fell back to the catch-all: its trailing `Data` field
+         * is variable-length with nothing to derive a width from, so take the
+         * rest of the message as the value. For a request that is the useful
+         * reading: "match records whose field starts with these bytes".
+         *
+         * This must not catch a variable-length field of a *resolved* PGN --
+         * 126998's Configuration Information strings are size 0 too, and they
+         * print perfectly well through the normal path.
+         */
+        if (usedCatchAll && refField->size == 0 && dataLen * 8 > startBit)
+        {
+          logDebug("Field %s: variable-length target '%s', emitting the remainder\n", fieldName, refField->name);
+          *bits = dataLen * 8 - startBit;
+          return fieldPrintBinary(variableField, fieldName, data, dataLen, startBit, bits);
+        }
+
         logDebug("Field %s: found variable field %u '%s'\n", fieldName, g_refPrn, refField->name);
         r     = printField(refField, fieldName, data, dataLen, startBit, bits, false);
         *bits = (*bits + 7) & ~0x07; // round to bytes
         return r;
       }
+      logError("Field %s: PGN %d has no field # %d\n", fieldName, g_refPrn, field + 1);
     }
   }
 

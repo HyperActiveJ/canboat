@@ -1,0 +1,63 @@
+pgn: 126720
+id: garminGpsmapDataSyncRecordB
+description: 'Garmin: GPSMAP Data-Sync Record B'
+type: Fast
+variantOrder: 88
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Garmin GPSMAP data-sync broadcast B: a fixed 42-byte data record, the larger sibling of the data-sync A record. Carries a small early enum block (always present) then a wider data section. Unset fields use the not-available sentinels, which expose the signed-field boundaries. The per-field widths and names are not decoded.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: GPSMAP data-sync transport B
+  match: 1633
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  match: 2
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 2
+- id: enumBlock
+  name: Enum Block
+  type: BINARY
+  bits: 48
+  description: Early small-enum fields, present even when the data fields are not available
+- id: data
+  name: Data
+  type: BINARY
+  bits: 240
+  description: Remaining data fields; unset fields use the not-available sentinels (0xFF / 0x7FFF / 0x7FFFFFFF), which expose the signed-16 boundaries. The per-field widths, scales and names are not decoded
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,10,255,42,e5,98,61,06,02,02,00,05,2d,00,00,00,00,00,10,66,ab,01,a6,50,04,0c,04,0c,00,00,ff,ff,ff,7f,ff,ff,ff,7f,ee,ff,ff,ff,00,00,20,04"
+  expects:
+    subProtocolId: 1633
+- raw: "2023-01-01-00:00:00.000,7,126720,1,255,42,e5,98,61,06,02,02,ff,ff,ff,ff,03,03,00,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,00,00,ff,ff,ff,7f,ff,ff,ff,7f,ff,ff,ff,7f,00,00,ff,7f"
+  expects:
+    subProtocolId: 1633

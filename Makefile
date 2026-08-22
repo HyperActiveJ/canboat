@@ -11,19 +11,17 @@ DESTDIR ?= ""
 PREFIX ?= /usr/local
 EXEC_PREFIX ?= $(PREFIX)
 BINDIR=$(EXEC_PREFIX)/bin
-SYSCONFDIR= /etc
 DATAROOTDIR ?= $(PREFIX)/share
 MANDIR= $(DATAROOTDIR)/man
 
 PLATFORM ?= $(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer socketcan-serial ikonvert-serial maretron-ipg replay
+SUBDIRS= actisense-serial analyzer nmea0183 ip group-function candump2analyzer socketcan-writer socketcan-serial ikonvert-serial maretron-ipg replay
 
 BUILDDIR ?= ./rel/$(PLATFORM)
 
 MKDIR = mkdir -p
 export HELP2MAN=$(shell command -v help2man 2> /dev/null)
 
-CONFDIR=$(SYSCONFDIR)/default
 
 ROOT_UID=0
 ROOT_GID=0
@@ -35,16 +33,67 @@ all:	bin compile
 	@echo "Use 'make generated' to recreate generated XML, HTML, JSON and DBC files."
 
 compile: bin
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
+	for dir in $(SUBDIRS); do $(MAKE) -C $$dir || exit 1; done
 
 tests:  compile
 	$(MAKE) -C analyzer tests
-	$(MAKE) -C n2kd tests
 	$(MAKE) -C actisense-serial/tests tests
 	$(MAKE) -C candump2analyzer/tests tests
 
-generated: tests research-docs
+# The Cargo workspace at the repo root (crates/*, keel/) is deliberately
+# OPT-IN and is NOT a dependency of all/compile/tests: a plain `make` of the C
+# tools must never invoke cargo, so C-only contributors and packagers need no
+# Rust toolchain (MERGE-CANBOAT-RS.md goal #1). Rust contributors just use
+# cargo directly; these targets exist so `make` users have the same shortcuts.
+CARGO ?= cargo
+
+# The Rust schema tables are generated from database/ by keel and committed
+# (MERGE-CANBOAT-RS.md §5), so a `cargo build` alone will happily compile
+# against a stale table after a database edit. Regenerate first.
+#
+# Deliberately NOT a dependency on `generated`: that additionally produces
+# canboat.html/json via xsltproc, validates with xmllint, runs the C golden
+# tests and builds the DBC exporter, so it needs xsltproc, libxml2-utils,
+# python3 + venv and a C compiler. None of that is required to build the
+# Rust side, and demanding it would make `make rust` unusable on a machine
+# that only has a Rust toolchain.
+#
+# keel/keel is self-contained: it builds keel with cargo, or downloads a
+# prebuilt binary when there is no toolchain. It writes only the artifacts
+# whose content actually changed, so this does not disturb the C build.
+.PHONY: keel-generate
+keel-generate:
+	@keel/keel generate
+
+rust: keel-generate
+	$(CARGO) build --release --workspace
+
+rust-debug: keel-generate
+	$(CARGO) build --workspace
+
+rust-tests: keel-generate
+	$(CARGO) test --workspace
+
+rust-clippy:
+	$(CARGO) clippy --workspace --all-targets -- -D warnings
+
+rust-fmt:
+	$(CARGO) fmt --all
+
+# Everything worth having green before opening a PR that touches Rust.
+rust-precommit: rust-fmt rust-clippy rust-tests
+
+rust-clean:
+	$(CARGO) clean
+
+# Regenerate FIRST, then test against the fresh output. keel (run inside
+# `analyzer generated`) rewrites the C data tables and canboat.xml from the
+# database; only afterwards do we rebuild the analyzer from those fresh
+# headers and run the golden-file suite. Running tests before regeneration
+# would validate the stale committed tables and never exercise the new output.
+generated: research-docs
 	$(MAKE) -C analyzer generated
+	$(MAKE) tests
 	$(MAKE) -C dbc-exporter
 
 # Run before opening a PR: regenerates the database, then reports how this
@@ -96,15 +145,14 @@ man/man1:
 	$(MKDIR) man/man1
 
 clean:
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
+	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean || exit 1; done
 	$(MAKE) -C dbc-exporter clean
 	-rm -R -f man $(BUILDDIR)
 
-install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR) $(DESTDIR)$(MANDIR)/man1
-	for i in $(BUILDDIR)/* util/* */*_monitor; do install -m $(EXEC_MOD) -b $$i $(DESTDIR)$(BINDIR); done
-	for i in config/*; do f=`basename $$i`; if [ ! -f "$(DESTDIR)/$(CONFDIR)/$$f" ]; then install -b -m $(ROOT_MOD) $$i $(DESTDIR)$(CONFDIR); fi; done
+install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
+	for i in $(BUILDDIR)/* util/*; do install -m $(EXEC_MOD) -b $$i $(DESTDIR)$(BINDIR) || exit 1; done
 ifeq ($(notdir $(HELP2MAN)),help2man)
-	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1; done
+	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1 || exit 1; done
 endif
 
 format:
@@ -125,13 +173,11 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-fmt rust-precommit rust-clean keel-generate
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)
 
-$(DESTDIR)$(CONFDIR):
-	$(MKDIR) $(DESTDIR)$(CONFDIR)
 
 $(DESTDIR)$(MANDIR)/man1:
 	$(MKDIR) $(DESTDIR)$(MANDIR)/man1

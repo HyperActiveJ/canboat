@@ -1,0 +1,70 @@
+pgn: 126720
+id: garminGhcNodeStatusReport
+description: 'Garmin: GHC Node-Status Report'
+type: Fast
+variantOrder: 84
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Garmin GHC node-status report. A variable-length record carrying a fixed 8-byte status header, a 32-bit node id, then a variable-length list of per-node status entries. The per-entry field layout is not decoded, so the trailing list is left as binary.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: GHC node-status transport
+  match: 6471
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  match: 2
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 2
+- id: messageId
+  name: Message ID
+  type: UINT16
+  match: 774
+- id: statusHeader
+  name: Status Header
+  type: BINARY
+  bits: 64
+  description: Constant report header 01 01 03 0F 08 FF 0F 00
+- id: nodeId
+  name: Node ID
+  type: UINT32
+  description: Varies per reported node. The same field is fixed in the self-status beacon and is that node's own address
+- id: nodeRecords
+  name: Node Records
+  type: BINARY
+  bits: 152
+  description: Per-node status entries, a variable-length list (1..N entries) to the end of the message. The per-entry field layout is not decoded
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,9,255,30,e5,98,47,19,02,02,06,03,01,01,03,0f,08,ff,0f,00,31,8b,a4,1c,01,11,00,19,00,22,90,4e,29,0a"
+  expects:
+    subProtocolId: 6471
+    messageId: 774
+    nodeId: 480545585

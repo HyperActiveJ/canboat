@@ -1,0 +1,47 @@
+pgn: 130817
+id: mercuryVesselConfiguration
+description: 'Mercury: Vessel Configuration'
+type: Fast
+variantOrder: 8
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: 'Mercury proprietary vessel / feature configuration. A message-version byte and a feature count are followed by that many feature records, each carrying a 16-bit feature identifier and a 16-bit feature setting (value). The enumerations for the feature identifier and setting are not yet known.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageVersion
+  name: Message Version
+  type: UINT8
+- id: featureCount
+  name: Feature Count
+  type: UINT8
+- repeat:
+    countField: featureCount
+    fields:
+    - id: feature
+      name: Feature
+      type: UINT16
+    - id: featureSetting
+      name: Feature Setting
+      type: UINT16

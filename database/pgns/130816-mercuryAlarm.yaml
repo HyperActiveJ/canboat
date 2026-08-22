@@ -1,0 +1,116 @@
+pgn: 130816
+id: mercuryAlarm
+description: 'Mercury: Alarm'
+type: Fast
+variantOrder: 25
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: 'Mercury proprietary display alarm PGN. A fixed header (6 bit-fields) carries a fault-record count (maximum 17), followed by that many 12-byte fault records (12 bit-fields per record). The value labels (fault catalog, feature/version enumerations) are not enumerated here.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: helmNumber
+  name: Helm Number
+  type: UNSIGNED_INTEGER
+  bits: 6
+- id: numberOfFaults
+  name: Number Of Faults
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Count of fault records that follow (maximum 17)
+- id: messageVersion
+  name: Message Version
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 16
+- id: feature
+  name: Feature
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: version
+  name: Version
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- repeat:
+    countField: numberOfFaults
+    fields:
+    - id: faultNumber
+      name: Fault Number
+      type: UNSIGNED_INTEGER
+      bits: 6
+    - id: faultMessageVersion
+      name: Fault Message Version
+      type: UNSIGNED_INTEGER
+      bits: 2
+    - id: reserved13
+      name: Reserved
+      type: RESERVED
+      bits: 16
+    - id: faultFeature
+      name: Fault Feature
+      type: UNSIGNED_INTEGER
+      bits: 2
+    - id: faultVersion
+      name: Fault Version
+      type: UNSIGNED_INTEGER
+      bits: 2
+    - id: reserved16
+      name: Reserved
+      type: RESERVED
+      bits: 8
+    - id: reserved17
+      name: Reserved
+      type: RESERVED
+      bits: 8
+    - id: reserved18
+      name: Reserved
+      type: RESERVED
+      bits: 10
+    - id: popupId
+      name: Popup ID
+      type: UNSIGNED_INTEGER
+      bits: 14
+    - id: reserved20
+      name: Reserved
+      type: RESERVED
+      bits: 8
+    - id: manufacturerIdFieldNumber
+      name: Manufacturer ID Field Number
+      type: UNSIGNED_INTEGER
+      bits: 10
+    - id: reserved22
+      name: Reserved
+      type: RESERVED
+      bits: 8
+    - id: reserved23
+      name: Reserved
+      type: RESERVED
+      bits: 2

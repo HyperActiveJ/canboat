@@ -1,0 +1,62 @@
+pgn: 126720
+id: garminButtonInterfaceIdleBeacon
+description: 'Garmin: Button-Interface Idle Beacon'
+type: Fast
+variantOrder: 79
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Garmin keypad/button-interface (GRID) idle beacon carried in the Garmin 126720 proprietary container. The idle payload is a fixed 5-byte body (01 11 02 19 00); the keypress content, which appears only while a key is pressed, is not decoded here.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: Button-interface transport
+  match: 2707
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  match: 2
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 2
+- id: messageId
+  name: Message ID
+  type: UINT16
+  match: 2307
+- id: idlePayload
+  name: Idle Payload
+  type: BINARY
+  bits: 40
+  description: Fixed 5-byte idle payload (01 11 02 19 00). The keypress content, which appears only while a key is pressed, is not represented here.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,6,255,13,e5,98,93,0a,02,02,03,09,01,11,02,19,00"
+  expects:
+    subProtocolId: 2707
+    wrapperByte1: 2
+    wrapperByte2: 2
+    messageId: 2307

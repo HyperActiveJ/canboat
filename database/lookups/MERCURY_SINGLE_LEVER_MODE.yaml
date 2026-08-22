@@ -1,0 +1,11 @@
+name: MERCURY_SINGLE_LEVER_MODE
+kind: pair
+bits: 3
+values:
+  0: Single Lever Mode
+  1: Throttle Only Mode
+  2: Docking Mode
+  3: SmartCraft Troll No Comms
+  4: SmartCraft Cruise No Comms
+  5: SmartCraft Autopilot No Comms
+  6: Reserved

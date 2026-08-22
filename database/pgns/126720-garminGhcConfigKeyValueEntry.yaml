@@ -1,0 +1,82 @@
+pgn: 126720
+id: garminGhcConfigKeyValueEntry
+description: 'Garmin: GHC Config Key-Value Entry'
+type: Fast
+variantOrder: 82
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Garmin GHC configuration / menu key-value entry. Each entry is a hashed 32-bit config key (in the Message-ID slot and first body word) followed by a fixed type/value envelope. The wrapper bytes 0x0B 0x0B mark the GHC config family group, shared with the config-table beacon. The keys are hashes, so the human field names are not recoverable from the wire.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: GHC config transport
+  match: 2558
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  match: 11
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  match: 11
+- id: configKey
+  name: Config Key
+  type: UINT32
+  description: Hashed config/menu key; occupies the Message-ID slot and the first body word
+- id: type
+  name: Type
+  type: UINT8
+  description: Constant 0x06
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 24
+- id: valueTag
+  name: Value Tag
+  type: UINT8
+  description: Constant 0x07
+- id: field15
+  name: Field 15
+  type: UINT8
+  description: Constant 0x00
+- id: value
+  name: Value
+  type: UINT8
+  description: The entry's small value
+- id: field17
+  name: Field 17
+  type: UINT8
+  description: Constant 0x00
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,11,9,18,e5,98,fe,09,0b,0b,aa,31,4a,89,06,00,00,00,07,00,01,00"
+  expects:
+    subProtocolId: 2558
+    configKey: 2303340970
+    type: 6
+    valueTag: 7
+    value: 1

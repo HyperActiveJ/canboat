@@ -1,0 +1,79 @@
+pgn: 130821
+id: mercuryPopUpNotification
+description: 'Mercury: Pop-up Notification'
+type: Fast
+variantOrder: 5
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: 'Mercury display pop-up notification. A header (version + pop-up count) followed by a repeating set of pop-up records. Each pop-up record carries a nested variable-length button array (a per-record button count followed by that many button records) which the flat field model cannot represent; the repeating stride here is the scalar pop-up record only and is faithful for the zero-button case. The value labels (pop-up id, engine state, single-lever mode enumerations) are not enumerated here.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: version
+  name: Version
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: popUpCount
+  name: Pop-up Count
+  type: UNSIGNED_INTEGER
+  bits: 8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- repeat:
+    countField: popUpCount
+    fields:
+    - id: popUpId
+      name: Pop-up ID
+      type: UNSIGNED_INTEGER
+      bits: 14
+    - id: reserved8
+      name: Reserved
+      type: RESERVED
+      bits: 8
+    - id: manufacturerIdFieldNumber
+      name: Manufacturer ID Field Number
+      type: UNSIGNED_INTEGER
+      bits: 10
+    - id: reserved10
+      name: Reserved
+      type: RESERVED
+      bits: 43
+    - id: engineState
+      name: Engine State
+      type: UNSIGNED_INTEGER
+      bits: 2
+    - id: reserved12
+      name: Reserved
+      type: RESERVED
+      bits: 6
+    - id: singleLeverMode
+      name: Single Lever Mode
+      type: UNSIGNED_INTEGER
+      bits: 7
+    - id: reserved14
+      name: Reserved
+      type: RESERVED
+      bits: 158

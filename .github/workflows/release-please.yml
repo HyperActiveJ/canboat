@@ -16,22 +16,28 @@ jobs:
       prs_created: ${{ steps.rp.outputs.prs_created }}
       releases_created: ${{ steps.rp.outputs.releases_created }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         id: rp
         with:
           # A PAT (RELEASE_PLEASE_TOKEN) is preferred so that the regenerate job's
           # push below re-triggers CI on the release PR. Falls back to GITHUB_TOKEN.
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
-  # release-please bumps VERSION in common/version.h, and that version is stamped
-  # into the generated docs/* + docs/canboat.dbc. Regenerate them on the
-  # release PR branch so it passes the build-ubuntu generated-files gate.
+  # release-please bumps VERSION in common/version.h and the workspace version in
+  # Cargo.toml. Both are stamped into files it does NOT itself update:
+  # the generated docs/* + docs/canboat.dbc carry VERSION, and Cargo.lock
+  # records a version for every workspace member. A bumped Cargo.toml with a
+  # stale Cargo.lock fails every `cargo --locked` job on the release PR, so both
+  # are refreshed here on the release branch.
+  #
+  # Runs whenever there is a release PR, not only when one is first created: an
+  # updated release PR needs the same re-stamping as a new one.
   regenerate:
     needs: release-please
-    if: ${{ needs.release-please.outputs.prs_created == 'true' }}
+    if: ${{ needs.release-please.outputs.pr != '' && needs.release-please.outputs.pr != 'null' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ fromJson(needs.release-please.outputs.pr).headBranchName }}
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
@@ -44,11 +50,24 @@ jobs:
           make
           make generated
 
+      # Sync Cargo.lock to the workspace version release-please just wrote
+      # into Cargo.toml. --workspace updates only the member packages;
+      # third-party pins are left exactly as locked (cargo reports them as
+      # "unchanged dependencies behind latest"), so this moves the member
+      # version lines and nothing else.
+      #
+      # Deliberately NOT --offline: a fresh runner has no registry cache, so
+      # cargo cannot resolve even already-locked third-party crates from the
+      # index and fails with "no matching package named `indexmap` found".
+      # It only appeared in CI because a warm local cache hides it.
+      - name: re-stamp Cargo.lock
+        run: cargo update --workspace
+
       - name: commit regenerated files
         run: |
           if ! git diff --exit-code; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -am "chore: regenerate docs/* + canboat.dbc for release"
+            git commit -am "chore: regenerate docs/*, canboat.dbc and Cargo.lock for release"
             git push
           fi
