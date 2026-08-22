@@ -29864,7 +29864,7 @@
             "Order":9,
             "Id":"nodeId",
             "Name":"Node ID",
-            "Description":"The emitting GHC's own node address (fixed)",
+            "Description":"The emitting device's own node address (fixed)",
             "BitLength":32,
             "BitOffset":128,
             "BitStart":0,

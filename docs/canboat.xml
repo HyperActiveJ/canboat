@@ -29431,7 +29431,7 @@ limitations under the License.
           <Order>9</Order>
           <Id>nodeId</Id>
           <Name>Node ID</Name>
-          <Description>The emitting GHC's own node address (fixed)</Description>
+          <Description>The emitting device's own node address (fixed)</Description>
           <BitLength>32</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>

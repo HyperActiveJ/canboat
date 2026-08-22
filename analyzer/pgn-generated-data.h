@@ -3544,7 +3544,7 @@ Pgn pgnList[] = {
       {.name = "Wrapper Byte 2", .camelName = "wrapperByte2", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 2},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "UINT16", .resolution = 1.0, .hasMatchValue = true, .matchValue = 771},
       {.name = "Status Header", .camelName = "statusHeader", .fieldType = "BINARY", .size = 64, .resolution = 1.0, .description = "Constant report header 01 01 03 0F 08 FF 0F 00, same as the node-status report"},
-      {.name = "Node ID", .camelName = "nodeId", .fieldType = "UINT32", .resolution = 1.0, .description = "The emitting GHC's own node address (fixed)"},
+      {.name = "Node ID", .camelName = "nodeId", .fieldType = "UINT32", .resolution = 1.0, .description = "The emitting device's own node address (fixed)"},
       {.name = "Field 20", .camelName = "field20", .fieldType = "UINT8", .resolution = 1.0, .description = "Constant 0x01"},
       {.name = "Sequence", .camelName = "sequence", .fieldType = "UINT8", .resolution = 1.0, .description = "Small counter"},
       {.name = "Status", .camelName = "status", .fieldType = "UINT16", .resolution = 1.0, .description = "A varying status word; GHC-internal semantics"}

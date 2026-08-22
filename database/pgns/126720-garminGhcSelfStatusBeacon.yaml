@@ -56,7 +56,7 @@ fields:
 - id: nodeId
   name: Node ID
   type: UINT32
-  description: The emitting GHC's own node address (fixed)
+  description: The emitting device's own node address (fixed)
 - id: field20
   name: Field 20
   type: UINT8
