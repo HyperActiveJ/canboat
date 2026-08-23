@@ -7366,7 +7366,7 @@ limitations under the License.
             PGN 126720
             - Garmin: GPSMAP 86xx Device Health Telemetry</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>23</td></tr><tr><td>Wrapper Byte 1</td><td>4</td></tr><tr><td>Wrapper Byte 2</td><td>4</td></tr></table></p><p>Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three equal scalars, slots 9-12 are four gauges. The field names are not known.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>23</td></tr><tr><td>Wrapper Byte 1</td><td>4</td></tr><tr><td>Wrapper Byte 2</td><td>4</td></tr></table></p><p>Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three scalars that vary independently, slots 9-12 are four gauges. The field names are not known.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -7398,7 +7398,7 @@ limitations under the License.
                   </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Scalar 1</td><td>Slots 0-2 carry equal values</td><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Scalar 1</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-FLOAT">FLOAT</a></td><td/></tr><tr><td>8</td><td>Scalar 2</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits

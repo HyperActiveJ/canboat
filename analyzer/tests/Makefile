@@ -250,8 +250,8 @@ test25:
 	diff $(TEMPDIR)/iso-tp-preassembled-test.out iso-tp-preassembled-test.out
 	diff $(TEMPDIR)/iso-tp-preassembled-test.err iso-tp-preassembled-test.err
 
-# This tests one representative real-world frame per proprietary (PGN, variant)
-# decode carried on this fork's decode branch, grouped by manufacturer.
+# This tests proprietary Mercury, Navico, Fusion and Victron (PGN, variant) decodes,
+# one representative real-world frame each, grouped by manufacturer.
 #
 test26:
 	$(ANALYZER) < pgn-boat-test.in > $(TEMPDIR)/pgn-boat-test.out -debug -q -fixtime pgn-boat-test 2> $(TEMPDIR)/pgn-boat-test.err

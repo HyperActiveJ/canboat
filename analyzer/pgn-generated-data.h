@@ -3564,7 +3564,7 @@ Pgn pgnList[] = {
       {.name = "Sub-protocol ID", .camelName = "subProtocolId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 23, .description = "GPSMAP device-health transport", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_MESSAGE_ID, .lookup.name = "GARMIN_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Wrapper Byte 1", .camelName = "wrapperByte1", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 4},
       {.name = "Wrapper Byte 2", .camelName = "wrapperByte2", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 4},
-      {.name = "Scalar 1", .camelName = "scalar1", .fieldType = "FLOAT", .resolution = 1.0, .hasSign = true, .description = "Slots 0-2 carry equal values"},
+      {.name = "Scalar 1", .camelName = "scalar1", .fieldType = "FLOAT", .resolution = 1.0, .hasSign = true},
       {.name = "Scalar 2", .camelName = "scalar2", .fieldType = "FLOAT", .resolution = 1.0, .hasSign = true},
       {.name = "Scalar 3", .camelName = "scalar3", .fieldType = "FLOAT", .resolution = 1.0, .hasSign = true},
       {.name = "Value 4", .camelName = "value4", .fieldType = "FLOAT", .resolution = 1.0, .hasSign = true},
@@ -3581,7 +3581,7 @@ Pgn pgnList[] = {
      },
      .camelDescription = "garminGpsmap86xxDeviceHealthTelemetry",
      .priority = 7,
-     .explanation = "Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three equal scalars, slots 9-12 are four gauges. The field names are not known."},
+     .explanation = "Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three scalars that vary independently, slots 9-12 are four gauges. The field names are not known."},
 
     {"Garmin: GPSMAP Data-Sync Record A",
      126720,

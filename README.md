@@ -49,10 +49,13 @@ no-comms states.
 - `126720 Garmin: Autopilot Heading to Steer` is an absolute heading on the full
   circle (0 .. 2 pi), not a signed offset; the range minimum is corrected accordingly.
 
-**Regression test.** `analyzer/tests` gains `test26`, which runs one representative
-frame per proprietary variant this fork works with — 21 frames across Mercury, Navico,
-Fusion and Victron — through `analyzer` and diffs the decode against a checked-in
-expectation.
+**Regression test.** `analyzer/tests` gains `test26`, which runs 21 proprietary
+frames through `analyzer` and diffs the decode against a checked-in expectation:
+Mercury `130824`, `130825` (two opcodes), `130826` and `130829`; Navico `65280`,
+`65313`, `130817`, `130822` (Source Report and Alert) and `130825`; Fusion `130820`
+across eight message ids; Victron `61184` across two VREG registers. Of the
+definitions listed above it exercises one, Navico `130822 Alert`; the Garmin 126720
+variants and the four Mercury PGNs in the table are not covered by it.
 
 **Generated output is regenerated on the branch**, so the definitions are live for
 every consumer: `docs/canboat.json`, `docs/canboat.xml`, `docs/canboat.html`,

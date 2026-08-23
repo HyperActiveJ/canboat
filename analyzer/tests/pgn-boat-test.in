@@ -1,6 +1,6 @@
 #
-# Sample frames exercising the proprietary PGN decodes added on this branch.
-# One representative real-world message per new (PGN, variant), grouped by manufacturer.
+# Sample frames exercising proprietary PGN decodes, grouped by manufacturer:
+# one representative real-world message per (PGN, variant) listed below.
 # Format: timestamp,prio,pgn,src,dst,len,data... (fast packets pre-assembled on one line).
 #
 # --- Mercury Marine (mfg 144) ---

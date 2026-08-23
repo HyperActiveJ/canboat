@@ -8,7 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: 'Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three equal scalars, slots 9-12 are four gauges. The field names are not known.'
+explanation: 'Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three scalars that vary independently, slots 9-12 are four gauges. The field names are not known.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -47,7 +47,6 @@ fields:
 - id: scalar1
   name: Scalar 1
   type: FLOAT
-  description: Slots 0-2 carry equal values
 - id: scalar2
   name: Scalar 2
   type: FLOAT

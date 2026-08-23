@@ -29935,7 +29935,7 @@
         "Id":"garminGpsmap86xxDeviceHealthTelemetry",
         "Description":"Garmin: GPSMAP 86xx Device Health Telemetry",
         "Priority":7,
-        "Explanation":"Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three equal scalars, slots 9-12 are four gauges. The field names are not known.",
+        "Explanation":"Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three scalars that vary independently, slots 9-12 are four gauges. The field names are not known.",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -30034,7 +30034,6 @@
             "Order":7,
             "Id":"scalar1",
             "Name":"Scalar 1",
-            "Description":"Slots 0-2 carry equal values",
             "BitLength":32,
             "BitOffset":48,
             "BitStart":0,

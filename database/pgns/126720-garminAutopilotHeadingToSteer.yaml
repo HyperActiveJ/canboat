@@ -67,8 +67,8 @@ fields:
   rangeMax: 6.283185307179586
 notes: |-
   Garmin autopilot scalar transport: a separate Garmin sub-protocol (ID 5904) that carries a single named
-  scalar per frame, selected by the Field Group + Field bytes. Structure inferred from the canboat-py-gh
-  extended decoder; the byte between the Field selector and the value is not yet identified.
+  scalar per frame, selected by the Field Group + Field bytes. The byte between the Field selector and
+  the value is not identified.
 samples:
 - raw: "2023-01-01-00:00:00.000,7,126720,0,255,13,e5,98,10,17,04,04,00,0b,00,b4,8d,2e,40"  # from garmin-ap-reactor-126720.raw
   expects:

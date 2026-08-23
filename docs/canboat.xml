@@ -29502,7 +29502,7 @@ limitations under the License.
       <Id>garminGpsmap86xxDeviceHealthTelemetry</Id>
       <Description>Garmin: GPSMAP 86xx Device Health Telemetry</Description>
       <Priority>7</Priority>
-      <Explanation>Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three equal scalars, slots 9-12 are four gauges. The field names are not known.</Explanation>
+      <Explanation>Garmin GPSMAP internal device-health / utilization telemetry. This family has no Message ID slot: after the two wrapper bytes (0x04 0x04) the 56-byte body is fourteen little-endian IEEE-754 float32 values. Slots 0-2 are three scalars that vary independently, slots 9-12 are four gauges. The field names are not known.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -29605,7 +29605,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>scalar1</Id>
           <Name>Scalar 1</Name>
-          <Description>Slots 0-2 carry equal values</Description>
           <BitLength>32</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
